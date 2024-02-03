@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">The Coupon App</string>
     <string name="Team_Welcome">Welcome Team Black!</string>
+    <string name="Login_Banner">The Coupon App</string>
 </resources>
