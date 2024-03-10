@@ -9,6 +9,8 @@
     <string name="Password_Prompt">Password</string>
     <string name="Confirm_Password">Re-Enter Password</string>
     <string name="Already_Member_Message">Already Have An Account?</string>
+    <string name="close_nav">Close Navigation Drawer</string>
+    <string name="open_nav">Open Navigation Drawer</string>
     <string name="title_activity_audio_classification">audio_classification</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
