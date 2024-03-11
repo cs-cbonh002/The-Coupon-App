@@ -6,4 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".FacadeActivity">
 
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="43dp"
+        android:layout_marginBottom="509dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/Grocery_Coupon_1" />
 </androidx.constraintlayout.widget.ConstraintLayout>
