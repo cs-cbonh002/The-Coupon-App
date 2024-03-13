@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,14 @@ public class SettingsActivity extends AppCompatActivity {
                 requestPermissions();
             }
         });
+
+        /*Button setBtn = findViewById(R.id.MapsButton);
+        setBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SettingsActivity.this, MapsActivity.class));
+            }
+        });*/
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
