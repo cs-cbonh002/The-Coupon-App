@@ -19,10 +19,10 @@ public class FacadeActivity extends AppCompatActivity {
 
         btn.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, HomeActivity.class)));
 
-        btn = findViewById(R.id.imageButton2);
-        btn.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, HomeActivity.class)));
+        ImageButton btn2 = findViewById(R.id.imageButton2);
+        btn2.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, HomeActivity.class)));
 
-        btn = findViewById(R.id.imageButton3);
-        btn.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, HomeActivity.class)));
+        ImageButton btn3 = findViewById(R.id.imageButton3);
+        btn3.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, HomeActivity.class)));
     }
 }
