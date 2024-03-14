@@ -38,17 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="96dp"
-                android:layout_height="91dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:src="@tools:sample/avatars"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <Button
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
@@ -65,8 +54,8 @@
                 android:ems="10"
                 android:inputType="date"
                 android:text="Date: "
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="104dp" />
 
             <EditText
                 android:id="@+id/editTextTime"
@@ -76,8 +65,8 @@
                 android:inputType="time"
                 android:text="Time: "
                 android:visibility="visible"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextDate"
+                tools:layout_editor_absoluteX="104dp" />
 
             <EditText
                 android:id="@+id/editTextTextMultiLine"
@@ -93,6 +82,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/editTextTime"
                 app:layout_constraintVertical_bias="0.0"
                 tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. " />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="98dp"
+                android:layout_height="96dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/sample_avatar_male1" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
