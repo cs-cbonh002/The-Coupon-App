@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
+
+    <group
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home_icon"
+            android:title="Home"/>
+
+        <item
+            android:id="@+id/nav_incident_log"
+            android:icon="@drawable/log_icon"
+            android:title="Incident Log"/>
+
+        <item
+            android:id="@+id/nav_wake_words"
+            android:icon="@drawable/wake_words_icon"
+            android:title="Wake Words"/>
+
+        <item
+            android:id="@+id/nav_communications"
+            android:icon="@drawable/communication_icon"
+            android:title="Communications"/>
+
+        <item
+            android:id="@+id/nav_emergency_contacts"
+            android:icon="@drawable/baseline_contact_emergency_24"
+            android:title="Emergency Contacts"/>
+
+        <item
+            android:id="@+id/nav_local_resources"
+            android:icon="@drawable/local_resources_icon"
+            android:title="Local Resources"/>
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/settings_icon"
+            android:title="Settings"/>
+
+        <item
+            android:id="@+id/nav_safe_exit"
+            android:icon="@drawable/safe_exit_icon"
+            android:title="Safe Exit"/>
+    </group>
+    <item
+        android:title="">
+
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/logout_icon"
+                android:title="Logout"/>
+        </menu>
+
+    </item>
+
+</menu>

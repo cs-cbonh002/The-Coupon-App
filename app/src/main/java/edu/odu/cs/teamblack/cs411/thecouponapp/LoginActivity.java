@@ -28,5 +28,12 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
             }
         });
+        Button homeButton = findViewById(R.id.homeButton);
+        homeButton.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            }
+        }));
     }
 }
