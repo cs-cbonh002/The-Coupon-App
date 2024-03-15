@@ -57,8 +57,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (item.getItemId() == R.id.nav_local_resources)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
-        if (item.getItemId() == R.id.nav_settings)
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        if (item.getItemId() == R.id.nav_profileSettings)
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileSettingsFragment()).commit();
 
         if (item.getItemId() == R.id.nav_safe_exit)
             if (item.getItemId() == R.id.nav_safe_exit) {

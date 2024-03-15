@@ -38,9 +38,9 @@
             android:title="Local Resources"/>
 
         <item
-            android:id="@+id/nav_settings"
+            android:id="@+id/nav_profileSettings"
             android:icon="@drawable/settings_icon"
-            android:title="Settings"/>
+            android:title="Profile and Settings"/>
 
         <item
             android:id="@+id/nav_safe_exit"

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/profileLabelTextView"
+        android:layout_width="108dp"
+        android:layout_height="36dp"
+        android:text="Profile"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="78dp"
+        tools:layout_editor_absoluteY="172dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="859dp"
+        android:layout_height="115dp"
+        android:background="@color/lavender"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:text="@string/profile_and_settings"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="21dp"
+        tools:layout_editor_absoluteY="37dp"
+        tools:ignore="MissingConstraints" />
+
+    <!-- Emergency Contact Box -->
+
+    <LinearLayout
+        android:layout_width="884dp"
+        android:layout_height="231dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="222dp">
+
+        <EditText
+            android:id="@+id/firstNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/first_name" />
+
+        <EditText
+            android:id="@+id/lastNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Last Name: " />
+
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email" />
+
+        <EditText
+            android:id="@+id/dobEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/date_of_birth"
+            android:inputType="date" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/emergencyContactsLabelTextView"
+        android:layout_width="243dp"
+        android:layout_height="48dp"
+        android:text="Emergency Contacts"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="77dp"
+        tools:layout_editor_absoluteY="460dp" />
+
+    <LinearLayout
+        android:id="@+id/emergencyContactContainer"
+        android:layout_width="896dp"
+        android:layout_height="135dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="4dp"
+        tools:layout_editor_absoluteY="508dp">
+
+        <!-- Emergency Contact Fields -->
+        <EditText
+            android:id="@+id/emergencyContact1EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/emergency_contact_1" />
+
+        <EditText
+            android:id="@+id/emergencyContact2EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/emergency_contact_2" />
+
+        <!-- Add more emergency contact fields as needed -->
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/editProfileButton"
+        android:layout_width="128dp"
+        android:layout_height="49dp"
+        android:text="@string/edit"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="716dp"
+        tools:layout_editor_absoluteY="453dp" />
+
+    <Button
+        android:id="@+id/addEmergencyContactButton"
+        android:layout_width="128dp"
+        android:layout_height="50dp"
+        android:text="@string/add"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="716dp"
+        tools:layout_editor_absoluteY="643dp" />
+
+    <ImageView
+        android:id="@+id/avatarImageView"
+        android:layout_width="62dp"
+        android:layout_height="70dp"
+        android:src="@drawable/avatar_vector_icon"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="152dp"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/emergencyIconImageView"
+        android:layout_width="73dp"
+        android:layout_height="60dp"
+        android:src="@drawable/baseline_contact_emergency_24"
+        tools:layout_editor_absoluteX="4dp"
+        tools:layout_editor_absoluteY="460dp"
+        tools:ignore="MissingConstraints" />
+
+
+    <ImageView
+        android:id="@+id/settingsIconImageView"
+        android:layout_width="118dp"
+        android:layout_height="80dp"
+        android:src="@drawable/settings_icon"
+        tools:layout_editor_absoluteX="454dp"
+        tools:layout_editor_absoluteY="655dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/additionalSettingsLabelTextView"
+        android:layout_width="484dp"
+        android:layout_height="50dp"
+        android:text="@string/additional_settings"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        tools:layout_editor_absoluteX="58dp"
+        tools:layout_editor_absoluteY="666dp"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/familyInfoButton"
+        android:layout_width="549dp"
+        android:layout_height="80dp"
+        tools:ignore="MissingConstraints"
+        android:text="@string/family_information"
+        tools:layout_editor_absoluteX="25dp"
+        tools:layout_editor_absoluteY="838dp" />
+
+    <Button
+        android:id="@+id/dangerAssessmentButton"
+        android:layout_width="547dp"
+        android:layout_height="76dp"
+        tools:ignore="MissingConstraints"
+        android:text="@string/danger_assessment"
+        tools:layout_editor_absoluteX="21dp"
+        tools:layout_editor_absoluteY="750dp" />
+
+    <Button
+        android:id="@+id/wakeWordSettingsButton"
+        android:layout_width="547dp"
+        android:layout_height="82dp"
+        tools:ignore="MissingConstraints"
+        android:text="@string/wake_word_settings"
+        tools:layout_editor_absoluteX="25dp"
+        tools:layout_editor_absoluteY="1024dp" />
+
+    <Button
+        android:id="@+id/themeSettingsButton"
+        android:layout_width="551dp"
+        android:layout_height="72dp"
+        tools:ignore="MissingConstraints"
+        android:text="@string/theme_settings"
+        tools:layout_editor_absoluteX="21dp"
+        tools:layout_editor_absoluteY="936dp" />
+
+    <Button
+        android:id="@+id/featureSettingsButton"
+        android:layout_width="547dp"
+        android:layout_height="80dp"
+        tools:ignore="MissingConstraints"
+        android:text="@string/feature_settings"
+        tools:layout_editor_absoluteX="25dp"
+        tools:layout_editor_absoluteY="1112dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
