@@ -62,12 +62,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         if (item.getItemId() == R.id.nav_safe_exit)
             if (item.getItemId() == R.id.nav_safe_exit) {
-                // Perform logout action
+                // Return to facade screen
                 safeExit();
             }
         if (item.getItemId() == R.id.nav_logout)
         {
             Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
+            // Perform logout action
             logout();
         }
 
