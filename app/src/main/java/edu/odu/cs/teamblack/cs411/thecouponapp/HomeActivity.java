@@ -85,7 +85,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Implement your logout logic here
         // For example, clearing user session, resetting preferences, etc.
         // Once logged out, you may navigate back to the login screen
-        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        Intent intent = new Intent(HomeActivity.this, FacadeActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }

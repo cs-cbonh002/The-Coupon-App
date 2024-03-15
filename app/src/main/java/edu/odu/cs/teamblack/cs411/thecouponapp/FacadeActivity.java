@@ -15,14 +15,17 @@ public class FacadeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_facade);
 
-        ImageButton btn = findViewById(R.id.imageButton);
+        ImageButton btn = findViewById(R.id.imageButton1);
 
-        btn.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, HomeActivity.class)));
+        btn.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, LoginActivity.class)));
 
         ImageButton btn2 = findViewById(R.id.imageButton2);
-        btn2.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, HomeActivity.class)));
+        btn2.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, LoginActivity.class)));
 
         ImageButton btn3 = findViewById(R.id.imageButton3);
-        btn3.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, HomeActivity.class)));
+        btn3.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, LoginActivity.class)));
+
+        ImageButton btn4 = findViewById(R.id.imageButton4);
+        btn4.setOnClickListener(v -> startActivity(new Intent(FacadeActivity.this, LoginActivity.class)));
     }
 }
