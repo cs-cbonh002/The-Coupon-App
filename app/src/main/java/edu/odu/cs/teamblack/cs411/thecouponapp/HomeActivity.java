@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -43,7 +43,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
         if (item.getItemId() == R.id.nav_incident_log)
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IncidentLogFragment()).commit();
 
         if (item.getItemId() == R.id.nav_wake_words)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
@@ -57,12 +57,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (item.getItemId() == R.id.nav_local_resources)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
-        if (item.getItemId() == R.id.nav_settings)
+        if (item.getItemId() == R.id.nav_profileSettings)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
         if (item.getItemId() == R.id.nav_safe_exit)
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-
+            if (item.getItemId() == R.id.nav_safe_exit) {
+                // Perform logout action
+                logout();
+            }
         if (item.getItemId() == R.id.nav_logout)
             Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
 
@@ -77,6 +79,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void logout() {
+        // Implement your logout logic here
+        // For example, clearing user session, resetting preferences, etc.
+        // Once logged out, you may navigate back to the login screen
+        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish(); // Optional: Close the current activity
     }
 
 }
