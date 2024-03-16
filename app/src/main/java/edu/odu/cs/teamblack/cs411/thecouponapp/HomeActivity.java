@@ -95,9 +95,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void logout() {
-        // Implement your logout logic here
-        // For example, clearing user session, resetting preferences, etc.
-        // Once logged out, you may navigate back to the login screen
+        SharedPreferencesManager.clearAccessToken(this); // Clear the access token
         Intent intent = new Intent(HomeActivity.this, FacadeActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
