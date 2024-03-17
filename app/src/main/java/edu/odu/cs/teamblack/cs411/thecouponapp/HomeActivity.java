@@ -96,7 +96,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void logout() {
         SharedPreferencesManager.clearAccessToken(this); // Clear the access token
-        Intent intent = new Intent(HomeActivity.this, FacadeActivity.class);
+        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }
