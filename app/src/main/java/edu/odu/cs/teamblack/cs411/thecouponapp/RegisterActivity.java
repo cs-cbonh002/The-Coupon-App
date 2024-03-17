@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.network.ApiService;
 import edu.odu.cs.teamblack.cs411.thecouponapp.network.RegistrationRequest;
@@ -30,11 +33,11 @@ public class RegisterActivity extends AppCompatActivity {
         userNameField = findViewById(R.id.userNameField);
         passwordField = findViewById(R.id.passwordField);
         confirmPasswordField = findViewById(R.id.confirmPasswordField);
-        Button btn=findViewById(R.id.register_button);
+        Button btn = findViewById(R.id.register_button);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                performRegistration(); // Call the performRegistration method when the button is clicked.
             }
         });
     }
@@ -57,12 +60,25 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RegistrationResponse> call, Response<RegistrationResponse> response) {
                 if (response.isSuccessful()) {
+                    // Assuming the server response includes a token in successful registration
                     RegistrationResponse registrationResponse = response.body();
-                    // TODO: Handle successful registration
+                    // Navigate to HomeActivity or LoginActivity, depending on your flow
+                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                    finish();
                 } else {
-                    // Handle registration failure
-                    // For example, display an error message to the user
-
+                    // Server responded with some error
+                    String errorMessage = "Registration failed.";
+                    if(response.errorBody() != null) {
+                        try {
+                            // Parse error response body if it has a structured format
+                            String errorJson = response.errorBody().string();
+                            // Convert this JSON string to a suitable error message
+                            // errorMessage = parseErrorJson(errorJson);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             }
 

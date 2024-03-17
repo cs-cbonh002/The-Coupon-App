@@ -10,7 +10,7 @@ import retrofit2.http.Path;
 public interface ApiService {
 
     // User registration endpoint
-    @POST("register/")
+    @POST("api/register/")
     Call<RegistrationResponse> registerUser(@Body RegistrationRequest registrationRequest);
 
     // JWT token retrieval endpoint
@@ -29,5 +29,5 @@ public interface ApiService {
     @GET("api/users/{user_pk}/incident_logs/")
     Call<List<IncidentLog>> getUserIncidentLogs(@Path("user_pk") int userPk);
 
-    // Other endpoints as needed...
+    // Other endpoints as needed...probably user profile info
 }
