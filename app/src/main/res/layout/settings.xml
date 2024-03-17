@@ -40,4 +40,23 @@
         app:layout_constraintStart_toEndOf="@+id/locationButton"
         app:layout_constraintTop_toTopOf="@+id/locationButton" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wake Word"
+        app:layout_constraintBottom_toBottomOf="@+id/wakeWordButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/wakeWordButton" />
+
+    <Button
+        android:id="@+id/wakeWordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Wake word"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/locationButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

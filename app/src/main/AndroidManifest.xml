@@ -22,20 +22,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TheCouponApp"
-        tools:targetApi="31">
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".LocalResourcesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".WakeWordsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CommunicationsActivity"
+            android:exported="false" />
         <activity
             android:name=".HomeActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".FacadeActivity"
-            android:exported="false" />
+            android:exported="false">
+        </activity>
+
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
+
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -49,6 +63,8 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@
     <string name="Registration_Message">No Account? Sign Up Today!</string>
     <string name="Register">Register</string>
     <string name="Email_Prompt">Email</string>
+    <string name="Username_Prompt">Username</string>
     <string name="Password_Prompt">Password</string>
     <string name="Confirm_Password">Re-Enter Password</string>
     <string name="Already_Member_Message">Already Have An Account?</string>
@@ -18,6 +19,11 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+
+    <string name="keyword_label">Keyword</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="footer">Made in Vancouver, Canada by Picovoice</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -75,4 +81,6 @@
     <string name="danger_assessment">Danger Assessment</string>
     <string name="family_information">Family Information</string>
     <string name="additional_settings">Additional Settings</string>
+    <string name="profile">Profile</string>
+    <string name="username_prompt">Username</string>
 </resources>
