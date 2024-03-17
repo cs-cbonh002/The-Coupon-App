@@ -14,14 +14,18 @@ package edu.odu.cs.teamblack.cs411.thecouponapp;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -53,6 +57,8 @@ public class WakeWordsActivity extends AppCompatActivity {
 
     private PorcupineManager porcupineManager = null;
     private MediaPlayer notificationPlayer;
+
+    private EditText phone;
     private final PorcupineManagerCallback porcupineManagerCallback = new PorcupineManagerCallback() {
         @Override
         public void invoke(int keywordIndex) {
@@ -61,7 +67,18 @@ public class WakeWordsActivity extends AppCompatActivity {
                 public void run() {
                     if (!notificationPlayer.isPlaying()) {
                         notificationPlayer.start();
-                    }
+                        //calls phonenumber in textfield
+                        String phone_number = phone.getText().toString();
+                        Intent phone_intent = new Intent(Intent.ACTION_CALL);
+                        phone_intent.setData(Uri.parse("tel:"+phone_number));
+                        if (ActivityCompat.checkSelfPermission(WakeWordsActivity.this,
+                                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            Toast toast = Toast.makeText(WakeWordsActivity.this, "Permission not granted to call", Toast.LENGTH_LONG);
+                            toast.show();
+                            return;
+                        }
+                        startActivity(phone_intent);
+                        }
 
                     final int detectedBackgroundColor = ContextCompat.getColor(
                             getApplicationContext(),
@@ -202,6 +219,11 @@ public class WakeWordsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         notificationPlayer = MediaPlayer.create(this, R.raw.notification);
 
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.CALL_PHONE}, 55);
+
+        phone = (EditText) findViewById(R.id.phoneNumber);
+
         configureKeywordSpinner();
     }
 
@@ -248,3 +270,5 @@ public class WakeWordsActivity extends AppCompatActivity {
         }
     }
 }
+
+

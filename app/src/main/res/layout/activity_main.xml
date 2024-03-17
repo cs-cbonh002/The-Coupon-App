@@ -82,4 +82,19 @@
         android:layout_marginBottom="15dp"
         android:text="@string/footer" />
 
+    <EditText
+        android:id="@+id/phoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/record_button"
+        android:layout_below="@+id/keyword_spinner"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="98dp"
+        android:layout_marginTop="83dp"
+        android:layout_marginEnd="104dp"
+        android:layout_marginBottom="81dp"
+        android:ems="10"
+        android:inputType="phone" />
+
 </RelativeLayout>
