@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     ToggleButton locationButton;
     ToggleButton audioClassifierButton;
-    ToggleButton wakeWordButton;
+    Button wakeWordButton;
 
     TextView locationCoordinateTextView;
     int LOCATION_PERMISSION = 44;
@@ -59,6 +60,15 @@ public class SettingsActivity extends AppCompatActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         fusedLocationClient.getLastLocation();
+
+        wakeWordButton = (Button) findViewById(R.id.wakeWordButton);
+        wakeWordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, WakeWordsActivity.class));
+            }
+        });
+
     }
 
     @SuppressLint("MissingPermission")

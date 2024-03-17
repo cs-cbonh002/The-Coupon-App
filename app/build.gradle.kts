@@ -49,6 +49,7 @@ dependencies {
     implementation("org.tensorflow:tensorflow-lite-task-audio-play-services:0.4.2.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("com.google.android.gms:play-services-location:21.1.0")
+    implementation("ai.picovoice:porcupine-android:3.0.1")
 
     androidTestImplementation("androidx.test:rules:1.5.0")
 }
