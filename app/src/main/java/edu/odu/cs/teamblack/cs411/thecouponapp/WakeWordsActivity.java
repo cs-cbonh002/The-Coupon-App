@@ -200,7 +200,7 @@ public class WakeWordsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //notificationPlayer = MediaPlayer.create(this, R.raw.notification);
+        notificationPlayer = MediaPlayer.create(this, R.raw.notification);
 
         configureKeywordSpinner();
     }
