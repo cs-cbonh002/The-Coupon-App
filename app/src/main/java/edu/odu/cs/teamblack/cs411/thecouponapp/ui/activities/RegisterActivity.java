@@ -33,11 +33,21 @@ public class RegisterActivity extends AppCompatActivity {
         userNameField = findViewById(R.id.userNameField);
         passwordField = findViewById(R.id.passwordField);
         confirmPasswordField = findViewById(R.id.confirmPasswordField);
-        Button btn = findViewById(R.id.register_button);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button registerBtn = findViewById(R.id.register_button);
+        Button loginBtn = findViewById(R.id.login_button);
+
+        registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 performRegistration(); // Call the performRegistration method when the button is clicked.
+            }
+        });
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
             }
         });
     }
