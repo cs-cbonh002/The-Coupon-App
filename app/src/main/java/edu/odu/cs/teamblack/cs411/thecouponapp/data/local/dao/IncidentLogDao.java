@@ -24,7 +24,7 @@ public interface IncidentLogDao {
     @Query("SELECT * FROM incident_logs")
     List<IncidentLog> getAllIncidentLogs();
 
-    @Query("SELECT * FROM incident_logs WHERE uuid = :uuid")
+    @Query("SELECT * FROM incident_logs WHERE id = :uuid")
     IncidentLog getIncidentLogByUuid(String uuid);
 
     // Additional queries as needed

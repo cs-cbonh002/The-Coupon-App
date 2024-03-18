@@ -4,29 +4,32 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.util.Date;
 
+import edu.odu.cs.teamblack.cs411.thecouponapp.data.local.converters.DateConverter;
+
 @Entity(tableName = "incident_logs")
 public class IncidentLog {
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = "uuid")
-    public String uuid;
 
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+    @TypeConverters({DateConverter.class})
+    public Date incidentDate;
+    public String description;
+    public boolean createdByUser;
     public Date timestamp;
     public int duration; // Duration in seconds
     public String transcription;
     public String notes;
-    public boolean createdByUser; // True if created by user, false if created by system
 
-    @NonNull
-    public String getUuid() {
-        return uuid;
+    public int getId() {
+        return id;
     }
 
-    public void setUuid(@NonNull String uuid) {
-        this.uuid = uuid;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Date getTimestamp() {
