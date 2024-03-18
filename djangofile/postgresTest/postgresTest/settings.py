@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "testdb"
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -72,11 +73,20 @@ WSGI_APPLICATION = 'postgresTest.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+import environ
+env = environ.Env()
+environ.Env.read_env()
+...
+# Your secret key
+SECRET_KEY = env("django-insecure-j5m8r)r)%x0&y(8**mcy72=2%-qk#l4y11%4n&a!ksc^4!l9(h")
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env("couponapp"),
+        'USER': env("postgres"),
+        'PASSWORD': env("queens39"),
+        'HOST': env("127.0.0.1"),
+        'PORT': env("5432"),
     }
 }
 
