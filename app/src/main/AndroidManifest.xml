@@ -51,6 +51,18 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.activities.FamilyInformationActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.activities.DangerAssessmentActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.fragments.EmergencyContactsFragment"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.activities.LoginActivity"
             android:exported="true">
             <intent-filter>

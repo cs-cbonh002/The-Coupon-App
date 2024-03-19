@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.EmergencyContactsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.HomeFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.IncidentLogFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.ProfileSettingsFragment;
@@ -57,8 +58,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (item.getItemId() == R.id.nav_communications)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
-        if (item.getItemId() == R.id.nav_emergency_contacts)
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        if (item.getItemId() == R.id.nav_emergency_contacts) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EmergencyContactsFragment()).commit();
+        }
 
         if (item.getItemId() == R.id.nav_local_resources)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
@@ -106,5 +108,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }
+
 
 }
