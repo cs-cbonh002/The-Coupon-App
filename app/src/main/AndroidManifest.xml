@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:allowBackup="true"
@@ -27,35 +28,63 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TheCouponApp"
         android:usesCleartextTraffic="true">
+
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+
         <activity
-            android:name=".LocalResourcesActivity"
+            android:name=".ui.activities.LocalResourcesActivity"
             android:exported="false" />
 
         <activity
-            android:name=".WakeWordsActivity"
+            android:name=".ui.activities.WakeWordsActivity"
             android:exported="false" />
         <activity
-            android:name=".CommunicationsActivity"
+            android:name=".ui.activities.CommunicationsActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".ui.activities.HomeActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".FacadeActivity"
+            android:name=".ui.activities.FacadeActivity"
             android:exported="false">
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".ui.activities.SettingsActivity"
+            android:exported="false">
+
+            <intent-filter>
+                <action android:name="android.intent.action.NOTIFICATION_PREFERENCES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".ui.activities.RegisterActivity"
             android:exported="false" />
 
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.activities.FamilyInformationActivity"
             android:exported="false" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.activities.DangerAssessmentActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.fragments.EmergencyContactsFragment"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
