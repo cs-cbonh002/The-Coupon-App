@@ -153,14 +153,6 @@
             android:text="Save"
             android:layout_marginTop="16dp"/>
 
-        <!-- Button to Add Emergency Contact -->
-        <Button
-            android:id="@+id/buttonAddContact"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add Contact"
-            android:layout_marginTop="16dp"/>
-
         <!-- Button to select family members from Family Information section -->
         <Button
             android:id="@+id/selectFamilyMemberButton"

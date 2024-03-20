@@ -25,6 +25,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,45 +36,73 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcomeBanner">
 
-    <!-- EditText for Family member Name (first and last) -->
-    <EditText
-        android:id="@+id/editTextFullName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Family Member Name (First and Last)"
-        android:inputType="text" />
+        <!-- TextView and EditText for Family member Name (first and last) -->
+        <TextView
+            android:id="@+id/textViewFullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Family Member Name (First and Last):"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
 
-    <!-- EditText for Relationship to user -->
-    <EditText
-        android:id="@+id/editTextRelationship"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Relationship to User"
-        android:inputType="text" />
+        <EditText
+            android:id="@+id/editTextFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
 
-    <!-- EditText for Phone number -->
-    <EditText
-        android:id="@+id/editTextPhoneNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Phone Number"
-        android:inputType="phone" />
+        <!-- TextView and EditText for Relationship to user -->
+        <TextView
+            android:id="@+id/textViewRelationship"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Relationship to User"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
 
-    <!-- EditText for Email -->
-    <EditText
-        android:id="@+id/editTextEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress" />
+        <EditText
+            android:id="@+id/editTextRelationship"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
 
-    <!-- Button to Save -->
-    <Button
-        android:id="@+id/buttonSave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:layout_marginTop="16dp"/>
+        <!-- TextView and EditText for Phone number -->
+        <TextView
+            android:id="@+id/textViewPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone Number"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+        <EditText
+            android:id="@+id/editTextPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone" />
+
+        <!-- TextView and EditText for Email -->
+        <TextView
+            android:id="@+id/textViewEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+
+        <!-- Button to Save -->
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_marginTop="16dp"/>
 
         <!-- Button to Add -->
         <Button
