@@ -4,11 +4,16 @@ package edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
@@ -17,9 +22,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -42,6 +50,11 @@ public class SettingsActivity extends AppCompatActivity {
     TextView locationCoordinateTextView;
     int LOCATION_PERMISSION = 44;
 
+    private static final String CHANNEL_ID = "channel_id";
+
+    Button notificationsButton;
+
+
     private FusedLocationProviderClient fusedLocationClient;
 
     @SuppressLint("MissingPermission")
@@ -59,6 +72,12 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("My Notification", "My Notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         fusedLocationClient.getLastLocation();
@@ -71,7 +90,48 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        notificationsButton = findViewById(R.id.notificationsButton);
+        notificationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Add your code to handle notifications button click here
+                // For example, you can show a toast message
+                //Toast.makeText(SettingsActivity.this, "Notifications Button Clicked", Toast.LENGTH_SHORT).show();
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(SettingsActivity.this, "My Notification");
+                builder.setContentTitle("The Coupon App");
+                builder.setContentText("Hello from The Coupon App, This is a simple Notification");
+                builder.setSmallIcon(R.drawable.lock_icon);
+                builder.setAutoCancel(true);
+
+                NotificationManagerCompat managerCompat = NotificationManagerCompat.from(SettingsActivity.this);
+                managerCompat.notify(1, builder.build());
+
+                // Check if notifications are enabled for the app
+                if (!managerCompat.areNotificationsEnabled()) {
+                    // Notifications are not enabled, prompt the user to enable them
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SettingsActivity.this);
+                    alertDialogBuilder.setTitle("Notifications Disabled");
+                    alertDialogBuilder.setMessage("Notifications are currently disabled for this app. Would you like to enable them?");
+                    alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Open app's notification settings
+                            Intent intent = new Intent();
+                            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        }
+                    });
+                    alertDialogBuilder.setNegativeButton("No", null);
+                    alertDialogBuilder.show();
+                }
+
+            }
+        });
+
     }
+
 
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
@@ -202,4 +262,9 @@ public class SettingsActivity extends AppCompatActivity {
            getLastLocation();
        }
     }
+
+
+
 }
+
+
