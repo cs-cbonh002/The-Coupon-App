@@ -87,10 +87,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileSettingsFragment()).commit();
 
         if (item.getItemId() == R.id.nav_safe_exit)
-            if (item.getItemId() == R.id.nav_safe_exit) {
-                // Return to facade screen
-                safeExit();
-            }
+            safeExit();
+
         if (item.getItemId() == R.id.nav_logout)
         {
             Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
@@ -126,6 +124,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }
+
 
 
 }
