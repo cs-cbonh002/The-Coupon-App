@@ -52,6 +52,13 @@ public class HomeActivity extends AppCompatActivity  {
                 recreate();
             }
         });
+
+        incident_log.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(HomeActivity.this, IncidentLogActivity.class);
+            }
+        });
         communications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
