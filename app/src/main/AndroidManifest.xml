@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -24,11 +24,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TheCouponApp"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.activities.ProfileAndSettings"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
-
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
@@ -36,7 +38,6 @@
         <activity
             android:name=".ui.activities.LocalResourcesActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.activities.WakeWordsActivity"
             android:exported="false" />
@@ -49,36 +50,28 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.activities.FacadeActivity"
-            android:exported="false">
-        </activity>
-
+            android:exported="false"></activity>
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:exported="false">
-
             <intent-filter>
                 <action android:name="android.intent.action.NOTIFICATION_PREFERENCES" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
-
         <activity
             android:name=".ui.activities.RegisterActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.activities.FamilyInformationActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.activities.DangerAssessmentActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.fragments.EmergencyContactsFragment"
             android:exported="false" />
-
         <activity
             android:name=".ui.activities.LoginActivity"
             android:exported="true">
@@ -92,8 +85,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-
     </application>
 
 </manifest>

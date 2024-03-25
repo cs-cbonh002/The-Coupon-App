@@ -1,9 +1,7 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -15,18 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.google.android.material.navigation.NavigationView;
-
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.EmergencyContactsFragment;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.HomeFragment;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.IncidentLogFragment;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.ProfileSettingsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
 
-public class HomeActivity extends AppCompatActivity  {
+public class ProfileAndSettings extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     ImageView menu;
@@ -35,7 +26,7 @@ public class HomeActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_profile_and_settings);
 
         drawerLayout = findViewById(R.id.drawerLayout);
         menu = findViewById(R.id.menu);
@@ -57,27 +48,28 @@ public class HomeActivity extends AppCompatActivity  {
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recreate();
+
+                redirectActivity(ProfileAndSettings.this, HomeActivity.class);
             }
         });
         communications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(HomeActivity.this, CommunicationsActivity.class);
+                redirectActivity(ProfileAndSettings.this, CommunicationsActivity.class);
             }
         });
 
         local_resources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(HomeActivity.this, LocalResourcesActivity.class);
+                redirectActivity(ProfileAndSettings.this, LocalResourcesActivity.class);
             }
         });
 
         profile_and_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectActivity(HomeActivity.this, ProfileAndSettings.class);
+                recreate();
             }
         });
 
@@ -189,18 +181,15 @@ public class HomeActivity extends AppCompatActivity  {
         // Implement your logout logic here
         // For example, clearing user session, resetting preferences, etc.
         // Once logged out, you may navigate back to the login screen
-        Intent intent = new Intent(HomeActivity.this, FacadeActivity.class);
+        Intent intent = new Intent(ProfileAndSettings.this, FacadeActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }
 
     private void logout() {
         SharedPreferences.clearAccessToken(this); // Clear the access token
-        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        Intent intent = new Intent(ProfileAndSettings.this, LoginActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }
-
-
-
 }
