@@ -151,7 +151,7 @@ public class ProfileAndSettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                redirectActivity(ProfileAndSettingsActivity.this, WakeWordsSettingsActivity.class);
+                redirectActivity(ProfileAndSettingsActivity.this, WakeWordsActivity.class);
             }
         });
         theme_setting.setOnClickListener(new View.OnClickListener() {
