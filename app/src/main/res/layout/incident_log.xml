@@ -52,7 +52,7 @@
                 app:srcCompat="@drawable/avatar_vector_icon"/>
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/Savebutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="View/Edit Incident"
@@ -88,7 +88,7 @@
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                app:layout_constraintBottom_toTopOf="@+id/button"
+                app:layout_constraintBottom_toTopOf="@+id/Savebutton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.92"
                 app:layout_constraintStart_toStartOf="parent"
