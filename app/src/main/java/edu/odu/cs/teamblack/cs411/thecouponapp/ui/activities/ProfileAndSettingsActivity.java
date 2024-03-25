@@ -21,7 +21,7 @@ public class ProfileAndSettingsActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     ImageView menu;
-    LinearLayout home, incident_log, communications, local_resources, emergency_contacts, profile_and_settings, safe_exit, logout;
+    LinearLayout home, incident_log, wake_words, communications, local_resources, emergency_contacts, profile_and_settings, safe_exit, logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +32,7 @@ public class ProfileAndSettingsActivity extends AppCompatActivity {
         menu = findViewById(R.id.menu);
         home = findViewById(R.id.home);
         incident_log = findViewById(R.id.incident_log);
+        wake_words = findViewById(R.id.wake_words);
         communications = findViewById(R.id.communications);
         emergency_contacts = findViewById(R.id.emergency_contacts);
         local_resources = findViewById(R.id.local_resources);
@@ -57,6 +58,13 @@ public class ProfileAndSettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 redirectActivity(ProfileAndSettingsActivity.this, IncidentLogActivity.class);
+            }
+        });
+
+        wake_words.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(ProfileAndSettingsActivity.this, WakeWordsActivity.class);
             }
         });
         communications.setOnClickListener(new View.OnClickListener() {

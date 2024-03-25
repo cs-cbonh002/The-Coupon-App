@@ -59,6 +59,13 @@ public class CommunicationsActivity extends AppCompatActivity {
                 redirectActivity(CommunicationsActivity.this, IncidentLogActivity.class);
             }
         });
+
+        wake_words.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(CommunicationsActivity.this, WakeWordsActivity.class);
+            }
+        });
         communications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

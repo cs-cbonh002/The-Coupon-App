@@ -1,251 +1,216 @@
-/*
-    Copyright 2021-2023 Picovoice Inc.
-
-    You may not use this file except in compliance with the license. A copy of the license is
-    located in the "LICENSE" file accompanying this source.
-
-    Unless required by applicable law or agreed to in writing, software distributed under the
-    License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-    express or implied. See the License for the specific language governing permissions and
-    limitations under the License.
-*/
-
 package edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities;
-
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import ai.picovoice.porcupine.Porcupine;
-import ai.picovoice.porcupine.PorcupineActivationException;
-import ai.picovoice.porcupine.PorcupineActivationLimitException;
-import ai.picovoice.porcupine.PorcupineActivationRefusedException;
-import ai.picovoice.porcupine.PorcupineActivationThrottledException;
-import ai.picovoice.porcupine.PorcupineException;
-import ai.picovoice.porcupine.PorcupineInvalidArgumentException;
-import ai.picovoice.porcupine.PorcupineManager;
-import ai.picovoice.porcupine.PorcupineManagerCallback;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
-
+import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
 
 public class WakeWordsActivity extends AppCompatActivity {
-    private static final String ACCESS_KEY = "ir/zJzrvkSCpbURXMlpFz1nL5VEHIsNf2snqMTDwXDiEDzc4Cp4zzQ==";
 
-    private PorcupineManager porcupineManager = null;
-    private MediaPlayer notificationPlayer;
-    private final PorcupineManagerCallback porcupineManagerCallback = new PorcupineManagerCallback() {
-        @Override
-        public void invoke(int keywordIndex) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (!notificationPlayer.isPlaying()) {
-                        notificationPlayer.start();
-                    }
-
-                    final int detectedBackgroundColor = ContextCompat.getColor(
-                            getApplicationContext(),
-                            R.color.colorAccent);
-                    final RelativeLayout layout = findViewById(R.id.layout);
-                    layout.setBackgroundColor(detectedBackgroundColor);
-                    new CountDownTimer(1000, 100) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            if (!notificationPlayer.isPlaying()) {
-                                notificationPlayer.start();
-                            }
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            layout.setBackgroundColor(Color.TRANSPARENT);
-                        }
-                    }.start();
-                }
-            });
-        }
-    };
-
-    private void startPorcupine() {
-        try {
-            final Spinner mySpinner = findViewById(R.id.keyword_spinner);
-            final String keywordName = mySpinner.getSelectedItem().toString();
-
-            PorcupineManager.Builder builder = new PorcupineManager.Builder()
-                    .setAccessKey(ACCESS_KEY)
-                    .setSensitivity(0.7f);
-           // if (Objects.equals(BuildConfig.FLAVOR, "en")) {
-                String keyword = keywordName.toUpperCase().replace(" ", "_");
-                builder.setKeyword(Porcupine.BuiltInKeyword.valueOf(keyword));
-           /* } else {
-                String keywordFile = keywordName.toLowerCase().replace(" ", "_") + ".ppn";
-                builder.setKeywordPath("keywords/" + keywordFile);
-                String model = "porcupine_params_" + BuildConfig.FLAVOR + ".pv";
-                builder.setModelPath("models/" + model);
-            }*/
-
-            porcupineManager = builder.build(getApplicationContext(), porcupineManagerCallback);
-            porcupineManager.start();
-        } catch (PorcupineInvalidArgumentException e) {
-            onPorcupineInitError(e.getMessage());
-        } catch (PorcupineActivationException e) {
-            onPorcupineInitError("AccessKey activation error");
-        } catch (PorcupineActivationLimitException e) {
-            onPorcupineInitError("AccessKey reached its device limit");
-        } catch (PorcupineActivationRefusedException e) {
-            onPorcupineInitError("AccessKey refused");
-        } catch (PorcupineActivationThrottledException e) {
-            onPorcupineInitError("AccessKey has been throttled");
-        } catch (PorcupineException e) {
-            onPorcupineInitError("Failed to initialize Porcupine " + e.getMessage());
-        }
-    }
-
-    private void stopPorcupine() {
-        if (porcupineManager != null) {
-            try {
-                porcupineManager.stop();
-                porcupineManager.delete();
-            } catch (PorcupineException e) {
-                displayError("Failed to stop Porcupine.");
-            }
-        }
-    }
-
-    private void onPorcupineInitError(final String errorMessage) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView errorText = findViewById(R.id.errorMessage);
-                errorText.setText(errorMessage);
-                errorText.setVisibility(View.VISIBLE);
-
-                ToggleButton recordButton = findViewById(R.id.record_button);
-                recordButton.setBackground(ContextCompat.getDrawable(
-                        getApplicationContext(),
-                        R.drawable.button_disabled));
-                recordButton.setChecked(false);
-                recordButton.setEnabled(false);
-            }
-        });
-    }
-
-    private void displayError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    private void configureKeywordSpinner() {
-        Spinner spinner = findViewById(R.id.keyword_spinner);
-        ArrayList<String> spinnerItems = new ArrayList<>();
-       // if (Objects.equals(BuildConfig.FLAVOR, "en")) {
-            for (Porcupine.BuiltInKeyword k : Porcupine.BuiltInKeyword.values()) {
-                spinnerItems.add(k.name().toLowerCase().replace("_", " "));
-          /*  }
-        } else {
-            try {
-                for (String keyword : this.getAssets().list("keywords")) {
-                    spinnerItems.add(keyword.replace("_", " ").replace(".ppn", ""));
-                }
-            } catch (IOException ex) {
-                displayError("Unable to get keyword files for given language");
-            }*/
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                R.layout.keyword_spinner_item,
-                spinnerItems);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        final ToggleButton recordButton = findViewById(R.id.record_button);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if (recordButton.isChecked()) {
-                    stopPorcupine();
-                    recordButton.toggle();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Do nothing.
-            }
-        });
-    }
+    DrawerLayout drawerLayout;
+    ImageView menu;
+    LinearLayout home, incident_log, wake_words, communications, local_resources, emergency_contacts, profile_and_settings, safe_exit, logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        notificationPlayer = MediaPlayer.create(this, R.raw.notification);
+        setContentView(R.layout.activity_wake_words);
 
-        configureKeywordSpinner();
-    }
+        drawerLayout = findViewById(R.id.drawerLayout);
+        menu = findViewById(R.id.menu);
+        home = findViewById(R.id.home);
+        incident_log = findViewById(R.id.incident_log);
+        wake_words = findViewById(R.id.wake_words);
+        communications = findViewById(R.id.communications);
+        emergency_contacts = findViewById(R.id.emergency_contacts);
+        local_resources = findViewById(R.id.local_resources);
+        profile_and_settings = findViewById(R.id.profile_and_settings);
+        safe_exit = findViewById(R.id.safe_exit);
+        logout = findViewById(R.id.logout);
 
-    @Override
-    protected void onStop() {
-        ToggleButton recordButton = findViewById(R.id.record_button);
-        recordButton.setChecked(false);
-
-        super.onStop();
-    }
-
-    private boolean hasRecordPermission() {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
-                PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestRecordPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            onPorcupineInitError("Microphone permission is required for this demo");
-        } else {
-            startPorcupine();
-        }
-    }
-
-    public void process(View view) {
-        ToggleButton recordButton = findViewById(R.id.record_button);
-        if (recordButton.isChecked()) {
-            if (hasRecordPermission()) {
-                startPorcupine();
-            } else {
-                requestRecordPermission();
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDrawer(drawerLayout);
             }
-        } else {
-            stopPorcupine();
+        });
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                redirectActivity(WakeWordsActivity.this, HomeActivity.class);
+            }
+        });
+
+        incident_log.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(WakeWordsActivity.this, IncidentLogActivity.class);
+            }
+        });
+
+        wake_words.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recreate();
+            }
+        });
+        communications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                redirectActivity(WakeWordsActivity.this, CommunicationsActivity.class);
+            }
+        });
+
+        emergency_contacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(WakeWordsActivity.this, EmergencyContactsActivity.class);
+            }
+        });
+
+        local_resources.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                redirectActivity(WakeWordsActivity.this, LocalResourcesActivity.class);
+            }
+        });
+
+        profile_and_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(WakeWordsActivity.this, ProfileAndSettingsActivity.class);
+            }
+        });
+
+        safe_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                safeExit();
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
+            }
+        });
+
+    }
+    public static void openDrawer(DrawerLayout drawerLayout) {
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    public static void closeDrawer(DrawerLayout drawerLayout) {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
+        {
+            drawerLayout.closeDrawer(GravityCompat.START);
         }
+    }
+
+    public static void redirectActivity(Activity activity, Class secondActivity) {
+        Intent intent = new Intent(activity, secondActivity);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+        activity.finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        closeDrawer(drawerLayout);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.safe_exit_btn)
+        {
+            safeExit();
+        }
+        return true;
+    }
+
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//
+//        if (item.getItemId() == R.id.nav_home)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_incident_log)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IncidentLogFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_wake_words)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_communications)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_emergency_contacts) {
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EmergencyContactsFragment()).commit();
+//        }
+//
+//        if (item.getItemId() == R.id.nav_local_resources)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_profileSettings)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileSettingsFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_safe_exit)
+//            safeExit();
+//
+//        if (item.getItemId() == R.id.nav_logout)
+//        {
+//            Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
+//            // Perform logout action
+//            logout();
+//        }
+//
+//        drawerLayout.closeDrawer(GravityCompat.START);
+//        return true;
+//    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void safeExit() {
+        // Implement your logout logic here
+        // For example, clearing user session, resetting preferences, etc.
+        // Once logged out, you may navigate back to the login screen
+        Intent intent = new Intent(WakeWordsActivity.this, FacadeActivity.class);
+        startActivity(intent);
+        finish(); // Optional: Close the current activity
+    }
+
+    private void logout() {
+        SharedPreferences.clearAccessToken(this); // Clear the access token
+        Intent intent = new Intent(WakeWordsActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish(); // Optional: Close the current activity
     }
 }

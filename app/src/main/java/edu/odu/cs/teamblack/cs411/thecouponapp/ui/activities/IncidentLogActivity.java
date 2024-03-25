@@ -59,6 +59,13 @@ public class IncidentLogActivity extends AppCompatActivity {
                 recreate();
             }
         });
+
+        wake_words.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(IncidentLogActivity.this, WakeWordsActivity.class);
+            }
+        });
         communications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

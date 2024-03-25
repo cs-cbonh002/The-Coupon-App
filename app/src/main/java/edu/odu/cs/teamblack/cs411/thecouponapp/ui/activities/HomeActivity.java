@@ -59,6 +59,13 @@ public class HomeActivity extends AppCompatActivity  {
                 redirectActivity(HomeActivity.this, IncidentLogActivity.class);
             }
         });
+
+        wake_words.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(HomeActivity.this, WakeWordsActivity.class);
+            }
+        });
         communications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
