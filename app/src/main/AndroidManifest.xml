@@ -25,6 +25,9 @@
         android:theme="@style/Theme.TheCouponApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.activities.EmergencyContactsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.IncidentLogActivity"
             android:exported="false" />
         <activity
