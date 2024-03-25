@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fadeScrollbars="false"
-    android:isScrollContainer="true"
-    tools:context=".ui.fragments.EmergencyContactsFragment">
+    android:isScrollContainer="true">
 
     <TextView
         android:id="@+id/EmergencyContacts"

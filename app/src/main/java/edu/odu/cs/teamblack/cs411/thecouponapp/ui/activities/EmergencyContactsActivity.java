@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
 
-public class CommunicationsActivity extends AppCompatActivity {
+public class EmergencyContactsActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     ImageView menu;
@@ -26,7 +26,7 @@ public class CommunicationsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_communications);
+        setContentView(R.layout.activity_emergency_contacts);
 
         drawerLayout = findViewById(R.id.drawerLayout);
         menu = findViewById(R.id.menu);
@@ -49,48 +49,48 @@ public class CommunicationsActivity extends AppCompatActivity {
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(CommunicationsActivity.this, HomeActivity.class);
+                redirectActivity(EmergencyContactsActivity.this, HomeActivity.class);
             }
         });
 
         incident_log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectActivity(CommunicationsActivity.this, IncidentLogActivity.class);
+                redirectActivity(EmergencyContactsActivity.this, IncidentLogActivity.class);
             }
         });
 
         wake_words.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectActivity(CommunicationsActivity.this, WakeWordsActivity.class);
+                redirectActivity(EmergencyContactsActivity.this, WakeWordsActivity.class);
             }
         });
         communications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recreate();
+                redirectActivity(EmergencyContactsActivity.this, CommunicationsActivity.class);
             }
         });
 
         emergency_contacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectActivity(CommunicationsActivity.this, EmergencyContactsActivity.class);
+                recreate();
             }
         });
 
         local_resources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(CommunicationsActivity.this, LocalResourcesActivity.class);
+                redirectActivity(EmergencyContactsActivity.this, LocalResourcesActivity.class);
             }
         });
 
         profile_and_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectActivity(CommunicationsActivity.this, ProfileAndSettingsActivity.class);
+                redirectActivity(EmergencyContactsActivity.this, ProfileAndSettingsActivity.class);
             }
         });
 
@@ -150,7 +150,44 @@ public class CommunicationsActivity extends AppCompatActivity {
         return true;
     }
 
-
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//
+//        if (item.getItemId() == R.id.nav_home)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_incident_log)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IncidentLogFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_wake_words)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_communications)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_emergency_contacts) {
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EmergencyContactsFragment()).commit();
+//        }
+//
+//        if (item.getItemId() == R.id.nav_local_resources)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_profileSettings)
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileSettingsFragment()).commit();
+//
+//        if (item.getItemId() == R.id.nav_safe_exit)
+//            safeExit();
+//
+//        if (item.getItemId() == R.id.nav_logout)
+//        {
+//            Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
+//            // Perform logout action
+//            logout();
+//        }
+//
+//        drawerLayout.closeDrawer(GravityCompat.START);
+//        return true;
+//    }
 
     @Override
     public void onBackPressed() {
@@ -165,14 +202,14 @@ public class CommunicationsActivity extends AppCompatActivity {
         // Implement your logout logic here
         // For example, clearing user session, resetting preferences, etc.
         // Once logged out, you may navigate back to the login screen
-        Intent intent = new Intent(CommunicationsActivity.this, FacadeActivity.class);
+        Intent intent = new Intent(EmergencyContactsActivity.this, FacadeActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }
 
     private void logout() {
         SharedPreferences.clearAccessToken(this); // Clear the access token
-        Intent intent = new Intent(CommunicationsActivity.this, LoginActivity.class);
+        Intent intent = new Intent(EmergencyContactsActivity.this, LoginActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }

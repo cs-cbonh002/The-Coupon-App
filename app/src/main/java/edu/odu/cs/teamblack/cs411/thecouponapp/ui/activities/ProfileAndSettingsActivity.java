@@ -11,22 +11,26 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
 
-public class WakeWordsActivity extends AppCompatActivity {
+public class ProfileAndSettingsActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     ImageView menu;
     LinearLayout home, incident_log, wake_words, communications, local_resources, emergency_contacts, profile_and_settings, safe_exit, logout;
+    Button family_info, emergency_contact_button, danger_assessment, wake_word_setting, theme_setting, feature_setting, save_button;
+    EditText first_name, last_name, email, date_of_birth, gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wake_words);
+        setContentView(R.layout.activity_profile_and_settings);
 
         drawerLayout = findViewById(R.id.drawerLayout);
         menu = findViewById(R.id.menu);
@@ -40,6 +44,20 @@ public class WakeWordsActivity extends AppCompatActivity {
         safe_exit = findViewById(R.id.safe_exit);
         logout = findViewById(R.id.logout);
 
+        family_info = findViewById(R.id.familyInfoButton);
+        emergency_contact_button = findViewById(R.id.emergencyContactsButton);
+        danger_assessment = findViewById(R.id.dangerAssessmentButton);
+        wake_word_setting = findViewById(R.id.wakeWordSettingsButton);
+        theme_setting = findViewById(R.id.themeSettingsButton);
+        feature_setting = findViewById(R.id.featureSettingsButton);
+        save_button = findViewById(R.id.Savebutton);
+
+        first_name = findViewById(R.id.editTextFirstName);
+        last_name = findViewById(R.id.editTextLastName);
+        email = findViewById(R.id.editTextEmail);
+        date_of_birth = findViewById(R.id.editTextDOB);
+        gender = findViewById(R.id.editTextGender);
+
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,48 +67,49 @@ public class WakeWordsActivity extends AppCompatActivity {
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(WakeWordsActivity.this, HomeActivity.class);
+
+                redirectActivity(ProfileAndSettingsActivity.this, HomeActivity.class);
             }
         });
 
         incident_log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectActivity(WakeWordsActivity.this, IncidentLogActivity.class);
+                redirectActivity(ProfileAndSettingsActivity.this, IncidentLogActivity.class);
             }
         });
 
         wake_words.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recreate();
+                redirectActivity(ProfileAndSettingsActivity.this, WakeWordsActivity.class);
             }
         });
         communications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(WakeWordsActivity.this, CommunicationsActivity.class);
+                redirectActivity(ProfileAndSettingsActivity.this, CommunicationsActivity.class);
             }
         });
 
         emergency_contacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectActivity(WakeWordsActivity.this, EmergencyContactsActivity.class);
+                redirectActivity(ProfileAndSettingsActivity.this, EmergencyContactsActivity.class);
             }
         });
 
         local_resources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(WakeWordsActivity.this, LocalResourcesActivity.class);
+                redirectActivity(ProfileAndSettingsActivity.this, LocalResourcesActivity.class);
             }
         });
 
         profile_and_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectActivity(WakeWordsActivity.this, ProfileAndSettingsActivity.class);
+                recreate();
             }
         });
 
@@ -107,7 +126,48 @@ public class WakeWordsActivity extends AppCompatActivity {
                 logout();
             }
         });
+        family_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                redirectActivity(ProfileAndSettingsActivity.this, FamilyInformationActivity.class);
+            }
+        });
+        emergency_contact_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                redirectActivity(ProfileAndSettingsActivity.this, EmergencyContactsActivity.class);
+            }
+        });
+        danger_assessment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                redirectActivity(ProfileAndSettingsActivity.this, DangerAssessmentActivity.class);
+            }
+        });
+        wake_word_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                redirectActivity(ProfileAndSettingsActivity.this, WakeWordsSettingsActivity.class);
+            }
+        });
+        theme_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                redirectActivity(ProfileAndSettingsActivity.this, HomeActivity.class);
+            }
+        });
+        feature_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                redirectActivity(ProfileAndSettingsActivity.this, HomeActivity.class);
+            }
+        });
     }
     public static void openDrawer(DrawerLayout drawerLayout) {
         drawerLayout.openDrawer(GravityCompat.START);
@@ -202,14 +262,14 @@ public class WakeWordsActivity extends AppCompatActivity {
         // Implement your logout logic here
         // For example, clearing user session, resetting preferences, etc.
         // Once logged out, you may navigate back to the login screen
-        Intent intent = new Intent(WakeWordsActivity.this, FacadeActivity.class);
+        Intent intent = new Intent(ProfileAndSettingsActivity.this, FacadeActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }
 
     private void logout() {
         SharedPreferences.clearAccessToken(this); // Clear the access token
-        Intent intent = new Intent(WakeWordsActivity.this, LoginActivity.class);
+        Intent intent = new Intent(ProfileAndSettingsActivity.this, LoginActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }
