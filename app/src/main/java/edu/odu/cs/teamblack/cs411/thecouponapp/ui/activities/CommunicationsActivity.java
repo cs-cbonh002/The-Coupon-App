@@ -21,7 +21,7 @@ public class CommunicationsActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     ImageView menu;
-    LinearLayout home, communications, local_resources, safe_exit, logout;
+    LinearLayout home, incident_log, wake_words, communications, local_resources, emergency_contacts, profile_and_settings, safe_exit, logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +31,12 @@ public class CommunicationsActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         menu = findViewById(R.id.menu);
         home = findViewById(R.id.home);
+        incident_log = findViewById(R.id.incident_log);
+        wake_words = findViewById(R.id.wake_words);
         communications = findViewById(R.id.communications);
+        emergency_contacts = findViewById(R.id.emergency_contacts);
         local_resources = findViewById(R.id.local_resources);
+        profile_and_settings = findViewById(R.id.profile_and_settings);
         safe_exit = findViewById(R.id.safe_exit);
         logout = findViewById(R.id.logout);
 
@@ -48,6 +52,13 @@ public class CommunicationsActivity extends AppCompatActivity {
                 redirectActivity(CommunicationsActivity.this, HomeActivity.class);
             }
         });
+
+        incident_log.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(CommunicationsActivity.this, IncidentLogActivity.class);
+            }
+        });
         communications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,10 +66,24 @@ public class CommunicationsActivity extends AppCompatActivity {
             }
         });
 
+        emergency_contacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(CommunicationsActivity.this, EmergencyContactsActivity.class);
+            }
+        });
+
         local_resources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 redirectActivity(CommunicationsActivity.this, LocalResourcesActivity.class);
+            }
+        });
+
+        profile_and_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(CommunicationsActivity.this, ProfileAndSettingsActivity.class);
             }
         });
 
