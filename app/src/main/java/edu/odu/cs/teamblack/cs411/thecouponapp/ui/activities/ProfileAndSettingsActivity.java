@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
 
-public class ProfileAndSettings extends AppCompatActivity {
+public class ProfileAndSettingsActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     ImageView menu;
@@ -49,20 +49,20 @@ public class ProfileAndSettings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                redirectActivity(ProfileAndSettings.this, HomeActivity.class);
+                redirectActivity(ProfileAndSettingsActivity.this, HomeActivity.class);
             }
         });
         communications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(ProfileAndSettings.this, CommunicationsActivity.class);
+                redirectActivity(ProfileAndSettingsActivity.this, CommunicationsActivity.class);
             }
         });
 
         local_resources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(ProfileAndSettings.this, LocalResourcesActivity.class);
+                redirectActivity(ProfileAndSettingsActivity.this, LocalResourcesActivity.class);
             }
         });
 
@@ -181,14 +181,14 @@ public class ProfileAndSettings extends AppCompatActivity {
         // Implement your logout logic here
         // For example, clearing user session, resetting preferences, etc.
         // Once logged out, you may navigate back to the login screen
-        Intent intent = new Intent(ProfileAndSettings.this, FacadeActivity.class);
+        Intent intent = new Intent(ProfileAndSettingsActivity.this, FacadeActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }
 
     private void logout() {
         SharedPreferences.clearAccessToken(this); // Clear the access token
-        Intent intent = new Intent(ProfileAndSettings.this, LoginActivity.class);
+        Intent intent = new Intent(ProfileAndSettingsActivity.this, LoginActivity.class);
         startActivity(intent);
         finish(); // Optional: Close the current activity
     }

@@ -1,9 +1,7 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -15,14 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.google.android.material.navigation.NavigationView;
-
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.EmergencyContactsFragment;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.HomeFragment;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.IncidentLogFragment;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.ProfileSettingsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
 
@@ -30,7 +21,7 @@ public class HomeActivity extends AppCompatActivity  {
 
     DrawerLayout drawerLayout;
     ImageView menu;
-    LinearLayout home, incident_log, communications, local_resources, emergency_contacts, profile_and_settings, safe_exit, logout;
+    LinearLayout home, incident_log, wake_words, communications, local_resources, emergency_contacts, profile_and_settings, safe_exit, logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +32,7 @@ public class HomeActivity extends AppCompatActivity  {
         menu = findViewById(R.id.menu);
         home = findViewById(R.id.home);
         incident_log = findViewById(R.id.incident_log);
+        wake_words = findViewById(R.id.wake_words);
         communications = findViewById(R.id.communications);
         emergency_contacts = findViewById(R.id.emergency_contacts);
         local_resources = findViewById(R.id.local_resources);
@@ -77,7 +69,7 @@ public class HomeActivity extends AppCompatActivity  {
         profile_and_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectActivity(HomeActivity.this, ProfileAndSettings.class);
+                redirectActivity(HomeActivity.this, ProfileAndSettingsActivity.class);
             }
         });
 

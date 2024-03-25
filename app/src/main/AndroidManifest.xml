@@ -25,7 +25,10 @@
         android:theme="@style/Theme.TheCouponApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.activities.ProfileAndSettings"
+            android:name=".ui.activities.IncidentLogActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.ProfileAndSettingsActivity"
             android:exported="false" />
 
         <meta-data
@@ -50,7 +53,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.activities.FacadeActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:exported="false">

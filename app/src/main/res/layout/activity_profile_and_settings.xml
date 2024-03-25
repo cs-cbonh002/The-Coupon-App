@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawerLayout"
-    tools:context=".ui.activities.ProfileAndSettings">
+    tools:context=".ui.activities.ProfileAndSettingsActivity">
 
 
     <LinearLayout
