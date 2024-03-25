@@ -66,6 +66,13 @@ public class IncidentLogActivity extends AppCompatActivity {
             }
         });
 
+        emergency_contacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(IncidentLogActivity.this, EmergencyContactsActivity.class);
+            }
+        });
+
         local_resources.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

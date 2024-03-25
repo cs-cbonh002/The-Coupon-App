@@ -52,10 +52,24 @@ public class ProfileAndSettingsActivity extends AppCompatActivity {
                 redirectActivity(ProfileAndSettingsActivity.this, HomeActivity.class);
             }
         });
+
+        incident_log.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(ProfileAndSettingsActivity.this, IncidentLogActivity.class);
+            }
+        });
         communications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 redirectActivity(ProfileAndSettingsActivity.this, CommunicationsActivity.class);
+            }
+        });
+
+        emergency_contacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectActivity(ProfileAndSettingsActivity.this, EmergencyContactsActivity.class);
             }
         });
 
