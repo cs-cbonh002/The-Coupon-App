@@ -25,7 +25,7 @@
     <TextView
         android:id="@+id/keyword_spinner_label"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_alignStart="@+id/keyword_spinner"
         android:layout_alignBottom="@+id/keyword_spinner"
         android:layout_marginBottom="50dp"
@@ -36,7 +36,7 @@
         android:id="@+id/keyword_spinner"
         style="@android:style/Widget.Holo.Light.Spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="15dp"
@@ -85,7 +85,7 @@
     <EditText
         android:id="@+id/phoneNumber"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_above="@+id/record_button"
         android:layout_below="@+id/keyword_spinner"
         android:layout_alignParentStart="true"
@@ -94,7 +94,9 @@
         android:layout_marginTop="83dp"
         android:layout_marginEnd="104dp"
         android:layout_marginBottom="81dp"
+        android:autofillHints="5555555555"
         android:ems="10"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:text="5555555555" />
 
 </RelativeLayout>
