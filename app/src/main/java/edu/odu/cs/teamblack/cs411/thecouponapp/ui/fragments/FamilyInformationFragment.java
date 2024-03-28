@@ -1,4 +1,4 @@
-package edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities;
+package edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments;
 
 
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 
-public class FamilyInformationActivity extends Fragment {
+public class FamilyInformationFragment extends Fragment {
 
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,

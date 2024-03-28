@@ -1,102 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright 2021-2023 Picovoice Inc.
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- This is activity_main.xml layout -->
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout"
-    tools:context="edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.WakeWordsActivity">
+    tools:openDrawer="start">
 
-    <TextView
-        android:id="@+id/keyword_spinner_label"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_alignStart="@+id/keyword_spinner"
-        android:layout_alignBottom="@+id/keyword_spinner"
-        android:layout_marginBottom="50dp"
-        android:text="@string/keyword_label"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-    <Spinner
-        android:id="@+id/keyword_spinner"
-        style="@android:style/Widget.Holo.Light.Spinner"
+    <!-- This is the main content layout -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="15dp"
-        android:spinnerMode="dialog" />
+        android:layout_height="match_parent">
 
-    <ToggleButton
-        android:id="@+id/record_button"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:background="@drawable/button_background"
-        android:textColor="@android:color/white"
-        android:textOff="@string/start"
-        android:textOn="@string/stop"
-        android:onClick="process"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <TextView
-        android:id="@+id/errorMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20sp"
-        android:text=""
-        android:textSize="18sp"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:background="@drawable/error_view"
-        android:padding="10sp"
-        android:layout_above="@id/footer"
-        android:visibility="invisible"/>
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/lavender"
+                android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+                app:title="@string/app_name"
+                app:titleTextColor="@color/white"
+                app:titleCentered="true"
+                app:menu="@menu/toolbar_menu" />
 
-    <TextView
-        android:id="@+id/footer"
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <!-- The fragment container -->
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!-- NavigationView for the navigation drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:text="@string/footer" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:itemTextColor="@color/lavender"
+        app:itemBackground="@color/white"
+        app:itemIconTint="@color/lavender"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_menu" />
 
-    <EditText
-        android:id="@+id/phoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_above="@+id/record_button"
-        android:layout_below="@+id/keyword_spinner"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="98dp"
-        android:layout_marginTop="83dp"
-        android:layout_marginEnd="104dp"
-        android:layout_marginBottom="81dp"
-        android:autofillHints="5555555555"
-        android:ems="10"
-        android:inputType="phone"
-        android:text="5555555555" />
+</androidx.drawerlayout.widget.DrawerLayout>
 
-</RelativeLayout>

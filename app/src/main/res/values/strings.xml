@@ -83,4 +83,15 @@
     <string name="additional_settings">Additional Settings</string>
     <string name="profile">Profile</string>
     <string name="username_prompt">Username</string>
+    <string name="add_incident">Add Incident</string>
+    <string name="transcription">Transcription</string>
+    <string name="view_details">View Details</string>
+    <string name="view_details_button">View Details Button</string>
+    <string name="channel_name">Notifications</string>
+    <string name="channel_description">Notification channel for app updates</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="exit_safe">Safe Exit</string>
+    <string name="menu">Menu</string>
+
 </resources>

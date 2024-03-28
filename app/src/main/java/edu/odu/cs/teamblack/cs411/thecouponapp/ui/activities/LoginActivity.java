@@ -40,22 +40,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button settingsButton = findViewById(R.id.SettingsButton);
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
-            }
-        });
-
-        Button homeButton = findViewById(R.id.homeButton);
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-            }
-        });
-
         Button loginButton = findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,11 +47,34 @@ public class LoginActivity extends AppCompatActivity {
                 performLogin();
             }
         });
+
+        Button settingsButton = findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra("fragmentToLoad", "SettingsFragment"); // Indicate which fragment to load
+            startActivity(intent);
+            finish();
+        });
+
+        Button homeButton = findViewById(R.id.homeButton);
+        homeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra("fragmentToLoad", "HomeFragment"); // Indicate which fragment to load
+            startActivity(intent);
+            finish();
+        });
+
+
     }
 
     private void performLogin() {
         String username = userNameField.getText().toString();
         String password = passwordField.getText().toString();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            Toast.makeText(LoginActivity.this, "Username or password cannot be empty.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         LoginRequest loginRequest = new LoginRequest(username, password);
         ApiService apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
@@ -76,19 +83,12 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<JwtResponse>() {
             @Override
             public void onResponse(Call<JwtResponse> call, Response<JwtResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     JwtResponse jwtResponse = response.body();
-                    if (jwtResponse != null && jwtResponse.getAccess() != null) {
-                        String accessToken = jwtResponse.getAccess();
-                        // Save the access token using SharedPreferencesManager
-                        SharedPreferences.saveAccessToken(LoginActivity.this, accessToken);
-                        // Transition to the next activity (e.g., HomeActivity)
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                        finish(); // Finish the LoginActivity to prevent going back to it with back button
-                    } else {
-                        // Access token is null or the response body is null
-                        Toast.makeText(LoginActivity.this, "Failed to retrieve access token from server.", Toast.LENGTH_SHORT).show();
-                    }
+                    SharedPreferences.saveAccessToken(LoginActivity.this, jwtResponse.getAccess());
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Login failed. Please check your credentials.", Toast.LENGTH_SHORT).show();
                 }
@@ -96,8 +96,9 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<JwtResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Failed to connect to server. Please try again later.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "An error occurred during the network request", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }

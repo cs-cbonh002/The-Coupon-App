@@ -15,7 +15,7 @@
         <item
             android:id="@+id/nav_incident_log"
             android:icon="@drawable/log_icon"
-            android:title="Incident Log"/>
+            android:title="Incident Logs"/>
 
         <item
             android:id="@+id/nav_wake_words"
@@ -38,9 +38,14 @@
             android:title="Local Resources"/>
 
         <item
-            android:id="@+id/nav_profileSettings"
+            android:id="@+id/nav_profile"
             android:icon="@drawable/settings_icon"
-            android:title="Profile and Settings"/>
+            android:title="Profile"/>
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/settings_icon"
+            android:title="Settings"/>
 
         <item
             android:id="@+id/nav_safe_exit"

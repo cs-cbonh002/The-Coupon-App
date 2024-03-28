@@ -1,15 +1,13 @@
 /*
     Copyright 2021 Picovoice Inc.
-
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
-
     Unless required by applicable law or agreed to in writing, software distributed under the
     License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
     express or implied. See the License for the specific language governing permissions and
     limitations under the License.
 */
-package edu.odu.cs.teamblack.cs411.thecouponapp.picovoice.porcupine;
+package edu.odu.cs.teamblack.cs411.thecouponapp.services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -34,7 +32,8 @@ import ai.picovoice.porcupine.PorcupineException;
 import ai.picovoice.porcupine.PorcupineInvalidArgumentException;
 import ai.picovoice.porcupine.PorcupineManager;
 import ai.picovoice.porcupine.PorcupineManagerCallback;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.WakeWordsSettingsActivity;
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsSettingsFragment;
+
 
 public class PorcupineService extends Service {
     private static final String CHANNEL_ID = "PorcupineServiceChannel";
@@ -114,7 +113,7 @@ public class PorcupineService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this,
                 0,
-                new Intent(this, WakeWordsSettingsActivity.class),
+                new Intent(this, WakeWordsSettingsFragment.class),
                 PendingIntent.FLAG_MUTABLE);
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)

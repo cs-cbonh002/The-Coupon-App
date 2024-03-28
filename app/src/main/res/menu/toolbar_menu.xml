@@ -2,11 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--
+    We only need one item here for the extra button,
+    MaterialToolbar automatically inserts a menu button and the title
+    -->
     <item
-        android:title="Safe Exit"
-        android:id="@+id/safe_exit_btn"
+        android:id="@+id/action_safe_exit"
         android:icon="@drawable/safe_exit_white_icon"
-        app:showAsAction="ifRoom"/>
-
-
+        android:title="@string/exit_safe"
+        app:showAsAction="always"/>
 </menu>

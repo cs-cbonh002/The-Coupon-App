@@ -25,6 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText userNameField;
     private EditText passwordField;
     private EditText confirmPasswordField;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performRegistration(); // Call the performRegistration method when the button is clicked.
+                performRegistration();
             }
         });
 
@@ -57,8 +58,13 @@ public class RegisterActivity extends AppCompatActivity {
         String password = passwordField.getText().toString();
         String confirmPassword = confirmPasswordField.getText().toString();
 
+        if (username.isEmpty() || password.isEmpty()) {
+            Toast.makeText(RegisterActivity.this, "Username or password cannot be empty.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (!password.equals(confirmPassword)) {
-            // Handle password mismatch
+            Toast.makeText(RegisterActivity.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -70,19 +76,15 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RegistrationResponse> call, Response<RegistrationResponse> response) {
                 if (response.isSuccessful()) {
-                    // Assuming the server response includes a token in successful registration
-                    RegistrationResponse registrationResponse = response.body();
-                    // Navigate to HomeActivity or LoginActivity, depending on your flow
-                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                    // Navigate to MainActivity after successful registration
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                     finish();
                 } else {
-                    // Server responded with some error
                     String errorMessage = "Registration failed.";
                     if(response.errorBody() != null) {
                         try {
-                            // Parse error response body if it has a structured format
                             String errorJson = response.errorBody().string();
-                            // Convert this JSON string to a suitable error message
+                            // Process the errorJson to extract the error message if needed
                             // errorMessage = parseErrorJson(errorJson);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -94,8 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<RegistrationResponse> call, Throwable t) {
-                // Handle network errors
-                // For example, display a message indicating network failure
+                Toast.makeText(RegisterActivity.this, "Network error, please try again later.", Toast.LENGTH_SHORT).show();
             }
         });
     }

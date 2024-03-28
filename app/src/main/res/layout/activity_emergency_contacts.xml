@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawerLayout"
-    tools:context=".ui.activities.EmergencyContactsActivity">
+    tools:context=".ui.fragments.EmergencyContactsFragment">
 
 
     <LinearLayout
@@ -14,10 +14,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@drawable/app_background">
-
-        <include
-            layout="@layout/toolbar"/>
-
 
 
     </LinearLayout>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawerLayout"
-    tools:context=".ui.activities.WakeWordsActivity">
+    tools:context=".ui.fragments.WakeWordsSettingsFragment">
 
 
     <LinearLayout
@@ -14,8 +14,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            layout="@layout/toolbar"/>
 
         <TextView
             android:layout_width="wrap_content"

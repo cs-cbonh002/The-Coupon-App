@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="nav_home" type="id"/>
+    <item name="nav_incident_log" type="id"/>
+    <item name="nav_wake_words" type="id"/>
+    <item name="nav_communications" type="id"/>
+    <item name="nav_emergency_contacts" type="id"/>
+    <item name="nav_local_resources" type="id"/>
+    <item name="nav_profile_and_settings" type="id"/>
+    <item name="nav_safe_exit" type="id"/>
+    <item name="nav_logout" type="id"/>
+</resources>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawerLayout"
-    tools:context=".ui.activities.ProfileAndSettingsActivity">
+    tools:context=".ui.fragments.ProfileFragment">
 
 
     <LinearLayout
@@ -15,9 +15,6 @@
         android:orientation="vertical"
         android:background="@drawable/app_background">
 
-
-        <include
-            layout="@layout/toolbar"/>
 
 
     </LinearLayout>
