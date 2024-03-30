@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             fragment = new SettingsFragment();
             toolbar.setTitle("Settings");
         } else if (id == R.id.nav_logout) {
+            Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
             logout();
             return true;
         } else if (id == R.id.nav_safe_exit) {
