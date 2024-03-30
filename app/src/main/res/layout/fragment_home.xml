@@ -3,12 +3,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/app_background">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/incidentLogButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Home"
-        android:textColor="@color/lavender"
-        android:textSize="36sp"/>
+        android:text="@string/incident_log" />
+
+    <Button
+        android:id="@+id/wakeWordsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/wake_words" />
+
+    <Button
+        android:id="@+id/communicationsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/communications" />
+
+    <Button
+        android:id="@+id/emergencyContactsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/emergency_contacts" />
+
+    <Button
+        android:id="@+id/localResourcesButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/local_resources" />
+
+    <Button
+        android:id="@+id/profileAndSettingsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/profile_and_settings" />
+
 </LinearLayout>

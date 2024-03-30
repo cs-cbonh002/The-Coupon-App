@@ -93,5 +93,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="exit_safe">Safe Exit</string>
     <string name="menu">Menu</string>
+    <string name="incident_log">Incident Log</string>
+    <string name="wake_words">Wake Words</string>
+    <string name="communications">Communications</string>
+    <string name="emergency_contacts">Emergency Contacts</string>
+    <string name="local_resources">Local Resources</string>
+    <string name="safe_exit">Safe Exit</string>
+    <string name="logout">Logout</string>
 
 </resources>
