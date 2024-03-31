@@ -54,7 +54,6 @@ public class WakeWordsFragment extends Fragment {
     private MediaPlayer notificationPlayer;
 
     //permissions
-
     int permissionsCount = 0;
     ArrayList<String> permissionsList;
     final String[] permissionsStr = {

@@ -9,6 +9,9 @@
 */
 package edu.odu.cs.teamblack.cs411.thecouponapp.services;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,12 +19,17 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import ai.picovoice.porcupine.Porcupine;
@@ -33,6 +41,7 @@ import ai.picovoice.porcupine.PorcupineException;
 import ai.picovoice.porcupine.PorcupineInvalidArgumentException;
 import ai.picovoice.porcupine.PorcupineManager;
 import ai.picovoice.porcupine.PorcupineManagerCallback;
+import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsSettingsFragment;
 
 
@@ -42,6 +51,7 @@ public class PorcupineService extends Service {
     private enum BuiltInKeywords {}
     private PorcupineManager porcupineManager;
     private int numUtterances;
+
     private final PorcupineManagerCallback porcupineManagerCallback = (keywordIndex) -> {
 
 
@@ -84,6 +94,7 @@ public class PorcupineService extends Service {
         }
     }
 
+    @SuppressLint("ForegroundServiceType")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -137,6 +148,7 @@ public class PorcupineService extends Service {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(message)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentIntent(pendingIntent)
                 .build();
     }
@@ -161,10 +173,17 @@ public class PorcupineService extends Service {
         super.onDestroy();
     }
     public void dialPhoneNumber(String phoneNumber) {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setData(Uri.parse("tel:" + phoneNumber));
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            Toast toast = Toast.makeText(this, "Permission not granted to call", Toast.LENGTH_LONG);
+            toast.show();
+            return;
         }
+        //AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        startActivity(intent);
     }
 }
+
