@@ -16,6 +16,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
@@ -38,12 +39,29 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsSettingsFra
 public class PorcupineService extends Service {
     private static final String CHANNEL_ID = "PorcupineServiceChannel";
     private static final String ACCESS_KEY = "ir/zJzrvkSCpbURXMlpFz1nL5VEHIsNf2snqMTDwXDiEDzc4Cp4zzQ==";
-
+    private enum BuiltInKeywords {}
     private PorcupineManager porcupineManager;
     private int numUtterances;
     private final PorcupineManagerCallback porcupineManagerCallback = (keywordIndex) -> {
-        numUtterances++;
 
+
+        switch (keywordIndex){
+            case 0:
+                //calling
+                dialPhoneNumber("555-555-5555");
+                break;
+            case 1:
+                //start documenting
+                numUtterances++;
+                break;
+            case 2:
+                //stop documenting
+                numUtterances--;
+                break;
+            case 3:
+                //pause audio classifier
+                break;
+        }
         final String contentText = numUtterances == 1 ? " time!" : " times!";
         Notification n = getNotification(
                 "Wake word",
@@ -75,8 +93,8 @@ public class PorcupineService extends Service {
         try {
             porcupineManager = new PorcupineManager.Builder()
                     .setAccessKey(ACCESS_KEY)
-                    .setKeyword(Porcupine.BuiltInKeyword.COMPUTER)
-                    .setSensitivity(0.7f).build(
+                    .setKeywords(new Porcupine.BuiltInKeyword[]{Porcupine.BuiltInKeyword.COMPUTER, Porcupine.BuiltInKeyword.PORCUPINE})
+                    .setSensitivities(new float[]{0.7f,0.6f}).build(
                             getApplicationContext(),
                             porcupineManagerCallback);
             porcupineManager.start();
@@ -141,5 +159,12 @@ public class PorcupineService extends Service {
         }
 
         super.onDestroy();
+    }
+    public void dialPhoneNumber(String phoneNumber) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + phoneNumber));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }

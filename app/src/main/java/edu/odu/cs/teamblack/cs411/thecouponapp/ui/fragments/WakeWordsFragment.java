@@ -1,9 +1,12 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -17,14 +20,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 import ai.picovoice.porcupine.Porcupine;
 import ai.picovoice.porcupine.PorcupineActivationException;
@@ -41,9 +49,19 @@ public class WakeWordsFragment extends Fragment {
 
     private static final String ACCESS_KEY = "ir/zJzrvkSCpbURXMlpFz1nL5VEHIsNf2snqMTDwXDiEDzc4Cp4zzQ==";
 
+
     private PorcupineManager porcupineManager;
     private MediaPlayer notificationPlayer;
-    private ActivityResultLauncher<String> requestPermissionLauncher;
+
+    //permissions
+
+    int permissionsCount = 0;
+    ArrayList<String> permissionsList;
+    final String[] permissionsStr = {
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CALL_PHONE
+    };
+    private ActivityResultLauncher<String[]> requestPermissionLauncher;
 
     // UI elements
     private ToggleButton recordButton;
@@ -56,14 +74,37 @@ public class WakeWordsFragment extends Fragment {
 
         // Initialize permission launcher
         requestPermissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if (isGranted) {
-                        startPorcupine();
-                    } else {
-                        showMicrophonePermissionError();
+                new ActivityResultContracts.RequestMultiplePermissions(),
+                new ActivityResultCallback<Map<String, Boolean>>() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
+                    @Override
+                    public void onActivityResult(Map<String,Boolean> result) {
+                        ArrayList<Boolean> list = new ArrayList<>(result.values());
+                        permissionsList = new ArrayList<>();
+                        permissionsCount = 0;
+                        for (int i = 0; i < list.size(); i++) {
+                            if (shouldShowRequestPermissionRationale(permissionsStr[i])) {
+                                permissionsList.add(permissionsStr[i]);
+                            }else if (!hasPermission(getActivity(), permissionsStr[i])){
+                                permissionsCount++;
+                            }
+                        }
+                        if (permissionsList.size() > 0) {
+                            //Some permissions are denied and can be asked again.
+                            askForPermissions(permissionsList);
+                        } else if (permissionsCount > 0) {
+                            //Show alert dialog
+                            showPermissionDialog();
+                        } else {
+                            //All permissions granted. Do your stuff 🤞
+                        }
                     }
                 });
+
+        //ask permissions
+        permissionsList = new ArrayList<>();
+        permissionsList.addAll(Arrays.asList(permissionsStr));
+        askForPermissions(permissionsList);
 
         // Create notification player
         notificationPlayer = MediaPlayer.create(requireContext(), R.raw.notification);
@@ -91,15 +132,44 @@ public class WakeWordsFragment extends Fragment {
     // Handles record button click events
     private void processRecordButtonClick() {
         if (recordButton.isChecked()) {
-            requestMicrophonePermission();
+           startPorcupine();
         } else {
             stopPorcupine();
         }
     }
 
-    // Requests microphone permission
-    private void requestMicrophonePermission() {
-        requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+    private void askForPermissions(ArrayList<String> permissionsList) {
+        String[] newPermissionStr = new String[permissionsList.size()];
+        for (int i = 0; i < newPermissionStr.length; i++) {
+            newPermissionStr[i] = permissionsList.get(i);
+        }
+        if (newPermissionStr.length > 0) {
+            requestPermissionLauncher.launch(newPermissionStr);
+        } else {
+        /* User has pressed 'Deny & Don't ask again' so we have to show the enable permissions dialog
+        which will lead them to app details page to enable permissions from there. */
+            showPermissionDialog();
+        }
+    }
+
+    private boolean hasPermission(Context context, String permissionStr) {
+        return ContextCompat.checkSelfPermission(context, permissionStr) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    AlertDialog alertDialog;
+    private void showPermissionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Permission required")
+                .setMessage("Some permissions are need to be allowed to use this app without any problems.")
+                .setPositiveButton("Settings", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+        if (alertDialog == null) {
+            alertDialog = builder.create();
+            if (!alertDialog.isShowing()) {
+                alertDialog.show();
+            }
+        }
     }
 
     // Starts Porcupine wake word detection
