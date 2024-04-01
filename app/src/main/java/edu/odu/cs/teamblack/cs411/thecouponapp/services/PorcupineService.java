@@ -25,6 +25,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Telephony;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -42,6 +44,7 @@ import ai.picovoice.porcupine.PorcupineInvalidArgumentException;
 import ai.picovoice.porcupine.PorcupineManager;
 import ai.picovoice.porcupine.PorcupineManagerCallback;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.FacadeActivity;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsSettingsFragment;
 
 
@@ -52,13 +55,21 @@ public class PorcupineService extends Service {
     private PorcupineManager porcupineManager;
     private int numUtterances;
 
+    Intent phoneIntent;
+
+    PendingIntent pendingIntent;
+
     private final PorcupineManagerCallback porcupineManagerCallback = (keywordIndex) -> {
 
 
         switch (keywordIndex){
             case 0:
                 //calling
-                dialPhoneNumber("555-555-5555");
+                try {
+                    dialPhoneNumber("555-555-5555");
+                } catch (PendingIntent.CanceledException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 1:
                 //start documenting
@@ -97,6 +108,9 @@ public class PorcupineService extends Service {
     @SuppressLint("ForegroundServiceType")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        phoneIntent = new Intent(Intent.ACTION_CALL);
+        pendingIntent = PendingIntent.getActivity(this,0,phoneIntent, PendingIntent.FLAG_IMMUTABLE);
 
         numUtterances = 0;
         createNotificationChannel();
@@ -172,18 +186,18 @@ public class PorcupineService extends Service {
 
         super.onDestroy();
     }
-    public void dialPhoneNumber(String phoneNumber) {
-        Intent intent = new Intent(Intent.ACTION_CALL);
-        intent.setData(Uri.parse("tel:" + phoneNumber));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    public void dialPhoneNumber(String phoneNumber) throws PendingIntent.CanceledException {
+        phoneIntent.setData(Uri.parse("tel:" + phoneNumber));
+        phoneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) !=
                 PackageManager.PERMISSION_GRANTED) {
             Toast toast = Toast.makeText(this, "Permission not granted to call", Toast.LENGTH_LONG);
             toast.show();
             return;
         }
+
         //AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        startActivity(intent);
+        this.startActivity(phoneIntent);
     }
 }
 
