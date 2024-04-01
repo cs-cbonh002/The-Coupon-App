@@ -23,11 +23,11 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.FacadeActivity;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.LoginActivity;
 import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
 
-public class EmergencyContactsFragment extends Fragment {
+public class ProfileAndSettingsFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_emergency_contacts, container, false); 
+        return inflater.inflate(R.layout.fragment_profile_and_settings, container, false);
     }
 }
