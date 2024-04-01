@@ -22,6 +22,7 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.EmergencyContactsFra
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.HomeFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.IncidentLogsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.LocalResourcesFragment;
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.ProfileAndSettingsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.SettingsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
@@ -114,9 +115,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_local_resources) {
             fragment = new LocalResourcesFragment();
             toolbar.setTitle("Local Resources");
-        } else if (id == R.id.nav_settings) {
-            fragment = new SettingsFragment();
-            toolbar.setTitle("Settings");
+        } else if (id == R.id.nav_profile_and_settings) {
+            fragment = new ProfileAndSettingsFragment();
+            toolbar.setTitle("Profile and Settings");
         } else if (id == R.id.nav_logout) {
             Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
             logout();
