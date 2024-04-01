@@ -24,7 +24,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -42,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
+import ai.picovoice.porcupine.Porcupine;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.services.PorcupineService;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.MainActivity;
@@ -59,6 +63,13 @@ public class WakeWordsFragment extends Fragment {
     };
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
 
+    // UI elements
+    private ToggleButton recordButton;
+    private Spinner keywordSpinner;
+    private Spinner keywordSpinner2;
+    private TextView errorMessageText;
+
+
     private boolean hasRecordPermission() {
         return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) ==
                 PackageManager.PERMISSION_GRANTED;
@@ -75,7 +86,7 @@ public class WakeWordsFragment extends Fragment {
             @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED &&  grantResults[1] == PackageManager.PERMISSION_DENIED) {
-            //onPorcupineInitError("Microphone permission is required for this demo");
+            onPorcupineInitError("Microphone permission is required for this demo");
         } else {
             //startService();
         }
@@ -95,11 +106,56 @@ public class WakeWordsFragment extends Fragment {
         getActivity().stopService(serviceIntent);
     }
 
+    private void configureKeywordSpinner() {
+        ArrayList<String> spinnerItems = new ArrayList<>();
+        for (Porcupine.BuiltInKeyword keyword : Porcupine.BuiltInKeyword.values()) {
+            spinnerItems.add(keyword.toString().toLowerCase().replace("_", " "));
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getContext(),
+                R.layout.keyword_spinner_item,
+                spinnerItems);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        keywordSpinner.setAdapter(adapter);
+        keywordSpinner2.setAdapter(adapter);
+
+        keywordSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Handle spinner item selected (e.g., update Porcupine if needed)
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Handle nothing selected
+            }
+        });
+        keywordSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Handle spinner item selected (e.g., update Porcupine if needed)
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Handle nothing selected
+            }
+        });
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wake_words, container, false);
 
-        ToggleButton recordButton = view.findViewById(R.id.record_button);
+        // Find and initialize UI elements
+        recordButton = view.findViewById(R.id.record_button);
+        keywordSpinner = view.findViewById(R.id.keyword_spinner);
+        keywordSpinner2 = view.findViewById(R.id.keyword_spinner2);
+        errorMessageText = view.findViewById(R.id.errorMessage);
+
+        // Configure keyword spinner
+        configureKeywordSpinner();
+
 
         recordButton.setOnClickListener(v ->
 
@@ -198,33 +254,40 @@ public class WakeWordsFragment extends Fragment {
         getActivity().registerReceiver(receiver, new IntentFilter("PorcupineInitError"));
     }
 
-    @Override
-    public void onDestroy() {
-        getActivity().unregisterReceiver(receiver);
-        super.onDestroy();
+
+    // Displays an error message for Porcupine initialization failure
+    private void showPorcupineError(String errorMessage) {
+        errorMessageText.setText(errorMessage);
+        errorMessageText.setVisibility(View.VISIBLE);
+        recordButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_disabled));
+        recordButton.setChecked(false);
+        recordButton.setEnabled(false);
     }
 
-    /*private void onPorcupineInitError(final String errorMessage) {
+    // Displays an error message for missing microphone permission
+    private void showMicrophonePermissionError() {
+        onPorcupineInitError("Microphone permission is required for this demo");
+    }
 
-        getActivity().runOnUiThread(() -> {
-            TextView errorText = findViewById(R.id.errorMessage);
+    private void onPorcupineInitError(final String errorMessage) {
+        requireActivity().runOnUiThread(() -> {
+            // Display the error message in the TextView
+            TextView errorText = requireActivity().findViewById(R.id.errorMessage);
             errorText.setText(errorMessage);
             errorText.setVisibility(View.VISIBLE);
 
-            ToggleButton recordButton = findViewById(R.id.record_button);
-            recordButton.setBackground(ContextCompat.getDrawable(
-                    getContext(),
-                    R.drawable.button_disabled));
+            // Disable the record button
+            ToggleButton recordButton = requireActivity().findViewById(R.id.record_button);
+            recordButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_disabled));
             recordButton.setChecked(false);
             recordButton.setEnabled(false);
-            stopService();
         });
-    }*/
+    }
 
     public class ServiceBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //onPorcupineInitError(intent.getStringExtra("errorMessage"));
+            onPorcupineInitError(intent.getStringExtra("errorMessage"));
         }
     }
 }

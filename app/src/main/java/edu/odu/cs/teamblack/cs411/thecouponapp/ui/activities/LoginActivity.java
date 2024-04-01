@@ -50,7 +50,10 @@ public class LoginActivity extends AppCompatActivity {
 
         Button settingsButton = findViewById(R.id.settingsButton);
         settingsButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, WakeWordActivity.class));
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra("fragmentToLoad", "SettingsFragment"); // Indicate which fragment to load
+            startActivity(intent);
+            finish();
         });
 
         Button homeButton = findViewById(R.id.homeButton);

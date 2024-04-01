@@ -61,7 +61,10 @@ public class PorcupineService extends Service {
 
     private final PorcupineManagerCallback porcupineManagerCallback = (keywordIndex) -> {
 
-
+        final String contentText = numUtterances == 1 ? " time!" : " times!";
+        Notification n = getNotification(
+                "IDK what you said",
+                "Detected " + numUtterances + contentText);
         switch (keywordIndex){
             case 0:
                 //calling
@@ -70,23 +73,33 @@ public class PorcupineService extends Service {
                 } catch (PendingIntent.CanceledException e) {
                     e.printStackTrace();
                 }
+
+                n = getNotification(
+                        "Calling",
+                        "Detected " + numUtterances + contentText);
                 break;
             case 1:
                 //start documenting
                 numUtterances++;
+                n = getNotification(
+                        "Start Documenting",
+                        "Detected " + numUtterances + contentText);
                 break;
             case 2:
                 //stop documenting
                 numUtterances--;
+                n = getNotification(
+                        "Stop Documenting",
+                        "Detected " + numUtterances + contentText);
                 break;
             case 3:
                 //pause audio classifier
                 break;
+            default:
+
+                break;
         }
-        final String contentText = numUtterances == 1 ? " time!" : " times!";
-        Notification n = getNotification(
-                "Wake word",
-                "Detected " + numUtterances + contentText);
+
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         assert notificationManager != null;
@@ -118,8 +131,8 @@ public class PorcupineService extends Service {
         try {
             porcupineManager = new PorcupineManager.Builder()
                     .setAccessKey(ACCESS_KEY)
-                    .setKeywords(new Porcupine.BuiltInKeyword[]{Porcupine.BuiltInKeyword.COMPUTER, Porcupine.BuiltInKeyword.PORCUPINE})
-                    .setSensitivities(new float[]{0.7f,0.6f}).build(
+                    .setKeywords(new Porcupine.BuiltInKeyword[]{Porcupine.BuiltInKeyword.COMPUTER, Porcupine.BuiltInKeyword.PORCUPINE,Porcupine.BuiltInKeyword.BLUEBERRY})
+                    .setSensitivities(new float[]{0.7f,0.6f,0.7f}).build(
                             getApplicationContext(),
                             porcupineManagerCallback);
             porcupineManager.start();
