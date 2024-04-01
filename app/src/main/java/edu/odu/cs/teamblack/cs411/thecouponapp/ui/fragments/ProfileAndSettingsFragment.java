@@ -25,7 +25,6 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
 
 public class ProfileAndSettingsFragment extends Fragment {
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_profile_and_settings, container, false);
