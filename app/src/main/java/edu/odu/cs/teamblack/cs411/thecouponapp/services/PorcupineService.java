@@ -11,7 +11,6 @@ package edu.odu.cs.teamblack.cs411.thecouponapp.services;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -20,13 +19,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Telephony;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -44,14 +38,13 @@ import ai.picovoice.porcupine.PorcupineInvalidArgumentException;
 import ai.picovoice.porcupine.PorcupineManager;
 import ai.picovoice.porcupine.PorcupineManagerCallback;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.FacadeActivity;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsSettingsFragment;
 
 
 public class PorcupineService extends Service {
     private static final String CHANNEL_ID = "PorcupineServiceChannel";
+    @SuppressWarnings("SpellCheckingInspection")
     private static final String ACCESS_KEY = "ir/zJzrvkSCpbURXMlpFz1nL5VEHIsNf2snqMTDwXDiEDzc4Cp4zzQ==";
-    private enum BuiltInKeywords {}
     private PorcupineManager porcupineManager;
     private int numUtterances;
 
@@ -71,7 +64,7 @@ public class PorcupineService extends Service {
                 try {
                     dialPhoneNumber("555-555-5555");
                 } catch (PendingIntent.CanceledException e) {
-                    e.printStackTrace();
+                    Log.e(CHANNEL_ID, "can't call",e);
                 }
 
                 n = getNotification(
@@ -107,15 +100,13 @@ public class PorcupineService extends Service {
     };
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Porcupine",
-                    NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel notificationChannel = new NotificationChannel(
+                CHANNEL_ID,
+                "Porcupine",
+                NotificationManager.IMPORTANCE_HIGH);
 
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(notificationChannel);
-        }
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(notificationChannel);
     }
 
     @SuppressLint("ForegroundServiceType")
