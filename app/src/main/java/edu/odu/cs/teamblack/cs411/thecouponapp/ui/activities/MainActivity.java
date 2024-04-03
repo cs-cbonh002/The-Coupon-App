@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationHost {
         } else if (id == R.id.nav_local_resources) {
             fragment = new LocalResourcesFragment();
             toolbar.setTitle("Local Resources");
-        } else if (id == R.id.nav_profile_and_settings) {
+        } else if (id == R.id.nav_settings) {
             fragment = new SettingsFragment();
             toolbar.setTitle("Settings");
         } else if (id == R.id.nav_logout) {

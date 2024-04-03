@@ -37,9 +37,9 @@
         android:text="@string/local_resources" />
 
     <Button
-        android:id="@+id/profileAndSettingsButton"
+        android:id="@+id/settingsButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/profile_and_settings" />
+        android:text="@string/settings" />
 
 </LinearLayout>
