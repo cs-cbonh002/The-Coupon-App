@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawerLayout"
-    tools:context=".ui.fragments.IncidentLogsFragment$LocalResourcesFragment">
+    android:background="@drawable/app_background"
+    tools:context=".ui.fragments.LocalResourcesFragment">
 
 
     <LinearLayout
@@ -14,14 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Local Resources"
-            android:layout_gravity="center"
-            android:layout_marginTop="300dp"
-            android:textColor="@color/lavender"
-            android:textSize="36sp"/>
+
 
     </LinearLayout>
 
