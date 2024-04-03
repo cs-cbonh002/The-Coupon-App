@@ -100,5 +100,8 @@
     <string name="local_resources">Local Resources</string>
     <string name="safe_exit">Safe Exit</string>
     <string name="logout">Logout</string>
+    <string name="navigate_to_setting">Navigate to settings.</string>
+    <string name="theme">Theme</string>
+    <string name="home">Home</string>
 
 </resources>
