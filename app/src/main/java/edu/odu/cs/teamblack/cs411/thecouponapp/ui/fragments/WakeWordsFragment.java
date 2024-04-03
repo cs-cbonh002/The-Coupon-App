@@ -59,7 +59,8 @@ public class WakeWordsFragment extends Fragment {
     ArrayList<String> permissionsList;
     final String[] permissionsStr = {
             Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.CALL_PHONE
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.POST_NOTIFICATIONS
     };
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
 

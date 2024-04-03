@@ -16,6 +16,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,6 +39,7 @@ import ai.picovoice.porcupine.PorcupineInvalidArgumentException;
 import ai.picovoice.porcupine.PorcupineManager;
 import ai.picovoice.porcupine.PorcupineManagerCallback;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.FacadeActivity;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsSettingsFragment;
 
 
@@ -48,8 +50,8 @@ public class PorcupineService extends Service {
     private PorcupineManager porcupineManager;
     private int numUtterances;
 
-    Intent phoneIntent;
-
+    //phone
+    Intent phoneIntent = new Intent(Intent.ACTION_CALL);
     PendingIntent pendingIntent;
 
     private final PorcupineManagerCallback porcupineManagerCallback = (keywordIndex) -> {
@@ -84,6 +86,7 @@ public class PorcupineService extends Service {
                 n = getNotification(
                         "Stop Documenting",
                         "Detected " + numUtterances + contentText);
+                gotoFacade();
                 break;
             case 3:
                 //pause audio classifier
@@ -112,9 +115,6 @@ public class PorcupineService extends Service {
     @SuppressLint("ForegroundServiceType")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        phoneIntent = new Intent(Intent.ACTION_CALL);
-        pendingIntent = PendingIntent.getActivity(this,0,phoneIntent, PendingIntent.FLAG_IMMUTABLE);
 
         numUtterances = 0;
         createNotificationChannel();
@@ -157,11 +157,6 @@ public class PorcupineService extends Service {
     }
 
     private Notification getNotification(String title, String message) {
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this,
-                0,
-                new Intent(this, WakeWordsSettingsFragment.class),
-                PendingIntent.FLAG_MUTABLE);
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
@@ -190,18 +185,32 @@ public class PorcupineService extends Service {
 
         super.onDestroy();
     }
-    public void dialPhoneNumber(String phoneNumber) throws PendingIntent.CanceledException {
-        phoneIntent.setData(Uri.parse("tel:" + phoneNumber));
-        phoneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    private void dialPhoneNumber(String phoneNumber) throws PendingIntent.CanceledException {
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) !=
                 PackageManager.PERMISSION_GRANTED) {
             Toast toast = Toast.makeText(this, "Permission not granted to call", Toast.LENGTH_LONG);
             toast.show();
             return;
         }
+        phoneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        phoneIntent.setData(Uri.parse("tel:" + phoneNumber));
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntent(phoneIntent);
+
+        pendingIntent = PendingIntent.getActivity(this,0,phoneIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
 
         //AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        this.startActivity(phoneIntent);
+        //this.startActivity(phoneIntent);
+        //pendingIntent.send();
+    }
+    private void gotoFacade() {
+        pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                new Intent(this, WakeWordsSettingsFragment.class),
+                PendingIntent.FLAG_MUTABLE);
     }
 }
+
 
