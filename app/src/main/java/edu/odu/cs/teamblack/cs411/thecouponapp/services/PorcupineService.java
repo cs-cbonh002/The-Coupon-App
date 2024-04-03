@@ -38,7 +38,7 @@ import ai.picovoice.porcupine.PorcupineInvalidArgumentException;
 import ai.picovoice.porcupine.PorcupineManager;
 import ai.picovoice.porcupine.PorcupineManagerCallback;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsSettingsFragment;
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsFragment;
 
 
 public class PorcupineService extends Service {
@@ -160,7 +160,7 @@ public class PorcupineService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this,
                 0,
-                new Intent(this, WakeWordsSettingsFragment.class),
+                new Intent(this, WakeWordsFragment.class),
                 PendingIntent.FLAG_MUTABLE);
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)

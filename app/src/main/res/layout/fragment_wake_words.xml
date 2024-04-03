@@ -20,7 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout"
-    tools:context="edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsSettingsFragment">
+    tools:context="edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsFragment">
 
     <Spinner
         android:id="@+id/keyword_spinner"
