@@ -12,22 +12,23 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.common.NavigationHost;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.CommunicationsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.EmergencyContactsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.HomeFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.IncidentLogsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.LocalResourcesFragment;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.ProfileAndSettingsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.SettingsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationHost {
 
     private DrawerLayout drawerLayout;
     private MaterialToolbar toolbar;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         // If savedInstanceState is null, then this is a fresh launch
         if (savedInstanceState == null) {
-            navigateToFragment(new HomeFragment());
+            navigateTo(new HomeFragment(), false);
             // Assuming nav_home is the ID of the navigation menu item for the Home fragment
             MenuItem homeItem = navigationView.getMenu().findItem(R.id.nav_home);
             if (homeItem != null) {
@@ -115,9 +116,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_local_resources) {
             fragment = new LocalResourcesFragment();
             toolbar.setTitle("Local Resources");
-        } else if (id == R.id.nav_profile_and_settings) {
-            fragment = new ProfileAndSettingsFragment();
-            toolbar.setTitle("Profile and Settings");
+        } else if (id == R.id.nav_settings) {
+            fragment = new SettingsFragment();
+            toolbar.setTitle("Settings");
         } else if (id == R.id.nav_logout) {
             Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
             logout();
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
-        navigateToFragment(fragment);
+        navigateTo(fragment, true);
 
         // Set the title for the toolbar
         if (toolbar != null) {
@@ -141,14 +142,14 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void navigateToFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-    }
-
-    public void navigateToWakeWordsFragment() {
-        navigateToFragment(new WakeWordsFragment());
+    @Override
+    public void navigateTo(Fragment fragment, boolean addToBackstack) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment);
+        if (addToBackstack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
     }
 
     private void safeExit() {

@@ -2,45 +2,46 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn = "navigation_view">
+    tools:showIn = "navigation_view"
+    android:divider="@color/material_dynamic_neutral30">
 
     <group
         android:checkableBehavior="single">
 
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/home_icon"
-            android:title="Home"/>
+            android:icon="@drawable/ic_home"
+            android:title="@string/home"/>
 
         <item
             android:id="@+id/nav_incident_log"
-            android:icon="@drawable/log_icon"
+            android:icon="@drawable/ic_incident_logs"
             android:title="@string/incident_log"/>
 
         <item
             android:id="@+id/nav_wake_words"
-            android:icon="@drawable/wake_words_icon"
+            android:icon="@drawable/ic_wake_words"
             android:title="@string/wake_words"/>
 
         <item
             android:id="@+id/nav_communications"
-            android:icon="@drawable/communication_icon"
+            android:icon="@drawable/ic_connect"
             android:title="@string/communications"/>
 
         <item
             android:id="@+id/nav_emergency_contacts"
-            android:icon="@drawable/baseline_contact_emergency_24"
+            android:icon="@drawable/ic_emergency_contacts"
             android:title="@string/emergency_contacts"/>
 
         <item
             android:id="@+id/nav_local_resources"
-            android:icon="@drawable/local_resources_icon"
+            android:icon="@drawable/ic_local_resources"
             android:title="@string/local_resources"/>
 
         <item
-            android:id="@+id/nav_profile_and_settings"
-            android:icon="@drawable/settings_icon"
-            android:title="@string/profile_and_settings"/>
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/settings"/>
 
         <item
             android:id="@+id/nav_safe_exit"
@@ -53,7 +54,7 @@
         <menu>
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/logout_icon"
+                android:icon="@drawable/ic_logout"
                 android:title="@string/logout"/>
         </menu>
 

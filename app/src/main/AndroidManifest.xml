@@ -38,9 +38,6 @@
             android:foregroundServiceType="phoneCall"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.WakeWordActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.activities.LoginActivity"
             android:exported="true">
             <intent-filter>

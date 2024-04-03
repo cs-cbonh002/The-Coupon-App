@@ -40,7 +40,6 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:2.7.7")
     implementation("androidx.navigation:navigation-ui:2.7.7")
     implementation("com.google.android.gms:play-services-location:21.2.0")
-    implementation("com.google.firebase:firebase-firestore:24.10.3")
     implementation("androidx.work:work-runtime:2.9.0")
     implementation("androidx.room:room-common:2.6.1")
     implementation("androidx.room:room-runtime:2.6.1")

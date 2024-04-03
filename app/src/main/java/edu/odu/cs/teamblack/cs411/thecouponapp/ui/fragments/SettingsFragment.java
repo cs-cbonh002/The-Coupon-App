@@ -1,44 +1,29 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
-import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.app.NotificationCompat;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.MainActivity;
@@ -46,65 +31,81 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.MainActivity;
 public class SettingsFragment extends Fragment {
 
     private static final String CHANNEL_ID = "edu.odu.cs.teamblack.cs411.thecouponapp.settings";
-    private ToggleButton locationButton;
-    private TextView locationCoordinateTextView;
-    private FusedLocationProviderClient fusedLocationClient;
-    private ActivityResultLauncher<String> requestPermissionLauncher;
-    private ActivityResultLauncher<String> requestNotificationPermissionLauncher;
+
+    private SwitchMaterial switchLocation, switchMicrophone, switchNotifications;
+    private ActivityResultLauncher<String> requestPermissionLauncher, requestNotificationPermissionLauncher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Initialize permission launcher for location permissions
-        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
-                getLastLocation();
-            } else {
-                Toast.makeText(requireContext(), "Location permission is required for this feature", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Initialize permission launcher for notification permissions
-        requestNotificationPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
-                showNotification();
-            } else {
-                Toast.makeText(requireContext(), "Notification permission denied", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        initializePermissionLaunchers();
         createNotificationChannel();
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.settings, container, false);
+        initializeUI(view);
+        return view;
+    }
 
-        locationCoordinateTextView = view.findViewById(R.id.LocationCoord);
-        locationButton = view.findViewById(R.id.locationButton);
-        locationButton.setChecked(checkPermissions());
-        locationButton.setOnClickListener(v -> requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION));
-
-        Button wakeWordButton = view.findViewById(R.id.wakeWordButton);
-        wakeWordButton.setOnClickListener(v -> {
-            MainActivity activity = (MainActivity) getActivity();
-            if (activity != null) {
-                activity.navigateToWakeWordsFragment();
+    private void initializePermissionLaunchers() {
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                Toast.makeText(getContext(), "Permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
             }
         });
 
-        Button notificationsButton = view.findViewById(R.id.notificationsButton);
-        notificationsButton.setOnClickListener(v -> {
+        requestNotificationPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                showNotification("Notification Permission Granted", "You can now receive notifications.");
+            } else {
+                Toast.makeText(getContext(), "Notification permission denied", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initializeUI(View rootView) {
+        // Obtain the featuresGroup LinearLayout by its ID
+        LinearLayout featuresGroup = rootView.findViewById(R.id.featuresGroup);
+
+        // Now within featuresGroup, find each of the switches by their respective IDs
+        SwitchMaterial switchLocation = featuresGroup.findViewById(R.id.switchLocation);
+        SwitchMaterial switchMicrophone = featuresGroup.findViewById(R.id.switchMicrophone);
+        SwitchMaterial switchNotifications = featuresGroup.findViewById(R.id.switchNotifications);
+
+        RelativeLayout wakeWordsSetting = rootView.findViewById(R.id.wakeWordsSetting);
+
+        switchLocation.setOnClickListener(v -> {
+            if (switchLocation.isChecked()) {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+        });
+
+        switchMicrophone.setOnClickListener(v -> {
+            if (switchMicrophone.isChecked()) {
+                requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+            }
+        });
+
+        switchNotifications.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
             } else {
-                showNotification();
+                showNotification("Notifications Enabled", "Notifications will be shown.");
             }
         });
 
-        return view;
+        wakeWordsSetting.setOnClickListener(v -> navigateToWakeWordsFragment());
+    }
+
+    private void navigateToWakeWordsFragment() {
+        // Assuming your activity has the method to navigate
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateTo(new WakeWordsFragment(), true);
+        }
     }
 
     private void createNotificationChannel() {
@@ -114,60 +115,47 @@ public class SettingsFragment extends Fragment {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            NotificationManager notificationManager = requireActivity().getSystemService(NotificationManager.class);
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(channel);
             }
         }
     }
 
-    private void showNotification() {
+    private void showNotification(String title, String content) {
+        // Ensure we are attached to a context
+        Context context = getContext();
+        Log Log;
+        if (context == null) {
+            android.util.Log.e("ProfileAndSettings", "Context is null in showNotification");
+            return; // Context is not available, exit early
+        }
+
+        // Explicit check for Android version and permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, continue with showing notification
-                buildAndNotify();
-            } else {
-                // Permission not granted, request it
-                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                android.util.Log.e("ProfileAndSettings", "POST_NOTIFICATIONS permission not granted");
+                Toast.makeText(context, "Notification permission not granted", Toast.LENGTH_SHORT).show();
+                return; // Permission not granted for POST_NOTIFICATIONS, exit early
             }
-        } else {
-            // Below Android 13 (API level 33), continue without the permission check
-            buildAndNotify();
         }
-    }
 
-    @SuppressLint("MissingPermission")
-    private void buildAndNotify() {
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireContext());
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.lock_icon)
-                .setContentTitle("The Coupon App")
-                .setContentText("Hello from The Coupon App, This is a simple Notification")
-                .setAutoCancel(true);
-        notificationManager.notify(1, builder.build());
-    }
+        try {
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_notifications) // Make sure this resource exists
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setAutoCancel(true);
 
-    @SuppressLint("MissingPermission")
-    private void getLastLocation() {
-        if (checkPermissions()) {
-            // Getting the last known location
-            fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
-                Location location = task.getResult();
-                if (location != null) {
-                    locationCoordinateTextView.setText(String.format("Latitude:%s\nLongitude:%s", location.getLatitude(), location.getLongitude()));
-                }
-            });
+            notificationManager.notify(1, builder.build());
+            android.util.Log.d("ProfileAndSettings", "Notification shown successfully.");
+        } catch (Exception e) {
+            // Catching a generic exception is a last resort and generally not recommended
+            // This is purely for diagnostic purposes
+            android.util.Log.e("ProfileAndSettings", "Failed to show notification: " + e.getMessage());
+            e.printStackTrace();
         }
-    }
-
-    private boolean checkPermissions() {
-        return ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        locationButton.setChecked(checkPermissions());
     }
 }
