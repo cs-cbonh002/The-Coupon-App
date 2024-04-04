@@ -102,5 +102,6 @@
     <string name="navigate_to_setting">Navigate to settings.</string>
     <string name="theme">Theme</string>
     <string name="home">Home</string>
+    <string name="enter_zip">Enter Zip Code</string>
 
 </resources>
