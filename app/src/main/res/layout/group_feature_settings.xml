@@ -1,149 +1,43 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<!-- CardView for Account Settings Items -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp">
 
-    <!-- CardView for Account Settings Items -->
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="0dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- Enable Location -->
-            <RelativeLayout
-                android:id="@+id/locationSetting"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="16dp">
-
-
-                <LinearLayout
-                    android:id="@+id/txtTitleLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true">
-
-                    <TextView
-                        android:id="@+id/txt_user_profile_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:text="Enable location use"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
-
-                </LinearLayout>
-
-                <!-- Switch  -->
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@string/navigate_to_setting"/>
-
-            </RelativeLayout>
-
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorLightGrey" />
-
-            <!-- Enable Microphone -->
-            <RelativeLayout
-                android:id="@+id/microphoneSetting"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="16dp">
-
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true">
-
-                    <TextView
-                        android:id="@+id/txtTitleMicrophone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:text="Enable microphone use"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
-
-                </LinearLayout>
-                <!-- Chevron Icon -->
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchMicrophone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@string/navigate_to_setting"/>
-
-            </RelativeLayout>
-
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorLightGrey" />
-
-            <!-- Enable Notifications -->
+        android:orientation="vertical">
+            <!-- Notifications -->
             <RelativeLayout
                 android:id="@+id/notificationsSetting"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="16dp">
 
-
-                <LinearLayout
-                    android:id="@+id/txtTitleNotifications"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true">
+                    android:text="Enable notifications"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/notifications"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:text="Enable notifications"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
-
-                </LinearLayout>
-                <!-- Chevron Icon -->
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switchNotifications"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:contentDescription="@string/navigate_to_setting"/>
-
+                    android:contentDescription="@string/navigate_to_setting" />
             </RelativeLayout>
 
             <!-- Divider -->
@@ -169,8 +63,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_navigate_next"
-                    android:contentDescription="@string/navigate_to_setting"/>
+                    android:contentDescription="@string/navigate_to_setting"
+                    android:src="@drawable/ic_navigate_next" />
 
                 <!-- Title Text -->
                 <TextView
@@ -180,8 +74,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:text="Wake Words"
-                    android:textSize="18sp"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textSize="18sp" />
 
                 <!-- Description Text -->
                 <TextView
@@ -189,12 +83,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txtTitleWakeWords"
-                    android:layout_toStartOf="@id/navigateWakeWords"
                     android:layout_alignParentStart="true"
                     android:layout_marginTop="4dp"
+                    android:layout_toStartOf="@id/navigateWakeWords"
                     android:text="Update and manage your wake words"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray"/>
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="14sp" />
+
             </RelativeLayout>
 
             <!-- Divider -->
@@ -203,9 +98,9 @@
                 android:layout_height="1dp"
                 android:background="@color/colorLightGrey" />
 
-            <!-- Audio Classifier -->
+            <!-- Safety Monitoring -->
             <RelativeLayout
-                android:id="@+id/audioClassifierSetting"
+                android:id="@+id/safetyMonitoringSetting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
@@ -215,39 +110,83 @@
 
                 <!-- Chevron Icon -->
                 <ImageView
-                    android:id="@+id/navigateAudioClassifier"
+                    android:id="@+id/navigateSafetyMonitoring"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_navigate_next"
-                    android:contentDescription="@string/navigate_to_setting"/>
+                    android:contentDescription="@string/navigate_to_setting"
+                    android:src="@drawable/ic_navigate_next" />
 
                 <!-- Title Text -->
                 <TextView
-                    android:id="@+id/txtTitleAudioClassifier"
+                    android:id="@+id/txtTitleSafetyMonitoring"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:text="Audio Classifier"
-                    android:textSize="18sp"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+                    android:text="Safety Monitoring"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textSize="18sp" />
 
                 <!-- Description Text -->
                 <TextView
-                    android:id="@+id/txtDescriptionAudioClassifier"
+                    android:id="@+id/txtDescriptionSafetyMonitoring"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/txtTitleAudioClassifier"
-                    android:layout_toStartOf="@id/navigateAudioClassifier"
+                    android:layout_below="@id/txtTitleSafetyMonitoring"
                     android:layout_alignParentStart="true"
                     android:layout_marginTop="4dp"
-                    android:text="Enable Audio Classifier"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray"/>
+                    android:layout_toStartOf="@id/navigateSafetyMonitoring"
+                    android:text="Manage and select automatic logging and calling features"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="14sp" />
             </RelativeLayout>
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</LinearLayout>
+        <!-- Safety Monitoring -->
+        <RelativeLayout
+            android:id="@+id/gpsSpoofingSetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp">
+
+            <!-- Chevron Icon -->
+            <ImageView
+                android:id="@+id/navigateGpsSpoofing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/navigate_to_setting"
+                android:src="@drawable/ic_navigate_next" />
+
+            <!-- Title Text -->
+            <TextView
+                android:id="@+id/txtTitleGpsSpoofing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="GPS Spoofing"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textSize="18sp" />
+
+            <!-- Description Text -->
+            <TextView
+                android:id="@+id/txtDescriptionGpsSpoofing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTitleGpsSpoofing"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="4dp"
+                android:layout_toStartOf="@id/navigateGpsSpoofing"
+                android:text="Manage GPS spoofing locations and routes"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+

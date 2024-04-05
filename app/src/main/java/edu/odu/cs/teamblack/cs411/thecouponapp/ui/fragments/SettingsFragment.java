@@ -69,28 +69,12 @@ public class SettingsFragment extends Fragment {
 
     private void initializeUI(View rootView) {
         // Obtain the featuresGroup LinearLayout by its ID
-        LinearLayout featuresGroup = rootView.findViewById(R.id.featuresGroup);
+        View featuresGroup = rootView.findViewById(R.id.featuresGroup);
 
-        // Now within featuresGroup, find each of the switches by their respective IDs
-        SwitchMaterial switchLocation = featuresGroup.findViewById(R.id.switchLocation);
-        SwitchMaterial switchMicrophone = featuresGroup.findViewById(R.id.switchMicrophone);
         SwitchMaterial switchNotifications = featuresGroup.findViewById(R.id.switchNotifications);
-
-        RelativeLayout wakeWordsSetting = rootView.findViewById(R.id.wakeWordsSetting);
-
-        RelativeLayout audioClassifierSetting = rootView.findViewById(R.id.audioClassifierSetting);
-
-        switchLocation.setOnClickListener(v -> {
-            if (switchLocation.isChecked()) {
-                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
-            }
-        });
-
-        switchMicrophone.setOnClickListener(v -> {
-            if (switchMicrophone.isChecked()) {
-                requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
-            }
-        });
+        RelativeLayout wakeWordsSetting = featuresGroup.findViewById(R.id.wakeWordsSetting);
+        RelativeLayout safetyMonitoringSetting = featuresGroup.findViewById(R.id.safetyMonitoringSetting);
+        RelativeLayout gpsSpoofingSetting = featuresGroup.findViewById(R.id.gpsSpoofingSetting);
 
         switchNotifications.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -101,24 +85,26 @@ public class SettingsFragment extends Fragment {
         });
 
         wakeWordsSetting.setOnClickListener(v -> navigateToWakeWordsFragment());
-
-        audioClassifierSetting.setOnClickListener(v -> navigateToAudioClassifierFragment());
-
+        safetyMonitoringSetting.setOnClickListener(v -> navigateToSafetyMonitoringFragment());
+        gpsSpoofingSetting.setOnClickListener(v -> navigateToGpsSpoofingFragment());
     }
 
     private void navigateToWakeWordsFragment() {
-        // Assuming your activity has the method to navigate
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).navigateTo(new WakeWordsFragment(), true);
         }
     }
 
-    private void navigateToAudioClassifierFragment() {
-        AudioClassifierFragment nextFrag= new AudioClassifierFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(getId(), nextFrag, "AudioClassifierFragment")
-                .addToBackStack(null)
-                .commit();
+    private void navigateToSafetyMonitoringFragment() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateTo(new SafetyMonitoringFragment(), true);
+        }
+    }
+
+    private void navigateToGpsSpoofingFragment() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateTo(new GpsSpoofingFragment(), true);
+        }
     }
 
     private void createNotificationChannel() {
@@ -140,14 +126,14 @@ public class SettingsFragment extends Fragment {
         Context context = getContext();
         Log Log;
         if (context == null) {
-            android.util.Log.e("ProfileAndSettings", "Context is null in showNotification");
+            android.util.Log.e("Settings", "Context is null in showNotification");
             return; // Context is not available, exit early
         }
 
         // Explicit check for Android version and permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                android.util.Log.e("ProfileAndSettings", "POST_NOTIFICATIONS permission not granted");
+                android.util.Log.e("Settings", "POST_NOTIFICATIONS permission not granted");
                 Toast.makeText(context, "Notification permission not granted", Toast.LENGTH_SHORT).show();
                 return; // Permission not granted for POST_NOTIFICATIONS, exit early
             }

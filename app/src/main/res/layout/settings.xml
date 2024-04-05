@@ -15,11 +15,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Account"
-            android:textSize="18sp"
-            android:textColor="@color/black"
+            android:layout_margin="8dp"
             android:paddingBottom="8dp"
-            android:layout_margin="8dp"/>
+            android:text="Account"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -31,12 +31,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:showDividers="middle"
                 android:divider="?android:attr/listDivider"
-                android:dividerPadding="8dp">
+                android:dividerPadding="8dp"
+                android:orientation="vertical"
+                android:showDividers="middle">
 
-                <include layout="@layout/group_account_settings" android:id="@+id/accountGroup"/>
+                <include
+                    android:id="@+id/accountGroup"
+                    layout="@layout/group_account_settings" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -45,11 +47,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Features"
-            android:textSize="18sp"
-            android:textColor="@color/black"
+            android:layout_margin="8dp"
             android:paddingBottom="8dp"
-            android:layout_margin="8dp" />
+            android:text="Features"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -61,12 +63,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:showDividers="middle"
                 android:divider="?android:attr/listDivider"
-                android:dividerPadding="8dp">
+                android:dividerPadding="8dp"
+                android:orientation="vertical"
+                android:showDividers="middle">
 
-                <include layout="@layout/group_feature_settings" android:id="@+id/featuresGroup"/>
+                <include
+                    android:id="@+id/featuresGroup"
+                    layout="@layout/group_feature_settings" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -75,11 +79,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Personalization"
-            android:textSize="18sp"
-            android:textColor="@color/black"
+            android:layout_margin="8dp"
             android:paddingBottom="8dp"
-            android:layout_margin="8dp"  />
+            android:text="Personalization"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -90,12 +94,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:showDividers="middle"
                 android:divider="?android:attr/listDivider"
-                android:dividerPadding="0dp">
+                android:dividerPadding="0dp"
+                android:orientation="vertical"
+                android:showDividers="middle">
 
-                <include layout="@layout/group_personalization_settings" android:id="@+id/personalizationGroup"/>
+                <include
+                    android:id="@+id/personalizationGroup"
+                    layout="@layout/group_personalization_settings" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
