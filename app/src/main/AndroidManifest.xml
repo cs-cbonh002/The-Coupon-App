@@ -33,9 +33,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TheCouponApp"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".helper.AudioClassifierHelperActivity"
-            android:exported="false" />
 
         <service
             android:name=".services.PorcupineService"
