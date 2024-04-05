@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,8 @@ import java.util.TimerTask;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 
 public class AudioClassifierFragment extends Fragment {
+
+    final String TAG = "Audio Classifier Fragment";
 
     //tensorflow
     private final String model = "audioClassifier.tflite";
@@ -119,7 +122,6 @@ public class AudioClassifierFragment extends Fragment {
         TensorAudio.TensorAudioFormat format = audioClassifier.getRequiredTensorAudioFormat();
         String channels = "Number of channels: " + format.getChannels() + "\n" +
                 "Sample rate: " + format.getSampleRate();
-        channelTextView.setText(channels);
 
         audioRecord = audioClassifier.createAudioRecord();
         audioRecord.startRecording();
@@ -131,6 +133,7 @@ public class AudioClassifierFragment extends Fragment {
                 List<Category> finalOutput = new ArrayList<>();
                 for (Classifications classifications : output) {
                     for (Category category : classifications.getCategories()) {
+                        Log.d(TAG, category.getDisplayName());
                         if (category.getScore() > 0.3f) {
                             finalOutput.add(category);
                         }
@@ -145,6 +148,7 @@ public class AudioClassifierFragment extends Fragment {
                 requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        channelTextView.setText(channels);
                         outText.setText(outStr.toString());
                     }
                 });
@@ -164,16 +168,17 @@ public class AudioClassifierFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_audio_classifier, container, false);
         toggleButton = view.findViewById(R.id.audioClassifierToggleButton);
         channelTextView = view.findViewById(R.id.channelsTextView);
+        outText = view.findViewById(R.id.audioClassifierOutText);
 
         toggleButton.setOnClickListener(v ->  {
             if (toggleButton.isChecked()) {
                 if (hasPermission(getContext(),permissionsStr)) {
-                    //startService();
+                    startService();
                 } else {
                     initPermission();
                 }
             } else {
-                //stopService();
+                stopService();
             }
         });
         return view;
