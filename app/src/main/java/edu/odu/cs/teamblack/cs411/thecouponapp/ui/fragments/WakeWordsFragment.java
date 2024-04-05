@@ -4,26 +4,19 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.os.Handler;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -35,7 +28,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,12 +43,11 @@ public class WakeWordsFragment extends Fragment {
     private static final String SHARED_PREFS_NAME = "wake_word_settings";
     private static final String KEY_WAKE_WORD_ENABLED = "wake_word_enabled";
     private static final long DEBOUNCE_DELAY_MS = 500;
-
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private List<Spinner> keywordSpinners;
     private SwitchMaterial enableWakeWordSwitch;
     private PermissionManager permissionManager;
     private SharedPreferences sharedPreferences;
-    private Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,8 +81,21 @@ public class WakeWordsFragment extends Fragment {
 
         // Now set the switch listener
         enableWakeWordSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Debounce logic (if implemented) would go here
-            handleSwitchStateChange(isChecked);
+            // Remove any existing callbacks to debounce
+            handler.removeCallbacksAndMessages(null);
+            handler.postDelayed(() -> {
+                sharedPreferences.edit().putBoolean(KEY_WAKE_WORD_ENABLED, isChecked).apply();
+                setUIEnabled(isChecked);
+                if (isChecked) {
+                    if (checkAllPermissionsGranted()) {
+                        requestPermissions();
+                    } else {
+                        startService();
+                    }
+                } else {
+                    stopService();
+                }
+            }, DEBOUNCE_DELAY_MS);
         });
 
         return view;
@@ -103,21 +107,6 @@ public class WakeWordsFragment extends Fragment {
         setUIEnabled(sharedPreferences.getBoolean(KEY_WAKE_WORD_ENABLED, false));
     }
 
-    private void setupWakeWordSwitch() {
-        boolean switchState = sharedPreferences.getBoolean(KEY_WAKE_WORD_ENABLED, false);
-        enableWakeWordSwitch.setChecked(switchState);
-        enableWakeWordSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            handler.removeCallbacksAndMessages(null);
-            handler.postDelayed(() -> handleSwitchStateChange(isChecked), DEBOUNCE_DELAY_MS);
-        });
-        updateServiceAndUIState(switchState);
-    }
-
-    private void handleSwitchStateChange(boolean isChecked) {
-        sharedPreferences.edit().putBoolean(KEY_WAKE_WORD_ENABLED, isChecked).apply();
-        updateServiceAndUIState(isChecked);
-    }
-
     private List<String> getKeywords() {
         return Arrays.stream(Porcupine.BuiltInKeyword.values())
                 .map(keyword -> keyword.name().toLowerCase().replace("_", " "))
@@ -126,7 +115,7 @@ public class WakeWordsFragment extends Fragment {
 
     private void updateServiceAndUIState(boolean enabled) {
         if (enabled) {
-            if (!checkAllPermissionsGranted()) {
+            if (checkAllPermissionsGranted()) {
                 requestPermissions();
             } else {
                 startService();
@@ -178,10 +167,10 @@ public class WakeWordsFragment extends Fragment {
     private boolean checkAllPermissionsGranted() {
         for (String permission : REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private void showSnackbarMessage(String message) {
