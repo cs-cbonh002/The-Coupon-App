@@ -20,7 +20,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import org.tensorflow.lite.Tensor;
 import org.tensorflow.lite.support.audio.TensorAudio;
 import org.tensorflow.lite.support.label.Category;
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier;
@@ -35,12 +34,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 
-public class AudioClassifierFragment extends Fragment {
+public class SafetyMonitoringFragment extends Fragment {
 
     final String TAG = "Audio Classifier Fragment";
     // TensorFlow Lite
