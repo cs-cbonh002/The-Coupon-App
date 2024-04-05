@@ -32,7 +32,6 @@ import android.widget.ToggleButton;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -63,16 +62,6 @@ public class WakeWordsFragment extends Fragment {
     private Spinner keywordSpinner;
     private Spinner keywordSpinner2;
     private TextView errorMessageText;
-
-
-    private boolean hasRecordPermission() {
-        return ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) ==
-                PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestRecordPermission() {
-        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, 0);
-    }
 
     public void startService() {
         Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
@@ -139,10 +128,10 @@ public class WakeWordsFragment extends Fragment {
 
         {
             if (recordButton.isChecked()) {
-                if (hasRecordPermission()) {
+                if (hasPermissions(requireContext(),permissionsStr)) {
                     startService();
                 } else {
-                    requestRecordPermission();
+                    askForPermissions(permissionsList);
                 }
             } else {
                 stopService();
@@ -157,6 +146,17 @@ public class WakeWordsFragment extends Fragment {
 
         receiver = new ServiceBroadcastReceiver();
 
+        initPermission();
+
+        //ask permissions
+        permissionsList = new ArrayList<>();
+        permissionsList.addAll(Arrays.asList(permissionsStr));
+        askForPermissions(permissionsList);
+
+
+    }
+
+    private void initPermission() {
         // Initialize permission launcher
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
@@ -169,7 +169,7 @@ public class WakeWordsFragment extends Fragment {
                         for (int i = 0; i < list.size(); i++) {
                             if (shouldShowRequestPermissionRationale(permissionsStr[i])) {
                                 permissionsList.add(permissionsStr[i]);
-                            } else if (!hasPermission(getActivity(), permissionsStr[i])) {
+                            } else if (!hasPermission(requireContext(), permissionsStr[i])) {
                                 permissionsCount++;
                             }
                         }
@@ -179,22 +179,26 @@ public class WakeWordsFragment extends Fragment {
                         } else if (permissionsCount > 0) {
                             //Show alert dialog
                             showPermissionDialog();
-                        } else {
-                            //All permissions granted. Do your stuff 🤞
-                        }
+                        }  //All permissions granted. Do your stuff 🤞
+
                     }
                 });
-
-        //ask permissions
-        permissionsList = new ArrayList<>();
-        permissionsList.addAll(Arrays.asList(permissionsStr));
-        askForPermissions(permissionsList);
-
-
     }
+
     private boolean hasPermission(Context context, String permissionStr) {
         return ContextCompat.checkSelfPermission(context, permissionStr) == PackageManager.PERMISSION_GRANTED;
     }
+
+    private boolean hasPermissions(Context context, String[] permissionStr) {
+        for (String s :
+                permissionStr) {
+            if (ContextCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_DENIED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void askForPermissions(ArrayList<String> permissionsList) {
         String[] newPermissionStr = new String[permissionsList.size()];
         for (int i = 0; i < newPermissionStr.length; i++) {
