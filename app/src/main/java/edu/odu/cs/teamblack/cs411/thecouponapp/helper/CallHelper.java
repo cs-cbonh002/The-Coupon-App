@@ -1,10 +1,6 @@
-package edu.odu.cs.teamblack.cs411.thecouponapp.services;
-
-import static androidx.core.content.ContextCompat.startActivity;
+package edu.odu.cs.teamblack.cs411.thecouponapp.helper;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,9 +9,7 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
-import java.util.Arrays;
-
-public class CallService {
+public class CallHelper {
    public Intent call(Context context, String phoneNumber) {
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
         phoneIntent.setData(Uri.parse("tel:" + phoneNumber));

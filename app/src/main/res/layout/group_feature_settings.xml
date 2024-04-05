@@ -196,6 +196,58 @@
                     android:textSize="14sp"
                     android:textColor="@android:color/darker_gray"/>
             </RelativeLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGrey" />
+
+            <!-- Audio Classifier -->
+            <RelativeLayout
+                android:id="@+id/audioClassifierSetting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp">
+
+                <!-- Chevron Icon -->
+                <ImageView
+                    android:id="@+id/navigateAudioClassifier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_navigate_next"
+                    android:contentDescription="@string/navigate_to_setting"/>
+
+                <!-- Title Text -->
+                <TextView
+                    android:id="@+id/txtTitleAudioClassifier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="Audio Classifier"
+                    android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+
+                <!-- Description Text -->
+                <TextView
+                    android:id="@+id/txtDescriptionAudioClassifier"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtTitleAudioClassifier"
+                    android:layout_toStartOf="@id/navigateAudioClassifier"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="4dp"
+                    android:text="Enable Audio Classifier"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/darker_gray"/>
+            </RelativeLayout>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

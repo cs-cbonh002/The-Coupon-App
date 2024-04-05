@@ -78,6 +78,8 @@ public class SettingsFragment extends Fragment {
 
         RelativeLayout wakeWordsSetting = rootView.findViewById(R.id.wakeWordsSetting);
 
+        RelativeLayout audioClassifierSetting = rootView.findViewById(R.id.audioClassifierSetting);
+
         switchLocation.setOnClickListener(v -> {
             if (switchLocation.isChecked()) {
                 requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -99,6 +101,9 @@ public class SettingsFragment extends Fragment {
         });
 
         wakeWordsSetting.setOnClickListener(v -> navigateToWakeWordsFragment());
+
+        audioClassifierSetting.setOnClickListener(v -> navigateToAudioClassifierFragment());
+
     }
 
     private void navigateToWakeWordsFragment() {
@@ -106,6 +111,14 @@ public class SettingsFragment extends Fragment {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).navigateTo(new WakeWordsFragment(), true);
         }
+    }
+
+    private void navigateToAudioClassifierFragment() {
+        AudioClassifierFragment nextFrag= new AudioClassifierFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(getId(), nextFrag, "AudioClassifierFragment")
+                .addToBackStack(null)
+                .commit();
     }
 
     private void createNotificationChannel() {
