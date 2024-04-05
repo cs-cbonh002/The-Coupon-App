@@ -40,8 +40,6 @@ import ai.picovoice.porcupine.PorcupineManager;
 import ai.picovoice.porcupine.PorcupineManagerCallback;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.FacadeActivity;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsSettingsFragment;
-
 
 public class PorcupineService extends Service {
     private static final String CHANNEL_ID = "PorcupineServiceChannel";
@@ -208,7 +206,7 @@ public class PorcupineService extends Service {
         pendingIntent = PendingIntent.getActivity(
                 this,
                 0,
-                new Intent(this, WakeWordsSettingsFragment.class),
+                new Intent(this, FacadeActivity.class),
                 PendingIntent.FLAG_MUTABLE);
     }
 }

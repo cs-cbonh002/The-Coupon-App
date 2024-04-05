@@ -19,14 +19,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -34,9 +32,6 @@ import android.widget.ToggleButton;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -48,7 +43,6 @@ import java.util.Map;
 import ai.picovoice.porcupine.Porcupine;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.services.PorcupineService;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.MainActivity;
 
 public class WakeWordsFragment extends Fragment {
 
@@ -72,39 +66,22 @@ public class WakeWordsFragment extends Fragment {
 
 
     private boolean hasRecordPermission() {
-        return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) ==
+        return ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) ==
                 PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestRecordPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, 0);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED &&  grantResults[1] == PackageManager.PERMISSION_DENIED) {
-            onPorcupineInitError("Microphone permission is required for this demo");
-        } else {
-            //startService();
-        }
+        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, 0);
     }
 
     public void startService() {
         Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
-        if (Build.VERSION.SDK_INT >= 26) {
-            getActivity().startForegroundService(serviceIntent);
-        } else {
-            getActivity().startService(serviceIntent);
-        }
+        requireActivity().startForegroundService(serviceIntent);
     }
 
     private void stopService() {
         Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
-        getActivity().stopService(serviceIntent);
+        requireActivity().stopService(serviceIntent);
     }
 
     private void configureKeywordSpinner() {
@@ -114,7 +91,7 @@ public class WakeWordsFragment extends Fragment {
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                getContext(),
+                requireContext(),
                 R.layout.keyword_spinner_item,
                 spinnerItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -184,7 +161,6 @@ public class WakeWordsFragment extends Fragment {
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
                 new ActivityResultCallback<Map<String, Boolean>>() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onActivityResult(Map<String, Boolean> result) {
                         ArrayList<Boolean> list = new ArrayList<>(result.values());
@@ -197,7 +173,7 @@ public class WakeWordsFragment extends Fragment {
                                 permissionsCount++;
                             }
                         }
-                        if (permissionsList.size() > 0) {
+                        if (!permissionsList.isEmpty()) {
                             //Some permissions are denied and can be asked again.
                             askForPermissions(permissionsList);
                         } else if (permissionsCount > 0) {
@@ -252,7 +228,7 @@ public class WakeWordsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().registerReceiver(receiver, new IntentFilter("PorcupineInitError"));
+        requireActivity().registerReceiver(receiver, new IntentFilter("PorcupineInitError"), Context.RECEIVER_NOT_EXPORTED);
     }
 
 
