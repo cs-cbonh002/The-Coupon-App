@@ -18,11 +18,71 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Communications"
             android:layout_gravity="center"
-            android:layout_marginTop="300dp"
+            android:layout_marginTop="30dp"
+            android:text="Communications"
             android:textColor="@color/lavender"
-            android:textSize="36sp"/>
+            android:textSize="36sp" />
+
+        <EditText
+            android:id="@+id/editTextText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:text="Email" />
+
+        <Switch
+            android:id="@+id/Email_Switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Automatically Send Email to Emergency Contact" />
+
+        <Switch
+            android:id="@+id/GPS_Email_Switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send GPS location in Email" />
+
+        <EditText
+            android:id="@+id/editTextText4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:text="Message" />
+
+        <Switch
+            android:id="@+id/Message_Switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send Message to Emergency Contacts" />
+
+        <EditText
+            android:id="@+id/editTextText5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:text="Phone Call" />
+
+        <Switch
+            android:id="@+id/Phone_Call_Switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Automatically initiate phone calls" />
+
+        <Switch
+            android:id="@+id/Emergency_Contact_Phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send Call to Emergency Contact" />
+
+        <Switch
+            android:id="@+id/Authority_Phone_Call"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send Call to Authorities" />
 
     </LinearLayout>
 

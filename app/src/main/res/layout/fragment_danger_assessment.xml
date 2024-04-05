@@ -7,259 +7,243 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.FamilyInformationFragment">
 
-    <EditText
-        android:id="@+id/welcomeBanner"
-        android:layout_width="0dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="16dp"
-        android:background="@color/lavender"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Danger Assessment"
-        android:textAlignment="center"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:background="@drawable/app_background"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeBanner">
+        app:layout_constraintTop_toTopOf="parent">
 
         <!-- Question 1 -->
         <TextView
             android:id="@+id/question1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1. Have you ever been physically abused?"
-            android:textSize="18sp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp"
+            android:paddingTop="30dp"
+            android:text="1. Have you ever been physically abused?"
+            android:textSize="18sp" />
 
         <RadioGroup
             android:id="@+id/radioGroup1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/yes1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yes"/>
+                android:text="Yes" />
 
             <RadioButton
                 android:id="@+id/no1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No"/>
+                android:text="No" />
 
             <RadioButton
                 android:id="@+id/notSure1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Not sure"/>
+                android:text="Not sure" />
         </RadioGroup>
 
         <TextView
-        android:id="@+id/question2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2. Has your partner ever threatened you with physical violence?"
-        android:textSize="18sp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"/>
+            android:id="@+id/question2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="2. Has your partner ever threatened you with physical violence?"
+            android:textSize="18sp" />
 
         <RadioGroup
             android:id="@+id/radioGroup2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/yes2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yes"/>
+                android:text="Yes" />
 
             <RadioButton
                 android:id="@+id/no2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No"/>
+                android:text="No" />
 
             <RadioButton
                 android:id="@+id/notSure2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Not sure"/>
+                android:text="Not sure" />
         </RadioGroup>
 
         <TextView
-        android:id="@+id/question3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="3. Have you ever felt afraid of your partner?"
-        android:textSize="18sp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"/>
+            android:id="@+id/question3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="3. Have you ever felt afraid of your partner?"
+            android:textSize="18sp" />
 
         <RadioGroup
             android:id="@+id/radioGroup3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/yes3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yes"/>
+                android:text="Yes" />
 
             <RadioButton
                 android:id="@+id/no3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No"/>
+                android:text="No" />
 
             <RadioButton
                 android:id="@+id/notSure3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Not sure"/>
+                android:text="Not sure" />
         </RadioGroup>
+
         <TextView
             android:id="@+id/question4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="4. Have you ever been forced to engage in sexual activity against your will?"
-            android:textSize="18sp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp"
+            android:text="4. Have you ever been forced to engage in sexual activity against your will?"
+            android:textSize="18sp" />
 
         <RadioGroup
             android:id="@+id/radioGroup4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/yes4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yes"/>
+                android:text="Yes" />
 
             <RadioButton
                 android:id="@+id/no4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No"/>
+                android:text="No" />
 
             <RadioButton
                 android:id="@+id/notSure4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Not sure"/>
+                android:text="Not sure" />
         </RadioGroup>
+
         <TextView
             android:id="@+id/question5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5. Do you feel safe in your current living situation?"
-            android:textSize="18sp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp"
+            android:text="5. Do you feel safe in your current living situation?"
+            android:textSize="18sp" />
 
         <RadioGroup
             android:id="@+id/radioGroup5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/yes5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yes"/>
+                android:text="Yes" />
 
             <RadioButton
                 android:id="@+id/no5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No"/>
+                android:text="No" />
 
             <RadioButton
                 android:id="@+id/notSure5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Not sure"/>
+                android:text="Not sure" />
         </RadioGroup>
+
         <TextView
             android:id="@+id/question6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="6. Do you have a safe place to go if you need to leave your current situation?"
-            android:textSize="18sp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp"
+            android:text="6. Do you have a safe place to go if you need to leave your current situation?"
+            android:textSize="18sp" />
 
         <RadioGroup
             android:id="@+id/radioGroup6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/yes6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yes"/>
+                android:text="Yes" />
 
             <RadioButton
                 android:id="@+id/no6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No"/>
+                android:text="No" />
 
             <RadioButton
                 android:id="@+id/notSure6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Not sure"/>
+                android:text="Not sure" />
         </RadioGroup>
 
 
-    <Button
-        android:id="@+id/buttonSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/questionnaireLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/questionnaireLayout" />
 
     </LinearLayout>
 

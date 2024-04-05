@@ -1,25 +1,17 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments;
 
-/*
-    Copyright 2021 Picovoice Inc.
-
-    You may not use this file except in compliance with the license. A copy of the license is
-    located in the "LICENSE" file accompanying this source.
-
-    Unless required by applicable law or agreed to in writing, software distributed under the
-    License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-express or implied. See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
+import android.os.Handler;
+
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,248 +19,205 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import ai.picovoice.porcupine.Porcupine;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.services.PorcupineService;
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.common.PermissionManager;
 
 public class WakeWordsFragment extends Fragment {
 
-    private ServiceBroadcastReceiver receiver;
+    private static final String[] REQUIRED_PERMISSIONS = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CALL_PHONE};
+    private static final String SHARED_PREFS_NAME = "wake_word_settings";
+    private static final String KEY_WAKE_WORD_ENABLED = "wake_word_enabled";
+    private static final long DEBOUNCE_DELAY_MS = 500;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private List<Spinner> keywordSpinners;
+    private SwitchMaterial enableWakeWordSwitch;
+    private PermissionManager permissionManager;
+    private SharedPreferences sharedPreferences;
 
-    //permissions
-    int permissionsCount = 0;
-    ArrayList<String> permissionsList;
-    final String[] permissionsStr = {
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.CALL_PHONE,
-            Manifest.permission.POST_NOTIFICATIONS
-    };
-    private ActivityResultLauncher<String[]> requestPermissionLauncher;
-
-    // UI elements
-    private ToggleButton recordButton;
-    private Spinner keywordSpinner;
-    private Spinner keywordSpinner2;
-    private TextView errorMessageText;
-
-    public void startService() {
-        Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
-        requireActivity().startForegroundService(serviceIntent);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        permissionManager = new PermissionManager(this);
+        sharedPreferences = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    private void stopService() {
-        Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
-        requireActivity().stopService(serviceIntent);
-    }
-
-    private void configureKeywordSpinner() {
-        ArrayList<String> spinnerItems = new ArrayList<>();
-        for (Porcupine.BuiltInKeyword keyword : Porcupine.BuiltInKeyword.values()) {
-            spinnerItems.add(keyword.toString().toLowerCase().replace("_", " "));
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                requireContext(),
-                R.layout.keyword_spinner_item,
-                spinnerItems);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        keywordSpinner.setAdapter(adapter);
-        keywordSpinner2.setAdapter(adapter);
-
-        keywordSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Handle spinner item selected (e.g., update Porcupine if needed)
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Handle nothing selected
-            }
-        });
-        keywordSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Handle spinner item selected (e.g., update Porcupine if needed)
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Handle nothing selected
-            }
-        });
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wake_words, container, false);
 
-        // Find and initialize UI elements
-        recordButton = view.findViewById(R.id.record_button);
-        keywordSpinner = view.findViewById(R.id.keyword_spinner);
-        keywordSpinner2 = view.findViewById(R.id.keyword_spinner2);
-        errorMessageText = view.findViewById(R.id.errorMessage);
+        enableWakeWordSwitch = view.findViewById(R.id.enable_wake_word_control_switch);
+        keywordSpinners = Arrays.asList(
+                view.findViewById(R.id.keyword_spinner_1),
+                view.findViewById(R.id.keyword_spinner_2),
+                view.findViewById(R.id.keyword_spinner_3),
+                view.findViewById(R.id.keyword_spinner_4)
+        );
 
-        // Configure keyword spinner
-        configureKeywordSpinner();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, getKeywords());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        keywordSpinners.forEach(spinner -> {
+            spinner.setAdapter(adapter);
+            spinner.setOnItemSelectedListener(spinnerListener);
+        });
 
+        // Get the saved switch state from SharedPreferences and apply it to the switch
+        boolean switchState = sharedPreferences.getBoolean(KEY_WAKE_WORD_ENABLED, false);
+        enableWakeWordSwitch.setChecked(switchState);
 
-        recordButton.setOnClickListener(v ->
-
-        {
-            if (recordButton.isChecked()) {
-                if (hasPermissions(requireContext(),permissionsStr)) {
-                    startService();
+        // Now set the switch listener
+        enableWakeWordSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Remove any existing callbacks to debounce
+            handler.removeCallbacksAndMessages(null);
+            handler.postDelayed(() -> {
+                sharedPreferences.edit().putBoolean(KEY_WAKE_WORD_ENABLED, isChecked).apply();
+                setUIEnabled(isChecked);
+                if (isChecked) {
+                    if (checkAllPermissionsGranted()) {
+                        requestPermissions();
+                    } else {
+                        startService();
+                    }
                 } else {
-                    askForPermissions(permissionsList);
+                    stopService();
                 }
-            } else {
-                stopService();
-            }
+            }, DEBOUNCE_DELAY_MS);
         });
 
         return view;
     }
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        receiver = new ServiceBroadcastReceiver();
-
-        initPermission();
-
-        //ask permissions
-        permissionsList = new ArrayList<>();
-        permissionsList.addAll(Arrays.asList(permissionsStr));
-        askForPermissions(permissionsList);
-
-
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setUIEnabled(sharedPreferences.getBoolean(KEY_WAKE_WORD_ENABLED, false));
     }
 
-    private void initPermission() {
-        // Initialize permission launcher
-        requestPermissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestMultiplePermissions(),
-                new ActivityResultCallback<Map<String, Boolean>>() {
-                    @Override
-                    public void onActivityResult(Map<String, Boolean> result) {
-                        ArrayList<Boolean> list = new ArrayList<>(result.values());
-                        permissionsList = new ArrayList<>();
-                        permissionsCount = 0;
-                        for (int i = 0; i < list.size(); i++) {
-                            if (shouldShowRequestPermissionRationale(permissionsStr[i])) {
-                                permissionsList.add(permissionsStr[i]);
-                            } else if (!hasPermission(requireContext(), permissionsStr[i])) {
-                                permissionsCount++;
-                            }
-                        }
-                        if (!permissionsList.isEmpty()) {
-                            //Some permissions are denied and can be asked again.
-                            askForPermissions(permissionsList);
-                        } else if (permissionsCount > 0) {
-                            //Show alert dialog
-                            showPermissionDialog();
-                        }  //All permissions granted. Do your stuff 🤞
-
-                    }
-                });
+    private List<String> getKeywords() {
+        return Arrays.stream(Porcupine.BuiltInKeyword.values())
+                .map(keyword -> keyword.name().toLowerCase().replace("_", " "))
+                .collect(Collectors.toList());
     }
 
-    private boolean hasPermission(Context context, String permissionStr) {
-        return ContextCompat.checkSelfPermission(context, permissionStr) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private boolean hasPermissions(Context context, String[] permissionStr) {
-        for (String s :
-                permissionStr) {
-            if (ContextCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_DENIED) {
-                return false;
+    private void updateServiceAndUIState(boolean enabled) {
+        if (enabled) {
+            if (checkAllPermissionsGranted()) {
+                requestPermissions();
+            } else {
+                startService();
+                setUIEnabled(true);
             }
-        }
-        return true;
-    }
-
-    private void askForPermissions(ArrayList<String> permissionsList) {
-        String[] newPermissionStr = new String[permissionsList.size()];
-        for (int i = 0; i < newPermissionStr.length; i++) {
-            newPermissionStr[i] = permissionsList.get(i);
-        }
-        if (newPermissionStr.length > 0) {
-            requestPermissionLauncher.launch(newPermissionStr);
         } else {
-        /* User has pressed 'Deny & Don't ask again' so we have to show the enable permissions dialog
-        which will lead them to app details page to enable permissions from there. */
-            showPermissionDialog();
+            stopService();
+            setUIEnabled(false);
         }
     }
 
-    AlertDialog alertDialog;
-    private void showPermissionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Permission required")
-                .setMessage("Some permissions are need to be allowed to use this app without any problems.")
-                .setPositiveButton("Settings", (dialog, which) -> {
-                    dialog.dismiss();
-                });
-        if (alertDialog == null) {
-            alertDialog = builder.create();
-            if (!alertDialog.isShowing()) {
-                alertDialog.show();
+    private void startService() {
+        Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
+        ContextCompat.startForegroundService(getContext(), serviceIntent);
+    }
+
+    private void stopService() {
+        Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
+        getActivity().stopService(serviceIntent);
+    }
+
+    private void setUIEnabled(boolean isEnabled) {
+        if (getView() == null) return;
+
+        int textColor = isEnabled ? getResources().getColor(R.color.text_enabled, null) : getResources().getColor(R.color.text_disabled, null);
+        float alpha = isEnabled ? 1.0f : 0.5f;
+        keywordSpinners.forEach(spinner -> {
+            spinner.setEnabled(isEnabled);
+            spinner.setAlpha(alpha);
+        });
+        updateTextViewsColor(textColor);
+    }
+
+    private void updateTextViewsColor(int textColor) {
+        int[] titleIDs = {R.id.keyword_title_1, R.id.keyword_title_2, R.id.keyword_title_3, R.id.keyword_title_4};
+        int[] subtitleIDs = {R.id.keyword_subtitle_1, R.id.keyword_subtitle_2, R.id.keyword_subtitle_3, R.id.keyword_subtitle_4};
+        for (int i = 0; i < titleIDs.length; i++) {
+            TextView titleView = getView().findViewById(titleIDs[i]);
+            TextView subtitleView = getView().findViewById(subtitleIDs[i]);
+            if (titleView != null) titleView.setTextColor(textColor);
+            if (subtitleView != null) subtitleView.setTextColor(textColor);
+        }
+    }
+
+    private void requestPermissions() {
+        permissionManager.requestPermissions(REQUIRED_PERMISSIONS, permissionsListener);
+    }
+
+    private boolean checkAllPermissionsGranted() {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                return true;
             }
         }
+        return false;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        requireActivity().registerReceiver(receiver, new IntentFilter("PorcupineInitError"), Context.RECEIVER_NOT_EXPORTED);
+    private void showSnackbarMessage(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
     }
 
-
-    // Displays an error message for Porcupine initialization failure
-    private void showPorcupineError(String errorMessage) {
-        errorMessageText.setText(errorMessage);
-        errorMessageText.setVisibility(View.VISIBLE);
-        recordButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_disabled));
-        recordButton.setChecked(false);
-        recordButton.setEnabled(false);
+    private void showPermissionDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Permission Required")
+                .setMessage("Microphone and call permissions are required for this feature. Please enable them in the app settings.")
+                .setPositiveButton("Go to Settings", (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", getContext().getPackageName(), null));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
     }
 
-    // Displays an error message for missing microphone permission
-    private void showMicrophonePermissionError() {
-        onPorcupineInitError("Microphone permission is required for this demo");
-    }
-
-    private void onPorcupineInitError(final String errorMessage) {
-        requireActivity().runOnUiThread(() -> {
-            // Display the error message in the TextView
-            TextView errorText = requireActivity().findViewById(R.id.errorMessage);
-            errorText.setText(errorMessage);
-            errorText.setVisibility(View.VISIBLE);
-
-            // Disable the record button
-            ToggleButton recordButton = requireActivity().findViewById(R.id.record_button);
-            recordButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_disabled));
-            recordButton.setChecked(false);
-            recordButton.setEnabled(false);
-        });
-    }
-
-    public class ServiceBroadcastReceiver extends BroadcastReceiver {
+    private final AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            onPorcupineInitError(intent.getStringExtra("errorMessage"));
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         }
-    }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+        }
+    };
+
+    private final PermissionManager.MultiplePermissionsListener permissionsListener = new PermissionManager.MultiplePermissionsListener() {
+        @Override
+        public void onAllPermissionsGranted() {
+            updateServiceAndUIState(true);
+        }
+
+        @Override
+        public void onPermissionsDenied(List<String> deniedPermissions) {
+            showSnackbarMessage("Permissions denied");
+            enableWakeWordSwitch.setChecked(false);
+        }
+
+        @Override
+        public void onPermissionsDeniedForever(List<String> deniedForeverPermissions) {
+            showPermissionDialog();
+            enableWakeWordSwitch.setChecked(false);
+        }
+    };
 }
+
