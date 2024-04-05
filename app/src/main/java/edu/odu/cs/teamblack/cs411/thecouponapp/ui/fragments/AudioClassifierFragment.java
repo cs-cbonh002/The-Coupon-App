@@ -30,6 +30,7 @@ import org.tensorflow.lite.task.audio.classifier.Classifications;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -127,18 +128,20 @@ public class AudioClassifierFragment extends Fragment {
         audioRecord.startRecording();
 
         timerTask = new TimerTask() {
-            List<Classifications> output = audioClassifier.classify(tensorAudio);
             @Override
             public void run() {
+                int numOfSamples = tensorAudio.load(audioRecord);
+                List<Classifications> output = audioClassifier.classify(tensorAudio);
+
                 List<Category> finalOutput = new ArrayList<>();
                 for (Classifications classifications : output) {
                     for (Category category : classifications.getCategories()) {
-                        Log.d(TAG, category.getDisplayName());
-                        if (category.getScore() > 0.3f) {
+                        if (category.getScore() > 0.2f) {
                             finalOutput.add(category);
                         }
                     }
                 }
+
                 StringBuilder outStr = new StringBuilder();
                 for (Category c :
                         finalOutput) {
@@ -148,6 +151,7 @@ public class AudioClassifierFragment extends Fragment {
                 requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.d(TAG, outStr.toString());
                         channelTextView.setText(channels);
                         outText.setText(outStr.toString());
                     }
