@@ -13,4 +13,7 @@
     <color name="colorAccent">#00E5C3</color>
     <color name="colorDanger">#ff0e0e</color>
     <color name="colorLightGrey">#f5f5f5</color>
+
+    <color name="text_enabled">#FF000000</color>
+    <color name="text_disabled">#FF888888</color>
 </resources>
