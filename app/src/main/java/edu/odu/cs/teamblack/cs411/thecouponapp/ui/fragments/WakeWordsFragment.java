@@ -174,7 +174,7 @@ public class WakeWordsFragment extends Fragment {
     }
 
     private void showSnackbarMessage(String message) {
-        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show();
     }
 
     private void showPermissionDialog() {

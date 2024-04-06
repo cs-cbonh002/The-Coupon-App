@@ -103,5 +103,7 @@
     <string name="theme">Theme</string>
     <string name="home">Home</string>
     <string name="enter_zip">Enter Zip Code</string>
+    <string name="channelInfo" />
+    <string name="label" />
 
 </resources>

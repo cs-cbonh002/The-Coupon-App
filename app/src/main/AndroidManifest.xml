@@ -33,7 +33,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TheCouponApp"
         android:usesCleartextTraffic="true">
-
+        <service
+            android:name=".services.SafetyMonitoringService"
+            android:enabled="true"
+            android:exported="true"></service>
         <service
             android:name=".services.PorcupineService"
             android:exported="false"

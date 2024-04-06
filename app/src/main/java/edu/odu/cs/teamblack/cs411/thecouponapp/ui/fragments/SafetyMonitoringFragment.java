@@ -4,14 +4,18 @@ package edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.GnssAntennaInfo;
 import android.media.AudioRecord;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -36,16 +40,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
+import edu.odu.cs.teamblack.cs411.thecouponapp.services.PorcupineService;
+import edu.odu.cs.teamblack.cs411.thecouponapp.services.SafetyMonitoringService;
 
 public class SafetyMonitoringFragment extends Fragment {
 
     final String TAG = "Audio Classifier Fragment";
     // TensorFlow Lite
-    BaseOptions baseOptionsBuilder;
-    private AudioClassifier audioClassifier;
-    private TensorAudio tensorAudio;
-    private AudioRecord audioRecord;
-    private TimerTask timerTask;
 
     //permissions
     int permissionsCount = 0;
@@ -53,13 +54,15 @@ public class SafetyMonitoringFragment extends Fragment {
     final String[] permissionsStr = {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CALL_PHONE,
-            Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
+            Manifest.permission.POST_NOTIFICATIONS
     };
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
     //UI
     private ToggleButton toggleButton;
     private TextView channelTextView;
     private TextView outText;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,16 +77,7 @@ public class SafetyMonitoringFragment extends Fragment {
         permissionsList.addAll(Arrays.asList(permissionsStr));
         askForPermissions(permissionsList);
 
-        baseOptionsBuilder = BaseOptions.builder().setNumThreads(1).useGpu().build();
 
-        try {
-            //tensorflow
-            final String model = "audioClassifier.tflite";
-            audioClassifier = AudioClassifier.createFromFile(requireContext(), model);
-        } catch (IOException e) {
-            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
-        }
-        tensorAudio = audioClassifier.createInputTensorAudio();
     }
 
     @Override
@@ -109,53 +103,15 @@ public class SafetyMonitoringFragment extends Fragment {
     }
 
     /////////// TensorFlow
-    public void startService() {
-        TensorAudio.TensorAudioFormat format = audioClassifier.getRequiredTensorAudioFormat();
-        String channels = "Number of channels: " + format.getChannels() + "\n" +
-                "Sample rate: " + format.getSampleRate();
-
-        audioRecord = audioClassifier.createAudioRecord();
-        audioRecord.startRecording();
-
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                int numOfSamples = tensorAudio.load(audioRecord);
-                List<Classifications> output = audioClassifier.classify(tensorAudio);
-
-                List<Category> finalOutput = new ArrayList<>(numOfSamples);
-                for (Classifications classifications : output) {
-                    for (Category category : classifications.getCategories()) {
-                        if (category.getScore() > 0.2f) {
-                            finalOutput.add(category);
-                        }
-                    }
-                }
-
-                StringBuilder outStr = new StringBuilder();
-                for (Category c :
-                        finalOutput) {
-                    outStr.append(c.getLabel()).append(": ")
-                            .append(c.getScore()).append("\n");
-                }
-                requireActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG,outStr.toString());
-                        channelTextView.setText(channels);
-                        outText.setText(outStr.toString());
-                    }
-                });
-            }
-        };
-        new Timer().scheduleAtFixedRate(timerTask, 1, 500);
+    private void startService() {
+        Intent serviceIntent = new Intent(requireContext(), SafetyMonitoringService.class);
+        ContextCompat.startForegroundService(requireContext(), serviceIntent);
     }
 
-    public void stopService() {
-        audioRecord.stop();
-        timerTask.cancel();
+    private void stopService() {
+        Intent serviceIntent = new Intent(requireContext(), SafetyMonitoringService.class);
+        requireActivity().stopService(serviceIntent);
     }
-
 
     ///////////////////////////// Permissions
     private void askForPermissions(ArrayList<String> permissionsList) {
