@@ -47,6 +47,7 @@ public class PorcupineService extends Service {
     private static final String ACCESS_KEY = "ir/zJzrvkSCpbURXMlpFz1nL5VEHIsNf2snqMTDwXDiEDzc4Cp4zzQ==";
     private PorcupineManager porcupineManager;
     private int numUtterances;
+    private String callingKeyword;
 
     //phone
     Intent phoneIntent = new Intent(Intent.ACTION_CALL);
@@ -113,6 +114,8 @@ public class PorcupineService extends Service {
     @SuppressLint("ForegroundServiceType")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        callingKeyword = (String) intent.getExtras().get("callingKeyword");
 
         numUtterances = 0;
         createNotificationChannel();

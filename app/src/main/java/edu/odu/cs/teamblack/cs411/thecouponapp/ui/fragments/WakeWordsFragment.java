@@ -49,6 +49,8 @@ public class WakeWordsFragment extends Fragment {
     private PermissionManager permissionManager;
     private SharedPreferences sharedPreferences;
 
+    private String callingKeyword = "computer";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +131,7 @@ public class WakeWordsFragment extends Fragment {
 
     private void startService() {
         Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
+        serviceIntent.putExtra("Keywords",callingKeyword);
         ContextCompat.startForegroundService(getContext(), serviceIntent);
     }
 
