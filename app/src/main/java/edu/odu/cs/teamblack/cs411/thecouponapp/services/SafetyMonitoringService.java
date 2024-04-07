@@ -1,7 +1,5 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.services;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -36,16 +34,11 @@ public class SafetyMonitoringService extends Service {
     private static final String CHANNEL_ID = "SafetyMonitoringChannel";
     PendingIntent pendingIntent;
 
-
     // TensorFlow Lite
     private AudioClassifier audioClassifier;
     private TensorAudio tensorAudio;
     private AudioRecord audioRecord;
     private TimerTask timerTask;
-
-    //UI callback
-    private int CHANNEL_INFO = R.string.channelInfo;
-    private int LABEL = R.string.label;
 
     @SuppressLint("ForegroundServiceType")
     @Override
@@ -69,7 +62,7 @@ public class SafetyMonitoringService extends Service {
 
         startService();
 
-        return super.onStartCommand(intent, flags, startId);
+        return Service.START_STICKY;
     }
 
     /////////////Start Stop Service
@@ -80,7 +73,6 @@ public class SafetyMonitoringService extends Service {
 
         audioRecord = audioClassifier.createAudioRecord();
         audioRecord.startRecording();
-       // channelTextView.setText(channels);
 
         timerTask = new TimerTask() {
             @Override
@@ -92,35 +84,41 @@ public class SafetyMonitoringService extends Service {
                 List<Category> finalOutput = new ArrayList<>(numOfSamples);
                 for (Classifications classifications : output) {
                     for (Category category : classifications.getCategories()) {
-                        if (category.getScore() > 0.2f) {
+                        if (category.getScore() > 0.1f) {
                             finalOutput.add(category);
                             switch (category.getLabel()) {
                                 case "Whistling":
-                                    Log.d(TAG,"Whistling");
-                                    notification = getNotification("Safety Monitoring","you're whistling");
+                                case "Whack":
+                                case "Thwack":
+                                case "Crying":
+                                case "Sobbing":
+                                case "Slap":
+                                case "Whimper":
+                                case "Screaming":
+                                case "Wail":
+                                case "Moan":
+                                case "Whipping":
+                                case "Shout":
+                                case "Yell":
+                                case "Grunt":
+                                    notification = getNotification("Safety Monitoring","you're " + category.getLabel());
                                     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                                     assert notificationManager != null;
                                     notificationManager.notify(4321, notification);
+                                    break;
+                                default:
+                                    Log.d(TAG,category.getLabel());
                                     break;
                             }
                         }
                     }
                 }
-
                 StringBuilder outStr = new StringBuilder();
                 for (Category c :
                         finalOutput) {
                     outStr.append(c.getLabel()).append(": ")
                             .append(c.getScore()).append("\n");
                 }
-
-                /*requireActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Log.d(TAG,outStr.toString());
-                        outText.setText(outStr.toString());
-                    }
-                });*/
             }
         };
         new Timer().scheduleAtFixedRate(timerTask, 1, 500);

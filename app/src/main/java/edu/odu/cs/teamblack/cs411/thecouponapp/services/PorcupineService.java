@@ -145,7 +145,7 @@ public class PorcupineService extends Service {
                 getNotification("Wake word service", "Say 'Computer'!");
         startForeground(1234, notification);
 
-        return super.onStartCommand(intent, flags, startId);
+        return Service.START_STICKY;
     }
 
     private void onPorcupineInitError(String message) {

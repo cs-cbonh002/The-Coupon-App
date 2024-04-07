@@ -6,16 +6,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.GnssAntennaInfo;
-import android.media.AudioRecord;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -24,28 +19,16 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import org.tensorflow.lite.support.audio.TensorAudio;
-import org.tensorflow.lite.support.label.Category;
-import org.tensorflow.lite.task.audio.classifier.AudioClassifier;
-import org.tensorflow.lite.task.audio.classifier.Classifications;
-import org.tensorflow.lite.task.core.BaseOptions;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
-import edu.odu.cs.teamblack.cs411.thecouponapp.services.PorcupineService;
 import edu.odu.cs.teamblack.cs411.thecouponapp.services.SafetyMonitoringService;
 
 public class SafetyMonitoringFragment extends Fragment {
 
-    final String TAG = "Audio Classifier Fragment";
+    final String TAG = "AudioClassifierFragment";
     // TensorFlow Lite
 
     //permissions
@@ -63,7 +46,6 @@ public class SafetyMonitoringFragment extends Fragment {
     private TextView channelTextView;
     private TextView outText;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +58,6 @@ public class SafetyMonitoringFragment extends Fragment {
         permissionsList = new ArrayList<>();
         permissionsList.addAll(Arrays.asList(permissionsStr));
         askForPermissions(permissionsList);
-
-
     }
 
     @Override

@@ -68,7 +68,7 @@ public class WakeWordsFragment extends Fragment {
                 view.findViewById(R.id.keyword_spinner_4)
         );
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, getKeywords());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, getKeywords());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         keywordSpinners.forEach(spinner -> {
             spinner.setAdapter(adapter);
@@ -128,17 +128,17 @@ public class WakeWordsFragment extends Fragment {
     }
 
     private void startService() {
-        Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
-        ContextCompat.startForegroundService(getContext(), serviceIntent);
+        Intent serviceIntent = new Intent(requireContext(), PorcupineService.class);
+        ContextCompat.startForegroundService(requireContext(), serviceIntent);
     }
 
     private void stopService() {
-        Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
-        getActivity().stopService(serviceIntent);
+        Intent serviceIntent = new Intent(requireContext(), PorcupineService.class);
+        requireActivity().stopService(serviceIntent);
     }
 
     private void setUIEnabled(boolean isEnabled) {
-        if (getView() == null) return;
+        if (requireView() == null) return;
 
         int textColor = isEnabled ? getResources().getColor(R.color.text_enabled, null) : getResources().getColor(R.color.text_disabled, null);
         float alpha = isEnabled ? 1.0f : 0.5f;
@@ -153,8 +153,8 @@ public class WakeWordsFragment extends Fragment {
         int[] titleIDs = {R.id.keyword_title_1, R.id.keyword_title_2, R.id.keyword_title_3, R.id.keyword_title_4};
         int[] subtitleIDs = {R.id.keyword_subtitle_1, R.id.keyword_subtitle_2, R.id.keyword_subtitle_3, R.id.keyword_subtitle_4};
         for (int i = 0; i < titleIDs.length; i++) {
-            TextView titleView = getView().findViewById(titleIDs[i]);
-            TextView subtitleView = getView().findViewById(subtitleIDs[i]);
+            TextView titleView = requireView().findViewById(titleIDs[i]);
+            TextView subtitleView = requireView().findViewById(subtitleIDs[i]);
             if (titleView != null) titleView.setTextColor(textColor);
             if (subtitleView != null) subtitleView.setTextColor(textColor);
         }
@@ -178,11 +178,11 @@ public class WakeWordsFragment extends Fragment {
     }
 
     private void showPermissionDialog() {
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(requireContext())
                 .setTitle("Permission Required")
                 .setMessage("Microphone and call permissions are required for this feature. Please enable them in the app settings.")
                 .setPositiveButton("Go to Settings", (dialog, which) -> {
-                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", getContext().getPackageName(), null));
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", requireContext().getPackageName(), null));
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 })

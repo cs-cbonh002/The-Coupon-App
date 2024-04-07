@@ -19,9 +19,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>
 
     <application
         android:allowBackup="true"
@@ -36,11 +35,12 @@
         <service
             android:name=".services.SafetyMonitoringService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:foregroundServiceType="microphone"
+            android:exported="true"/>
         <service
             android:name=".services.PorcupineService"
             android:exported="false"
-            android:foregroundServiceType="phoneCall" />
+            android:foregroundServiceType="microphone" />
 
         <activity
             android:name=".ui.activities.LoginActivity"
