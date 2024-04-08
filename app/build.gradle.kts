@@ -29,9 +29,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
-androidResource {
-noCompress "tflite"
-}
+
     flavorDimensions += listOf("enDebug")
 }
 
