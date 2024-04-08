@@ -39,7 +39,8 @@
             android:exported="true"/>
         <service
             android:name=".services.PorcupineService"
-            android:exported="false"
+            android:enabled="true"
+            android:exported="true"
             android:foregroundServiceType="microphone" />
 
         <activity

@@ -70,7 +70,7 @@ public class SafetyMonitoringFragment extends Fragment {
 
         toggleButton.setOnClickListener(v ->  {
             if (toggleButton.isChecked()) {
-                if (hasPermission(getContext(),permissionsStr)) {
+                if (hasPermission(requireContext(),permissionsStr)) {
                     startService();
                 } else {
                     initPermission();

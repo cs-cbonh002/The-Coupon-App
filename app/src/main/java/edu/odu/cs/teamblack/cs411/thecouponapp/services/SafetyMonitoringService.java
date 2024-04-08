@@ -9,15 +9,27 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioRecord;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 
+import org.tensorflow.lite.InterpreterApi;
+import org.tensorflow.lite.task.core.BaseOptions;
+
 import androidx.core.app.NotificationCompat;
+
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tflite.gpu.support.TfLiteGpu;
+import com.google.android.gms.tflite.java.TfLite;
 
 import org.tensorflow.lite.support.audio.TensorAudio;
 import org.tensorflow.lite.support.label.Category;
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier;
 import org.tensorflow.lite.task.audio.classifier.Classifications;
+import org.tensorflow.lite.task.core.BaseOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,99 +50,133 @@ public class SafetyMonitoringService extends Service {
     private AudioClassifier audioClassifier;
     private TensorAudio tensorAudio;
     private AudioRecord audioRecord;
+
+    private InterpreterApi interpreter;
     private TimerTask timerTask;
+    private Looper serviceLooper;
+    private ServiceHandler serviceHandler;
+
+    // Handler that receives messages from the thread
+    private final class ServiceHandler extends Handler {
+        public ServiceHandler(Looper looper) {
+            super(looper);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            TensorAudio.TensorAudioFormat format = audioClassifier.getRequiredTensorAudioFormat();
+
+            if (AudioRecord.RECORDSTATE_RECORDING == audioRecord.getRecordingState()) {
+                return;
+            }
+            audioRecord.startRecording();
+            timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    int numOfSamples = tensorAudio.load(audioRecord);
+                    List<Classifications> output = audioClassifier.classify(tensorAudio);
+                    Notification notification;
+
+                    List<Category> finalOutput = new ArrayList<>(numOfSamples);
+                    for (Classifications classifications : output) {
+                        for (Category category : classifications.getCategories()) {
+                            finalOutput.add(category);
+                            switch (category.getLabel()) {
+                            case "Whistling":
+                            case "Whack":
+                            case "Thwack":
+                            case "Crying":
+                            case "Sobbing":
+                            case "Slap":
+                            case "Whimper":
+                            case "Screaming":
+                            case "Wail":
+                            case "Moan":
+                            case "Whipping":
+                            case "Shout":
+                            case "Yell":
+                            case "Grunt":
+                                notification = getNotification("Safety Monitoring","you're " + category.getLabel());
+                                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                assert notificationManager != null;
+                                notificationManager.notify(4321, notification);
+                                break;
+                            default:
+                                Log.d(TAG,category.getLabel());
+                                break;
+                            }
+                        }
+                    }
+                    StringBuilder outStr = new StringBuilder();
+                    for (Category c :
+                            finalOutput) {
+                        outStr.append(c.getLabel()).append(": ")
+                                .append(c.getScore()).append("\n");
+                    }
+                }
+            };
+            new Timer().scheduleAtFixedRate(timerTask, 1, 500);
+        }
+    }
+
+    @Override
+    public void onCreate() {
+
+        HandlerThread thread = new HandlerThread("ServiceStartArguments", Thread.MAX_PRIORITY);
+        thread.start();
+
+        // Get the HandlerThread's Looper and use it for our Handler
+        serviceLooper = thread.getLooper();
+        serviceHandler = new ServiceHandler(serviceLooper);
+    }
 
     @SuppressLint("ForegroundServiceType")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        
         createNotificationChannel();
         Notification notification;
+
+        Task<Void> initializeTask = TfLite.initialize(getApplicationContext());
+
+
+        BaseOptions baseOptions = BaseOptions.builder()
+                .setNumThreads(1)
+                .useNnapi()
+                .build();
+
+        AudioClassifier.AudioClassifierOptions options = AudioClassifier.AudioClassifierOptions.builder()
+                .setScoreThreshold(0.7f)
+                .setBaseOptions(baseOptions)
+                .build();
 
         try {
             //tensorflow
             final String model = "audioClassifier.tflite";
-            audioClassifier = AudioClassifier.createFromFile(getApplicationContext(), model);
+            audioClassifier = AudioClassifier.createFromFileAndOptions(getApplicationContext(), model, options);
+            tensorAudio = audioClassifier.createInputTensorAudio();
+            audioRecord = audioClassifier.createAudioRecord();
             notification = getNotification("Safety Monitoring Service","Now listing");
         } catch (IOException e) {
             Log.e(TAG, Objects.requireNonNull(e.getMessage()));
             notification =getNotification("Audio Classifier failed","Service will be shut down");
         }
-        tensorAudio = audioClassifier.createInputTensorAudio();
 
         startForeground(4321, notification);
 
-        startService();
+        Message msg = serviceHandler.obtainMessage();
+        msg.arg1 = startId;
+        serviceHandler.sendMessage(msg);
 
         return Service.START_STICKY;
     }
 
     /////////////Start Stop Service
-    public void startService() {
-        TensorAudio.TensorAudioFormat format = audioClassifier.getRequiredTensorAudioFormat();
-        String channels = "Number of channels: " + format.getChannels() + "\n" +
-                "Sample rate: " + format.getSampleRate();
-
-        audioRecord = audioClassifier.createAudioRecord();
-        audioRecord.startRecording();
-
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                int numOfSamples = tensorAudio.load(audioRecord);
-                List<Classifications> output = audioClassifier.classify(tensorAudio);
-                Notification notification;
-
-                List<Category> finalOutput = new ArrayList<>(numOfSamples);
-                for (Classifications classifications : output) {
-                    for (Category category : classifications.getCategories()) {
-                        if (category.getScore() > 0.1f) {
-                            finalOutput.add(category);
-                            switch (category.getLabel()) {
-                                case "Whistling":
-                                case "Whack":
-                                case "Thwack":
-                                case "Crying":
-                                case "Sobbing":
-                                case "Slap":
-                                case "Whimper":
-                                case "Screaming":
-                                case "Wail":
-                                case "Moan":
-                                case "Whipping":
-                                case "Shout":
-                                case "Yell":
-                                case "Grunt":
-                                    notification = getNotification("Safety Monitoring","you're " + category.getLabel());
-                                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                                    assert notificationManager != null;
-                                    notificationManager.notify(4321, notification);
-                                    break;
-                                default:
-                                    Log.d(TAG,category.getLabel());
-                                    break;
-                            }
-                        }
-                    }
-                }
-                StringBuilder outStr = new StringBuilder();
-                for (Category c :
-                        finalOutput) {
-                    outStr.append(c.getLabel()).append(": ")
-                            .append(c.getScore()).append("\n");
-                }
-            }
-        };
-        new Timer().scheduleAtFixedRate(timerTask, 1, 500);
-    }
 
     @Override
     public void onDestroy() {
         audioRecord.stop();
         timerTask.cancel();
     }
-
-
 
     //////Notifications
     private void createNotificationChannel() {
@@ -151,7 +197,6 @@ public class SafetyMonitoringService extends Service {
                 .setContentIntent(pendingIntent)
                 .build();
     }
-
 
     @Override
     public IBinder onBind(Intent intent) {return null; }

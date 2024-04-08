@@ -21,7 +21,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -48,10 +52,65 @@ public class PorcupineService extends Service {
     private PorcupineManager porcupineManager;
     private int numUtterances;
 
+    private Looper serviceLooper;
+    private ServiceHandler serviceHandler;
+
     //phone
     Intent phoneIntent = new Intent(Intent.ACTION_CALL);
     PendingIntent pendingIntent;
 
+    // Handler that receives messages from the thread
+    private final class ServiceHandler extends Handler {
+        public ServiceHandler(Looper looper) {
+            super(looper);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            try {
+                porcupineManager = new PorcupineManager.Builder()
+                        .setAccessKey(ACCESS_KEY)
+                        .setKeywords(new Porcupine.BuiltInKeyword[]{Porcupine.BuiltInKeyword.COMPUTER, Porcupine.BuiltInKeyword.PORCUPINE,Porcupine.BuiltInKeyword.BLUEBERRY})
+                        .setSensitivities(new float[]{0.7f,0.6f,0.7f}).build(
+                                getApplicationContext(),
+                                porcupineManagerCallback);
+                porcupineManager.start();
+
+            } catch (PorcupineInvalidArgumentException e) {
+                onPorcupineInitError(e.getMessage());
+            } catch (PorcupineActivationException e) {
+                onPorcupineInitError("AccessKey activation error");
+            } catch (PorcupineActivationLimitException e) {
+                onPorcupineInitError("AccessKey reached its device limit");
+            } catch (PorcupineActivationRefusedException e) {
+                onPorcupineInitError("AccessKey refused");
+            } catch (PorcupineActivationThrottledException e) {
+                onPorcupineInitError("AccessKey has been throttled");
+            } catch (PorcupineException e) {
+                onPorcupineInitError("Failed to initialize Porcupine: " + e.getMessage());
+            }
+
+            Notification notification = porcupineManager == null ?
+                    getNotification("Porcupine init failed", "Service will be shut down") :
+                    getNotification("Wake word service", "Say 'Computer'!");
+            startForeground(1234, notification);
+
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        // Start up the thread running the service. Note that we create a
+        // separate thread because the service normally runs in the process's
+        // main thread, which we don't want to block. We also make it
+        // background priority so CPU-intensive work doesn't disrupt our UI.
+        HandlerThread thread = new HandlerThread("ServiceStartArguments",
+                Thread.MAX_PRIORITY);
+        thread.start();
+
+        // Get the HandlerThread's Looper and use it for our Handler
+        serviceLooper = thread.getLooper();
+        serviceHandler = new ServiceHandler(serviceLooper);
+    }
     private final PorcupineManagerCallback porcupineManagerCallback = (keywordIndex) -> {
 
         final String contentText = numUtterances == 1 ? " time!" : " times!";
@@ -100,6 +159,9 @@ public class PorcupineService extends Service {
         notificationManager.notify(1234, n);
     };
 
+    public PorcupineService() {
+    }
+
     private void createNotificationChannel() {
         NotificationChannel notificationChannel = new NotificationChannel(
                 CHANNEL_ID,
@@ -117,33 +179,9 @@ public class PorcupineService extends Service {
         numUtterances = 0;
         createNotificationChannel();
 
-        try {
-            porcupineManager = new PorcupineManager.Builder()
-                    .setAccessKey(ACCESS_KEY)
-                    .setKeywords(new Porcupine.BuiltInKeyword[]{Porcupine.BuiltInKeyword.COMPUTER, Porcupine.BuiltInKeyword.PORCUPINE,Porcupine.BuiltInKeyword.BLUEBERRY})
-                    .setSensitivities(new float[]{0.7f,0.6f,0.7f}).build(
-                            getApplicationContext(),
-                            porcupineManagerCallback);
-            porcupineManager.start();
-
-        } catch (PorcupineInvalidArgumentException e) {
-            onPorcupineInitError(e.getMessage());
-        } catch (PorcupineActivationException e) {
-            onPorcupineInitError("AccessKey activation error");
-        } catch (PorcupineActivationLimitException e) {
-            onPorcupineInitError("AccessKey reached its device limit");
-        } catch (PorcupineActivationRefusedException e) {
-            onPorcupineInitError("AccessKey refused");
-        } catch (PorcupineActivationThrottledException e) {
-            onPorcupineInitError("AccessKey has been throttled");
-        } catch (PorcupineException e) {
-            onPorcupineInitError("Failed to initialize Porcupine: " + e.getMessage());
-        }
-
-        Notification notification = porcupineManager == null ?
-                getNotification("Porcupine init failed", "Service will be shut down") :
-                getNotification("Wake word service", "Say 'Computer'!");
-        startForeground(1234, notification);
+        Message msg = serviceHandler.obtainMessage();
+        msg.arg1 = startId;
+        serviceHandler.sendMessage(msg);
 
         return Service.START_STICKY;
     }
