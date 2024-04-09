@@ -25,6 +25,7 @@ public class LocalResourcesFragment extends Fragment {
         CheckBox Housing, Legal, Shelter;
         EditText Zipcode;
 
-        return inflater.inflate(R.layout.activity_local_resources, container, false);
+        return inflater.inflate(R.layout.local_resources_activity, container, false);
 
+    }
 }
