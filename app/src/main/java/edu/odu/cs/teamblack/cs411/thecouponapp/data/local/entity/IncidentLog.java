@@ -22,6 +22,8 @@ public class IncidentLog {
     public Date timestamp;
     public int duration; // Duration in seconds
     public String transcription;
+
+    public String severity;
     public String notes;
 
     public int getId() {
@@ -70,5 +72,13 @@ public class IncidentLog {
 
     public void setCreatedByUser(boolean createdByUser) {
         this.createdByUser = createdByUser;
+    }
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(String severity) {
+        this.severity = severity;
     }
 }

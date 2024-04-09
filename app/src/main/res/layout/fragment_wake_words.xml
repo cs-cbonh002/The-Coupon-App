@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
     android:layout_width="match_parent"
@@ -14,103 +15,245 @@
         android:layout_height="wrap_content"
         android:switchMinWidth="48dp"
         android:switchPadding="8dp"
-        android:text="Enable Remote Control Using Wake Words"
-        android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+        android:text="Enable wake word control"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        app:thumbTint="?attr/colorOnTertiaryContainer"
+        app:trackTint="?attr/colorTertiary" />
 
     <!-- Wake Word 1 -->
-    <TextView
-        android:id="@+id/keyword_title_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Keyword 1"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-
-    <TextView
-        android:id="@+id/keyword_subtitle_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Function explanation for keyword 1"
-        android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
-
-    <Spinner
-        android:id="@+id/keyword_spinner_1"
-        style="@android:style/Widget.Holo.Light.Spinner"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:spinnerMode="dialog" />
+        app:cardElevation="0dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/keyword_title_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Keyword 1"
+                android:textAppearance="?attr/textAppearanceHeadline6" />
+
+            <TextView
+                android:id="@+id/keyword_subtitle_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Function explanation for keyword 1"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:layout_margin="8dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/keyword_menu_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:hint="Select wake word">
+
+                <AutoCompleteTextView
+                    android:id="@+id/keyword_dropdown_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:dropDownHeight="wrap_content"
+                    android:dropDownWidth="match_parent"
+                    android:gravity="start"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="Choose a wake word" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Wake Word 2 -->
-    <TextView
-        android:id="@+id/keyword_title_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Keyword 2"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-
-    <TextView
-        android:id="@+id/keyword_subtitle_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Function explanation for keyword 2"
-        android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
-
-    <Spinner
-        android:id="@+id/keyword_spinner_2"
-        style="@android:style/Widget.Holo.Light.Spinner"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:spinnerMode="dialog" />
+        app:cardElevation="0dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/keyword_title_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Keyword 2"
+                android:textAppearance="?attr/textAppearanceHeadline6" />
+
+            <TextView
+                android:id="@+id/keyword_subtitle_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Function explanation for keyword 2"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:layout_margin="8dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/keyword_menu_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:hint="Select wake word">
+
+                <AutoCompleteTextView
+                    android:id="@+id/keyword_dropdown_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:dropDownHeight="wrap_content"
+                    android:dropDownWidth="match_parent"
+                    android:gravity="start"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="Choose a wake word" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Wake Word 3 -->
-    <TextView
-        android:id="@+id/keyword_title_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Keyword 3"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-
-    <TextView
-        android:id="@+id/keyword_subtitle_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Function explanation for keyword 3"
-        android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
-
-    <Spinner
-        android:id="@+id/keyword_spinner_3"
-        style="@android:style/Widget.Holo.Light.Spinner"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:spinnerMode="dialog" />
+        app:cardElevation="0dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/keyword_title_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Keyword 3"
+                android:textAppearance="?attr/textAppearanceHeadline6" />
+
+            <TextView
+                android:id="@+id/keyword_subtitle_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Function explanation for keyword 3"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:layout_margin="8dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/keyword_menu_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:hint="Select wake word">
+
+                <AutoCompleteTextView
+                    android:id="@+id/keyword_dropdown_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:dropDownHeight="wrap_content"
+                    android:dropDownWidth="match_parent"
+                    android:gravity="start"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="Choose a wake word" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Wake Word 4 -->
-    <TextView
-        android:id="@+id/keyword_title_4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Keyword 4"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-
-    <TextView
-        android:id="@+id/keyword_subtitle_4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Function explanation for keyword 4"
-        android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
-
-    <Spinner
-        android:id="@+id/keyword_spinner_4"
-        style="@android:style/Widget.Holo.Light.Spinner"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:spinnerMode="dialog" />
+        app:cardElevation="0dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/keyword_title_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Keyword 4"
+                android:textAppearance="?attr/textAppearanceHeadline6" />
+
+            <TextView
+                android:id="@+id/keyword_subtitle_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Function explanation for keyword 4"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:layout_margin="8dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/keyword_menu_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:hint="Select wake word">
+
+                <AutoCompleteTextView
+                    android:id="@+id/keyword_dropdown_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:dropDownHeight="wrap_content"
+                    android:dropDownWidth="match_parent"
+                    android:gravity="start"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="Choose a wake word" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

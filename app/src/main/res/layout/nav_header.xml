@@ -6,7 +6,7 @@
     android:layout_height="176dp"
     android:gravity="bottom"
     android:padding="16dp"
-    android:background="@drawable/headerbkg"
+    android:background="@drawable/bg_header"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     >
 
@@ -19,14 +19,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="The Coupon App"
-        android:textColor="@color/white"
+        android:textColor="?attr/colorOnPrimary"
         android:textStyle="bold"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="https://www.cs.odu.edu/~411black/"
-        android:textColor="@color/white"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="14sp"
         android:layout_marginBottom="16dp"/>
 

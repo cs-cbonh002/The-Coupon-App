@@ -18,7 +18,7 @@
             android:layout_margin="8dp"
             android:paddingBottom="8dp"
             android:text="Account"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
@@ -50,7 +50,7 @@
             android:layout_margin="8dp"
             android:paddingBottom="8dp"
             android:text="Features"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
@@ -82,7 +82,7 @@
             android:layout_margin="8dp"
             android:paddingBottom="8dp"
             android:text="Personalization"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
