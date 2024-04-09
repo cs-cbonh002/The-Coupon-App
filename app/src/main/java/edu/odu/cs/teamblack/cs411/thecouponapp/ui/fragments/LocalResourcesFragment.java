@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
+import edu.odu.cs.teamblack.cs411.thecouponapp.R.id;
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.Local;
 
 public class LocalResourcesFragment extends Fragment {
 
@@ -24,5 +26,5 @@ public class LocalResourcesFragment extends Fragment {
         EditText Zipcode;
 
         return inflater.inflate(R.layout.activity_local_resources, container, false);
-    }
+
 }

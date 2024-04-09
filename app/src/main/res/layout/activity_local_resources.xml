@@ -109,6 +109,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <Button
+            android:id="@+id/localRes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Local"
+            tools:layout_editor_absoluteX="31dp"
+            tools:layout_editor_absoluteY="377dp" />
+
+        <Button
+            android:id="@+id/legalRes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Legal"
+            tools:layout_editor_absoluteX="146dp"
+            tools:layout_editor_absoluteY="377dp" />
+
+        <Button
+            android:id="@+id/genRes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="General"
+            tools:layout_editor_absoluteX="282dp"
+            tools:layout_editor_absoluteY="379dp" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
