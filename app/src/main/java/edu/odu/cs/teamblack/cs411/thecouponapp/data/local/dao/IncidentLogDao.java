@@ -1,5 +1,6 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.data.local.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -13,19 +14,18 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.data.local.entity.IncidentLog;
 @Dao
 public interface IncidentLogDao {
     @Insert
-    void insertIncidentLog(IncidentLog incidentLog);
+    void insert(IncidentLog incidentLog);
 
     @Update
-    void updateIncidentLog(IncidentLog incidentLog);
+    void update(IncidentLog incidentLog);
 
     @Delete
-    void deleteIncidentLog(IncidentLog incidentLog);
+    void delete(IncidentLog incidentLog);
 
     @Query("SELECT * FROM incident_logs")
-    List<IncidentLog> getAllIncidentLogs();
+    LiveData<List<IncidentLog>> getAllIncidentLogs();
 
     @Query("SELECT * FROM incident_logs WHERE id = :uuid")
     IncidentLog getIncidentLogByUuid(String uuid);
 
-    // Additional queries as needed
 }
