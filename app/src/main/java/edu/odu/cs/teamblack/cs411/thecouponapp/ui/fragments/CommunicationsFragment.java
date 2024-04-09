@@ -18,6 +18,6 @@ public class CommunicationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         Switch Email, GPS_Email,Message, Emergency, Phone, Authorities;
-        return inflater.inflate(R.layout.activity_communications, container, false);
+        return inflater.inflate(R.layout.communications_activity, container, false);
     }
 }

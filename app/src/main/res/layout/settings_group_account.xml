@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?attr/colorPrimaryContainer"
     app:cardCornerRadius="8dp"
     app:cardElevation="0dp">
 
@@ -22,7 +22,6 @@
             android:focusable="true"
             android:padding="16dp">
 
-            <!-- Chevron Icon -->
             <ImageView
                 android:id="@+id/navigateProfile"
                 android:layout_width="wrap_content"
@@ -30,9 +29,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/navigate_to_setting"
-                android:src="@drawable/ic_navigate_next" />
+                android:src="@drawable/ic_navigate_next"
+                app:tint="?attr/colorOnPrimaryContainer" />
 
-            <!-- Title Text -->
             <TextView
                 android:id="@+id/txtTitleProfile"
                 android:layout_width="wrap_content"
@@ -41,9 +40,9 @@
                 android:layout_alignParentTop="true"
                 android:text="Profile"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="?attr/colorOnPrimaryContainer" />
 
-            <!-- Description Text -->
             <TextView
                 android:id="@+id/txtDescriptionProfile"
                 android:layout_width="match_parent"
@@ -53,15 +52,16 @@
                 android:layout_marginTop="4dp"
                 android:layout_toStartOf="@id/navigateProfile"
                 android:text="Setup and manage profile, change password"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="14sp" />
         </RelativeLayout>
+
 
         <!-- Divider -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorLightGrey" />
+            android:background="?attr/colorOutlineVariant" />
 
         <!-- Family Information -->
         <RelativeLayout
@@ -81,7 +81,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/navigate_to_setting"
-                android:src="@drawable/ic_navigate_next" />
+                android:src="@drawable/ic_navigate_next"
+                app:tint="?attr/colorOnPrimaryContainer" />
 
             <!-- Title Text -->
             <TextView
@@ -92,7 +93,9 @@
                 android:layout_alignParentTop="true"
                 android:text="Family Information"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="?attr/colorOnPrimaryContainer" />
+
 
             <!-- Description Text -->
             <TextView
@@ -104,15 +107,16 @@
                 android:layout_marginTop="4dp"
                 android:layout_toStartOf="@id/navigateFamilyInformation"
                 android:text="Manage your family settings and information"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="?attr/colorSecondary" />
+
         </RelativeLayout>
 
         <!-- Divider -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorLightGrey" />
+            android:background="?attr/colorOutlineVariant" />
 
         <!-- Emergency Contacts -->
         <RelativeLayout
@@ -132,7 +136,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/navigate_to_setting"
-                android:src="@drawable/ic_navigate_next" />
+                android:src="@drawable/ic_navigate_next"
+                app:tint="?attr/colorOnPrimaryContainer" />
 
             <!-- Title Text -->
             <TextView
@@ -143,7 +148,8 @@
                 android:layout_alignParentTop="true"
                 android:text="Emergency Contacts"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="?attr/colorOnPrimaryContainer"/>
 
             <!-- Description Text -->
             <TextView
@@ -155,8 +161,9 @@
                 android:layout_marginTop="4dp"
                 android:layout_toStartOf="@id/navigateEmergencyContacts"
                 android:text="Manage your emergency contacts"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="?attr/colorSecondary" />
+
         </RelativeLayout>
 
     </LinearLayout>

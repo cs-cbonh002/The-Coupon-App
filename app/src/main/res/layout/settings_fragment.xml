@@ -18,7 +18,7 @@
             android:layout_margin="8dp"
             android:paddingBottom="8dp"
             android:text="Account"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
@@ -38,7 +38,7 @@
 
                 <include
                     android:id="@+id/accountGroup"
-                    layout="@layout/group_account_settings" />
+                    layout="@layout/settings_group_account" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -50,7 +50,7 @@
             android:layout_margin="8dp"
             android:paddingBottom="8dp"
             android:text="Features"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
@@ -70,7 +70,7 @@
 
                 <include
                     android:id="@+id/featuresGroup"
-                    layout="@layout/group_feature_settings" />
+                    layout="@layout/settings_group_features" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -82,7 +82,7 @@
             android:layout_margin="8dp"
             android:paddingBottom="8dp"
             android:text="Personalization"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="18sp" />
 
         <androidx.cardview.widget.CardView
@@ -101,7 +101,7 @@
 
                 <include
                     android:id="@+id/personalizationGroup"
-                    layout="@layout/group_personalization_settings" />
+                    layout="@layout/settings_group_personalization" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

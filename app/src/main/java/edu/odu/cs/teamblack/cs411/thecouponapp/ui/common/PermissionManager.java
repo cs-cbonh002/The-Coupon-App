@@ -8,18 +8,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PermissionManager {
-    public interface PermissionResultListener {
-        void onPermissionGranted(String permission);
-        void onPermissionDenied(String permission);
-        void onPermissionDeniedForever(String permission);
-    }
-
     public interface MultiplePermissionsListener {
         void onAllPermissionsGranted();
         void onPermissionsDenied(List<String> deniedPermissions);
@@ -27,17 +20,16 @@ public class PermissionManager {
     }
 
     private final Fragment fragment;
-    private final Map<String, PermissionResultListener> singlePermissionListeners = new HashMap<>();
     private MultiplePermissionsListener multiplePermissionsListener;
-    private ActivityResultLauncher<String[]> multiplePermissionsRequestLauncher;
+    private ActivityResultLauncher<String[]> permissionsLauncher;
 
     public PermissionManager(Fragment fragment) {
         this.fragment = fragment;
-        initLaunchers();
+        initLauncher();
     }
 
-    private void initLaunchers() {
-        multiplePermissionsRequestLauncher = fragment.registerForActivityResult(
+    private void initLauncher() {
+        permissionsLauncher = fragment.registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
                     List<String> grantedPermissions = permissions.entrySet().stream()
                             .filter(Map.Entry::getValue)
@@ -64,15 +56,6 @@ public class PermissionManager {
                 });
     }
 
-    public void requestPermission(String permission, PermissionResultListener listener) {
-        if (ContextCompat.checkSelfPermission(fragment.requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
-            listener.onPermissionGranted(permission);
-        } else {
-            singlePermissionListeners.put(permission, listener);
-            multiplePermissionsRequestLauncher.launch(new String[] { permission });
-        }
-    }
-
     public void requestPermissions(String[] permissions, MultiplePermissionsListener listener) {
         List<String> permissionsNotGranted = Arrays.stream(permissions)
                 .filter(permission -> ContextCompat.checkSelfPermission(fragment.requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
@@ -82,19 +65,7 @@ public class PermissionManager {
             listener.onAllPermissionsGranted();
         } else {
             multiplePermissionsListener = listener;
-            multiplePermissionsRequestLauncher.launch(permissionsNotGranted.toArray(new String[0]));
-        }
-    }
-
-    public void checkPermission(String permission, PermissionResultListener listener) {
-        if (ContextCompat.checkSelfPermission(fragment.requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
-            listener.onPermissionGranted(permission);
-        } else {
-            if (!fragment.shouldShowRequestPermissionRationale(permission)) {
-                listener.onPermissionDeniedForever(permission);
-            } else {
-                listener.onPermissionDenied(permission);
-            }
+            permissionsLauncher.launch(permissionsNotGranted.toArray(new String[0]));
         }
     }
 }

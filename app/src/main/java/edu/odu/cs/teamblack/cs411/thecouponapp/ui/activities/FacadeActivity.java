@@ -13,7 +13,7 @@ public class FacadeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_facade);
+        setContentView(R.layout.facade_activity);
 
         // Consider what these ImageButtons are supposed to do.
         // If they're supposed to navigate to different parts of the app,

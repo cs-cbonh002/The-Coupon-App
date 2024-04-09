@@ -9,4 +9,6 @@
     <item name="nav_settings" type="id"/>
     <item name="nav_safe_exit" type="id"/>
     <item name="nav_logout" type="id"/>
+    <item name="text_view_timestamp" type="id" />
+    <item name="text_view_severity" type="id" />
 </resources>
