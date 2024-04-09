@@ -62,7 +62,7 @@ public class WakeWordsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_wake_words, container, false);
+        View view = inflater.inflate(R.layout.wake_words_fragment, container, false);
 
         enableWakeWordSwitch = view.findViewById(R.id.enable_wake_word_control_switch);
         keywordDropdowns = Arrays.asList(
