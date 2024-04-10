@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -13,8 +14,11 @@ import java.util.Date;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.data.local.converters.DateConverter;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 @Entity(tableName = "incident_logs")
-public class IncidentLog {
+public class IncidentLog implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
@@ -90,11 +94,57 @@ public class IncidentLog {
         return sdf.format(this.timestamp);
     }
 
-    // Method to get formatted duration in HH:mm:ss format
     public String getFormattedDuration() {
         long hours = TimeUnit.SECONDS.toHours(this.duration);
         long minutes = TimeUnit.SECONDS.toMinutes(this.duration) - TimeUnit.HOURS.toMinutes(hours);
         long seconds = TimeUnit.SECONDS.toSeconds(this.duration) - TimeUnit.MINUTES.toSeconds(minutes) - TimeUnit.HOURS.toSeconds(hours);
         return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
     }
+
+    public IncidentLog() {
+
+    }
+
+    public IncidentLog(Parcel in) {
+        id = in.readInt();
+        long tmpIncidentDate = in.readLong();
+        incidentDate = tmpIncidentDate != -1 ? new Date(tmpIncidentDate) : null;
+        description = in.readString();
+        createdByUser = in.readByte() != 0;
+        timestamp = new Date(in.readLong());
+        duration = in.readInt();
+        transcription = in.readString();
+        severity = in.readString();
+        notes = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeLong(incidentDate != null ? incidentDate.getTime() : -1);
+        dest.writeString(description);
+        dest.writeByte((byte) (createdByUser ? 1 : 0));
+        dest.writeLong(timestamp.getTime());
+        dest.writeInt(duration);
+        dest.writeString(transcription);
+        dest.writeString(severity);
+        dest.writeString(notes);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<IncidentLog> CREATOR = new Creator<IncidentLog>() {
+        @Override
+        public IncidentLog createFromParcel(Parcel in) {
+            return new IncidentLog(in);
+        }
+
+        @Override
+        public IncidentLog[] newArray(int size) {
+            return new IncidentLog[size];
+        }
+    };
 }
