@@ -51,10 +51,8 @@ public class SafetyMonitoringService extends Service {
     private AudioClassifier audioClassifier;
     private TensorAudio tensorAudio;
     private AudioRecord audioRecord;
-
     private TimerTask timerTask;
     private ServiceHandler serviceHandler;
-
     Notification notification;
 
     // Handler that receives messages from the thread
@@ -99,15 +97,15 @@ public class SafetyMonitoringService extends Service {
                                 notificationManager.notify(4321, notification);
                                 break;
                             default:
-                                Log.d(TAG,category.getLabel());
+
                                 break;
                             }
+                            Log.d(TAG,category.getLabel());
                         }
                     }
                 }
             };
             new Timer().scheduleAtFixedRate(timerTask, 1, 500);
-            stopSelf();
         }
     }
 
@@ -135,7 +133,7 @@ public class SafetyMonitoringService extends Service {
                 .build();
 
         AudioClassifier.AudioClassifierOptions options = AudioClassifier.AudioClassifierOptions.builder()
-                .setScoreThreshold(0.7f)
+                .setScoreThreshold(0.5f)
                 .setBaseOptions(baseOptions)
                 .build();
 
@@ -166,6 +164,7 @@ public class SafetyMonitoringService extends Service {
     public void onDestroy() {
         audioRecord.stop();
         timerTask.cancel();
+        stopSelf();
     }
 
     //////Notifications

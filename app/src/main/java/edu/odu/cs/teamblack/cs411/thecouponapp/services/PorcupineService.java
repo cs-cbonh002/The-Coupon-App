@@ -230,7 +230,7 @@ public class PorcupineService extends Service {
                 Log.e("PORCUPINE", e.toString());
             }
         }
-
+        stopSelf();
         super.onDestroy();
     }
     private void dialPhoneNumber(String phoneNumber) throws PendingIntent.CanceledException {
