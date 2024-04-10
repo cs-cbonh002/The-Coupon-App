@@ -19,6 +19,7 @@ import android.util.Log;
 import org.tensorflow.lite.InterpreterApi;
 import org.tensorflow.lite.task.core.BaseOptions;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.tasks.Task;
@@ -51,10 +52,10 @@ public class SafetyMonitoringService extends Service {
     private TensorAudio tensorAudio;
     private AudioRecord audioRecord;
 
-    private InterpreterApi interpreter;
     private TimerTask timerTask;
-    private Looper serviceLooper;
     private ServiceHandler serviceHandler;
+
+    Notification notification;
 
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
@@ -62,9 +63,7 @@ public class SafetyMonitoringService extends Service {
             super(looper);
         }
         @Override
-        public void handleMessage(Message msg) {
-            TensorAudio.TensorAudioFormat format = audioClassifier.getRequiredTensorAudioFormat();
-
+        public void handleMessage(@NonNull Message msg) {
             if (AudioRecord.RECORDSTATE_RECORDING == audioRecord.getRecordingState()) {
                 return;
             }
@@ -74,7 +73,6 @@ public class SafetyMonitoringService extends Service {
                 public void run() {
                     int numOfSamples = tensorAudio.load(audioRecord);
                     List<Classifications> output = audioClassifier.classify(tensorAudio);
-                    Notification notification;
 
                     List<Category> finalOutput = new ArrayList<>(numOfSamples);
                     for (Classifications classifications : output) {
@@ -106,26 +104,21 @@ public class SafetyMonitoringService extends Service {
                             }
                         }
                     }
-                    StringBuilder outStr = new StringBuilder();
-                    for (Category c :
-                            finalOutput) {
-                        outStr.append(c.getLabel()).append(": ")
-                                .append(c.getScore()).append("\n");
-                    }
                 }
             };
             new Timer().scheduleAtFixedRate(timerTask, 1, 500);
+            stopSelf();
         }
     }
 
     @Override
     public void onCreate() {
 
-        HandlerThread thread = new HandlerThread("ServiceStartArguments", Thread.MAX_PRIORITY);
+        HandlerThread thread = new HandlerThread(TAG, Thread.MAX_PRIORITY);
         thread.start();
 
         // Get the HandlerThread's Looper and use it for our Handler
-        serviceLooper = thread.getLooper();
+        Looper serviceLooper = thread.getLooper();
         serviceHandler = new ServiceHandler(serviceLooper);
     }
 
@@ -135,9 +128,6 @@ public class SafetyMonitoringService extends Service {
         
         createNotificationChannel();
         Notification notification;
-
-        Task<Void> initializeTask = TfLite.initialize(getApplicationContext());
-
 
         BaseOptions baseOptions = BaseOptions.builder()
                 .setNumThreads(1)
@@ -155,7 +145,7 @@ public class SafetyMonitoringService extends Service {
             audioClassifier = AudioClassifier.createFromFileAndOptions(getApplicationContext(), model, options);
             tensorAudio = audioClassifier.createInputTensorAudio();
             audioRecord = audioClassifier.createAudioRecord();
-            notification = getNotification("Safety Monitoring Service","Now listing");
+            notification = getNotification("Safety Monitoring Service","Now listing\nTry Whistling");
         } catch (IOException e) {
             Log.e(TAG, Objects.requireNonNull(e.getMessage()));
             notification =getNotification("Audio Classifier failed","Service will be shut down");

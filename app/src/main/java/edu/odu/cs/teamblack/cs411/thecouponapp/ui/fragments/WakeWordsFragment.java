@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +49,7 @@ public class WakeWordsFragment extends Fragment {
     private SwitchMaterial enableWakeWordSwitch;
     private PermissionManager permissionManager;
     private SharedPreferences sharedPreferences;
+    ArrayList<String> keywords = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class WakeWordsFragment extends Fragment {
         keywordSpinners.forEach(spinner -> {
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(spinnerListener);
+            //keywords.add(spinner.getSelectedItem().toString().toUpperCase().replace(" ","_"));
         });
 
         // Get the saved switch state from SharedPreferences and apply it to the switch
@@ -129,6 +132,11 @@ public class WakeWordsFragment extends Fragment {
 
     private void startService() {
         Intent serviceIntent = new Intent(requireContext(), PorcupineService.class);
+        keywords.add("COMPUTER");
+        keywords.add("PORCUPINE");
+        keywords.add("BLUEBERRY");
+        keywords.add("TERMINATOR");
+        serviceIntent.putExtra("keywords",keywords);
         ContextCompat.startForegroundService(requireContext(), serviceIntent);
     }
 

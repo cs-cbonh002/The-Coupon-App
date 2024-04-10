@@ -33,6 +33,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
+import java.util.ArrayList;
+
 import ai.picovoice.porcupine.Porcupine;
 import ai.picovoice.porcupine.PorcupineActivationException;
 import ai.picovoice.porcupine.PorcupineActivationLimitException;
@@ -44,6 +46,7 @@ import ai.picovoice.porcupine.PorcupineManager;
 import ai.picovoice.porcupine.PorcupineManagerCallback;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.FacadeActivity;
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsFragment;
 
 public class PorcupineService extends Service {
     private static final String CHANNEL_ID = "PorcupineServiceChannel";
@@ -54,6 +57,10 @@ public class PorcupineService extends Service {
 
     private Looper serviceLooper;
     private ServiceHandler serviceHandler;
+
+    ArrayList<String> keywords = new ArrayList<String>();
+
+    Porcupine.BuiltInKeyword[] pWords;
 
     //phone
     Intent phoneIntent = new Intent(Intent.ACTION_CALL);
@@ -69,8 +76,8 @@ public class PorcupineService extends Service {
             try {
                 porcupineManager = new PorcupineManager.Builder()
                         .setAccessKey(ACCESS_KEY)
-                        .setKeywords(new Porcupine.BuiltInKeyword[]{Porcupine.BuiltInKeyword.COMPUTER, Porcupine.BuiltInKeyword.PORCUPINE,Porcupine.BuiltInKeyword.BLUEBERRY})
-                        .setSensitivities(new float[]{0.7f,0.6f,0.7f}).build(
+                        .setKeywords(pWords)
+                        .setSensitivities(new float[]{0.7f,0.6f,0.7f,0.7f}).build(
                                 getApplicationContext(),
                                 porcupineManagerCallback);
                 porcupineManager.start();
@@ -159,9 +166,6 @@ public class PorcupineService extends Service {
         notificationManager.notify(1234, n);
     };
 
-    public PorcupineService() {
-    }
-
     private void createNotificationChannel() {
         NotificationChannel notificationChannel = new NotificationChannel(
                 CHANNEL_ID,
@@ -175,6 +179,14 @@ public class PorcupineService extends Service {
     @SuppressLint("ForegroundServiceType")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        keywords = intent.getExtras().getStringArrayList("keywords");
+        pWords = new Porcupine.BuiltInKeyword[]{
+                Porcupine.BuiltInKeyword.valueOf(keywords.get(0)),
+                Porcupine.BuiltInKeyword.valueOf(keywords.get(1)),
+                Porcupine.BuiltInKeyword.valueOf(keywords.get(2)),
+                Porcupine.BuiltInKeyword.valueOf(keywords.get(3)),
+        };
 
         numUtterances = 0;
         createNotificationChannel();
