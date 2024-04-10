@@ -21,7 +21,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
             android:text="Communications"
-            android:textColor="@color/lavender"
+            android:textColor="?attr/colorOnBackground"
             android:textSize="36sp" />
 
         <EditText
@@ -85,16 +85,5 @@
             android:text="Send Call to Authorities" />
 
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:layout_gravity = "start">
-
-        <include
-            layout="@layout/nav_drawer"/>
-
-    </RelativeLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

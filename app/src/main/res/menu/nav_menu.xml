@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn = "navigation_view"
-    android:divider="@color/material_dynamic_neutral30">
+    android:divider="@color/material_dynamic_neutral30"
+    android:background="?attr/colorSurface">
 
     <group
         android:checkableBehavior="single">

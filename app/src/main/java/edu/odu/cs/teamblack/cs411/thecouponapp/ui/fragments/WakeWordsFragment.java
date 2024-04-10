@@ -2,12 +2,12 @@ package edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
@@ -17,16 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,16 +40,18 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.ui.common.PermissionManager;
 
 public class WakeWordsFragment extends Fragment {
 
-    private static final String[] REQUIRED_PERMISSIONS = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CALL_PHONE};
+    private static final String[] REQUIRED_PERMISSIONS = {
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CALL_PHONE
+    };
     private static final String SHARED_PREFS_NAME = "wake_word_settings";
     private static final String KEY_WAKE_WORD_ENABLED = "wake_word_enabled";
     private static final long DEBOUNCE_DELAY_MS = 500;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private List<Spinner> keywordSpinners;
+    private List<AutoCompleteTextView> keywordDropdowns;
     private SwitchMaterial enableWakeWordSwitch;
     private PermissionManager permissionManager;
     private SharedPreferences sharedPreferences;
-    ArrayList<String> keywords = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,23 +62,24 @@ public class WakeWordsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_wake_words, container, false);
+        View view = inflater.inflate(R.layout.wake_words_fragment, container, false);
 
         enableWakeWordSwitch = view.findViewById(R.id.enable_wake_word_control_switch);
-        keywordSpinners = Arrays.asList(
-                view.findViewById(R.id.keyword_spinner_1),
-                view.findViewById(R.id.keyword_spinner_2),
-                view.findViewById(R.id.keyword_spinner_3),
-                view.findViewById(R.id.keyword_spinner_4)
+        keywordDropdowns = Arrays.asList(
+                view.findViewById(R.id.keyword_dropdown_1),
+                view.findViewById(R.id.keyword_dropdown_2),
+                view.findViewById(R.id.keyword_dropdown_3),
+                view.findViewById(R.id.keyword_dropdown_4)
         );
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, getKeywords());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        keywordSpinners.forEach(spinner -> {
-            spinner.setAdapter(adapter);
-            spinner.setOnItemSelectedListener(spinnerListener);
-            //keywords.add(spinner.getSelectedItem().toString().toUpperCase().replace(" ","_"));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, getKeywords());
+        keywordDropdowns.forEach(dropdown -> {
+            dropdown.setAdapter(adapter);
+            dropdown.setOnItemClickListener(dropdownListener);
         });
+
+        // Set the default first dropdown to the first item in the list
+        keywordDropdowns.forEach(dropdown -> dropdown.setText(adapter.getItem(0), false));
 
         // Get the saved switch state from SharedPreferences and apply it to the switch
         boolean switchState = sharedPreferences.getBoolean(KEY_WAKE_WORD_ENABLED, false);
@@ -88,16 +91,7 @@ public class WakeWordsFragment extends Fragment {
             handler.removeCallbacksAndMessages(null);
             handler.postDelayed(() -> {
                 sharedPreferences.edit().putBoolean(KEY_WAKE_WORD_ENABLED, isChecked).apply();
-                setUIEnabled(isChecked);
-                if (isChecked) {
-                    if (checkAllPermissionsGranted()) {
-                        requestPermissions();
-                    } else {
-                        startService();
-                    }
-                } else {
-                    stopService();
-                }
+                updateServiceAndUIState(isChecked);
             }, DEBOUNCE_DELAY_MS);
         });
 
@@ -107,7 +101,8 @@ public class WakeWordsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setUIEnabled(sharedPreferences.getBoolean(KEY_WAKE_WORD_ENABLED, false));
+        updateServiceAndUIState(sharedPreferences.getBoolean(KEY_WAKE_WORD_ENABLED, false));
+        populateDropdowns();
     }
 
     private List<String> getKeywords() {
@@ -132,12 +127,7 @@ public class WakeWordsFragment extends Fragment {
 
     private void startService() {
         Intent serviceIntent = new Intent(requireContext(), PorcupineService.class);
-        keywords.add("COMPUTER");
-        keywords.add("PORCUPINE");
-        keywords.add("BLUEBERRY");
-        keywords.add("TERMINATOR");
-        serviceIntent.putExtra("keywords",keywords);
-        ContextCompat.startForegroundService(requireContext(), serviceIntent);
+        requireContext().startService(serviceIntent);
     }
 
     private void stopService() {
@@ -148,13 +138,56 @@ public class WakeWordsFragment extends Fragment {
     private void setUIEnabled(boolean isEnabled) {
         if (requireView() == null) return;
 
-        int textColor = isEnabled ? getResources().getColor(R.color.text_enabled, null) : getResources().getColor(R.color.text_disabled, null);
+        int textColor = isEnabled ? getResources().getColor(R.color.textColorEnabled, null) : getResources().getColor(R.color.textColorDisabled, null);
         float alpha = isEnabled ? 1.0f : 0.5f;
-        keywordSpinners.forEach(spinner -> {
-            spinner.setEnabled(isEnabled);
-            spinner.setAlpha(alpha);
+
+        boolean hasPermissions = !checkAllPermissionsGranted();
+        keywordDropdowns.forEach(dropdown -> {
+            dropdown.setEnabled(isEnabled && hasPermissions);
+            dropdown.setAlpha(alpha);
         });
+
         updateTextViewsColor(textColor);
+
+        // Enable/disable the TextInputLayout elements
+        int[] keywordMenuIDs = {R.id.keyword_menu_1, R.id.keyword_menu_2, R.id.keyword_menu_3, R.id.keyword_menu_4};
+        for (int menuID : keywordMenuIDs) {
+            TextInputLayout textInputLayout = requireView().findViewById(menuID);
+            textInputLayout.setEnabled(isEnabled && hasPermissions);
+        }
+    }
+
+    private void populateDropdowns() {
+        List<String> availableKeywords = new ArrayList<>(getKeywords());
+        String[] defaultKeywords = {"porcupine", "bumblebee", "terminator", "blueberry"};
+
+        for (int i = 0; i < keywordDropdowns.size(); i++) {
+            AutoCompleteTextView dropdown = keywordDropdowns.get(i);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, availableKeywords);
+            dropdown.setAdapter(adapter);
+            dropdown.setText(defaultKeywords[i], false);
+            availableKeywords.remove(defaultKeywords[i]);
+            dropdown.setOnItemClickListener(getDropdownListener(i, availableKeywords));
+        }
+    }
+
+    private AdapterView.OnItemClickListener getDropdownListener(int index, List<String> availableKeywords) {
+        return (parent, view, position, id) -> {
+            String selectedKeyword = parent.getItemAtPosition(position).toString();
+            availableKeywords.add(keywordDropdowns.get(index).getText().toString());
+            availableKeywords.remove(selectedKeyword);
+            updateAdapters(index, availableKeywords);
+        };
+    }
+
+    private void updateAdapters(int excludeIndex, List<String> availableKeywords) {
+        for (int i = 0; i < keywordDropdowns.size(); i++) {
+            if (i != excludeIndex) {
+                AutoCompleteTextView dropdown = keywordDropdowns.get(i);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, availableKeywords);
+                dropdown.setAdapter(adapter);
+            }
+        }
     }
 
     private void updateTextViewsColor(int textColor) {
@@ -174,7 +207,7 @@ public class WakeWordsFragment extends Fragment {
 
     private boolean checkAllPermissionsGranted() {
         for (String permission : REQUIRED_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+            if (requireContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
                 return true;
             }
         }
@@ -199,14 +232,8 @@ public class WakeWordsFragment extends Fragment {
                 .show();
     }
 
-    private final AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-        }
+    private final AdapterView.OnItemClickListener dropdownListener = (parent, view, position, id) -> {
+        // Handle item selection
     };
 
     private final PermissionManager.MultiplePermissionsListener permissionsListener = new PermissionManager.MultiplePermissionsListener() {
@@ -228,4 +255,3 @@ public class WakeWordsFragment extends Fragment {
         }
     };
 }
-

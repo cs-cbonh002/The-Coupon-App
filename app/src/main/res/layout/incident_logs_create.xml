@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Incident Details"
+        style="@style/TextAppearance.MaterialComponents.Headline6" />
+
+    <TextView
+        android:id="@+id/details_timestamp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Timestamp: 2024-04-09 14:22"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/details_severity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Severity: High"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Attachments:"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_marginTop="16dp" />
+
+    <!-- Add other TextViews or views for the audio, video, and transcript files -->
+
+    <EditText
+        android:id="@+id/details_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Notes"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:minLines="3"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/button_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

@@ -1,0 +1,211 @@
+<!-- CardView for Account Settings Items -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="?attr/colorPrimaryContainer"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Notifications -->
+        <RelativeLayout
+            android:id="@+id/notificationsSetting"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/listPreferredItemHeight"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Enable notifications"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                android:textSize="18sp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchNotifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/navigate_to_setting"
+                app:thumbTint="?attr/colorOnTertiaryContainer"
+                app:trackTint="?attr/colorTertiary" />
+        </RelativeLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorOutlineVariant" />
+
+        <!-- Wake Words -->
+        <RelativeLayout
+            android:id="@+id/wakeWordsSetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp">
+
+            <!-- Chevron Icon -->
+            <ImageView
+                android:id="@+id/navigateWakeWords"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/navigate_to_setting"
+                android:src="@drawable/ic_navigate_next"
+                app:tint="?attr/colorOnPrimaryContainer" />
+
+            <!-- Title Text -->
+            <TextView
+                android:id="@+id/txtTitleWakeWords"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="Wake Words"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                android:textSize="18sp" />
+
+            <!-- Description Text -->
+            <TextView
+                android:id="@+id/txtDescriptionWakeWords"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTitleWakeWords"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="4dp"
+                android:layout_toStartOf="@id/navigateWakeWords"
+                android:text="Update and manage your wake words"
+                android:textColor="?attr/colorSecondary"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorOutlineVariant" />
+
+        <!-- Safety Monitoring -->
+        <RelativeLayout
+            android:id="@+id/safetyMonitoringSetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp">
+
+            <!-- Chevron Icon -->
+            <ImageView
+                android:id="@+id/navigateSafetyMonitoring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/navigate_to_setting"
+                android:src="@drawable/ic_navigate_next"
+                app:tint="?attr/colorOnPrimaryContainer" />
+
+            <!-- Title Text -->
+            <TextView
+                android:id="@+id/txtTitleSafetyMonitoring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="Safety Monitoring"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                android:textSize="18sp" />
+
+            <!-- Description Text -->
+            <TextView
+                android:id="@+id/txtDescriptionSafetyMonitoring"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTitleSafetyMonitoring"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="4dp"
+                android:layout_toStartOf="@id/navigateSafetyMonitoring"
+                android:text="Manage and select automatic logging and calling features"
+                android:textColor="?attr/colorSecondary"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorOutlineVariant" />
+
+        <!-- Safety Monitoring -->
+        <RelativeLayout
+            android:id="@+id/gpsSpoofingSetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp">
+
+            <!-- Chevron Icon -->
+            <ImageView
+                android:id="@+id/navigateGpsSpoofing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/navigate_to_setting"
+                android:src="@drawable/ic_navigate_next"
+                app:tint="?attr/colorOnPrimaryContainer" />
+
+            <!-- Title Text -->
+            <TextView
+                android:id="@+id/txtTitleGpsSpoofing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="GPS Spoofing"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                android:textSize="18sp" />
+
+            <!-- Description Text -->
+            <TextView
+                android:id="@+id/txtDescriptionGpsSpoofing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTitleGpsSpoofing"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="4dp"
+                android:layout_toStartOf="@id/navigateGpsSpoofing"
+                android:text="Manage GPS spoofing locations and routes"
+                android:textSize="14sp"
+                android:textColor="?attr/colorSecondary" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+
