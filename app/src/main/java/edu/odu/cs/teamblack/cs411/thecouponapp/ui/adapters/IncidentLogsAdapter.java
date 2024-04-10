@@ -1,5 +1,7 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.ui.adapters;
 
+import androidx.core.content.ContextCompat;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +53,24 @@ public class IncidentLogsAdapter extends RecyclerView.Adapter<IncidentLogsAdapte
                 listener.onItemClick(incidentLog);
             }
         });
+
+        switch (incidentLog.getSeverity()) {
+            case "Low":
+                holder.severityChip.setText("Low");
+                holder.severityChip.setBackgroundResource(R.drawable.severity_background_low);
+                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_low_dark));
+                break;
+            case "Medium":
+                holder.severityChip.setText("Medium");
+                holder.severityChip.setBackgroundResource(R.drawable.severity_background_medium);
+                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_medium_dark));
+                break;
+            case "High":
+                holder.severityChip.setText("High");
+                holder.severityChip.setBackgroundResource(R.drawable.severity_background_high);
+                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_high_dark));
+                break;
+        }
     }
 
     @Override

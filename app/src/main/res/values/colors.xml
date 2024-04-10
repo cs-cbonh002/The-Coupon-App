@@ -1,4 +1,5 @@
 <resources>
+
     <color name="md_theme_primary">#8692f7</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
     <color name="md_theme_primaryContainer">#E2DFFF</color>
@@ -144,4 +145,14 @@
 
     <color name="textColorEnabled">#FF000000</color>
     <color name="textColorDisabled">#FF787878</color>
+
+    <!-- Colors for severity levels -->
+    <color name="severity_low">#FFFFEB3B</color>
+    <color name="severity_low_dark">#FFFBC02D</color>
+    <color name="severity_medium">#FFFF9800</color>
+    <color name="severity_medium_dark">#FFF57C00</color>
+    <color name="severity_high">#FFF44336</color>
+    <color name="severity_high_dark">#FFD32F2F</color>
+
 </resources>
+

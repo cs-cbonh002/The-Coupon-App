@@ -9,7 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="?attr/colorSecondaryContainer">
 
         <TextView
             android:id="@+id/incident_log_timestamp"
@@ -45,7 +46,7 @@
             android:id="@+id/chip_severity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="High"
+            android:text="Low"
             android:textColor="?attr/colorOnErrorContainer"
             app:chipBackgroundColor="?attr/colorErrorContainer"
             app:chipStrokeColor="?attr/colorOnErrorContainer"

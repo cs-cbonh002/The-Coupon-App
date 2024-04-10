@@ -21,17 +21,31 @@ import android.os.Parcelable;
 public class IncidentLog implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
-    @TypeConverters({DateConverter.class})
-    public Date incidentDate;
-    public String description;
-    public boolean createdByUser;
-    public Date timestamp;
-    public int duration; // Duration in seconds
-    public String transcription;
+    public int id; // No need for a default value since it's auto-generated
 
-    public String severity;
-    public String notes;
+    @TypeConverters({DateConverter.class})
+    public Date incidentDate = new Date(); // Default to the current system date and time
+
+    public boolean createdByUser = true; // Default to true, assuming the user creates the log
+
+    public Date timestamp = new Date(); // Default to the current system date and time
+
+    public int duration = 0; // Default to 0 seconds
+
+    public String transcription = ""; // Default to an empty string
+
+    public String severity = "Low"; // Default to "Low" or any other default value you see fit
+
+    public String notes = ""; // Default to an empty string
+
+    public IncidentLog() {
+        this.notes = "";
+        this.severity = "Low";
+        this.transcription = "";
+        this.duration = 0;
+        this.timestamp = new Date();
+        this.incidentDate = new Date();
+    }
 
     public int getId() {
         return id;
@@ -101,15 +115,10 @@ public class IncidentLog implements Parcelable {
         return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
-    public IncidentLog() {
-
-    }
-
     public IncidentLog(Parcel in) {
         id = in.readInt();
         long tmpIncidentDate = in.readLong();
         incidentDate = tmpIncidentDate != -1 ? new Date(tmpIncidentDate) : null;
-        description = in.readString();
         createdByUser = in.readByte() != 0;
         timestamp = new Date(in.readLong());
         duration = in.readInt();
@@ -122,7 +131,6 @@ public class IncidentLog implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeLong(incidentDate != null ? incidentDate.getTime() : -1);
-        dest.writeString(description);
         dest.writeByte((byte) (createdByUser ? 1 : 0));
         dest.writeLong(timestamp.getTime());
         dest.writeInt(duration);
