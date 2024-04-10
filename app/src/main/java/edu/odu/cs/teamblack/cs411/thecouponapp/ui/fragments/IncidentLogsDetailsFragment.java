@@ -74,14 +74,32 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
             incidentLog = new IncidentLog();
         }
         incidentLog.setNotes(notes);
-        incidentLog.setSeverity(String.valueOf(severityLevel));
 
+        // Convert severity level from integer to string representation
+        String severityString;
+        switch (severityLevel) {
+            case 0:
+                severityString = "Low";
+                break;
+            case 1:
+                severityString = "Medium";
+                break;
+            case 2:
+                severityString = "High";
+                break;
+            default:
+                severityString = "Unknown"; // Default case or consider throwing an exception
+                break;
+        }
+        incidentLog.setSeverity(severityString);
+
+        // Save or update the incident log using the ViewModel
         if (incidentLog.getId() == 0) {
             viewModel.insert(incidentLog);
         } else {
             viewModel.update(incidentLog);
         }
 
-        dismiss();
+        dismiss(); // Close the bottom sheet or dialog
     }
 }

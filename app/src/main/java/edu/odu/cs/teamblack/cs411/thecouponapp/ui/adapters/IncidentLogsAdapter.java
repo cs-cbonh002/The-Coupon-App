@@ -57,18 +57,21 @@ public class IncidentLogsAdapter extends RecyclerView.Adapter<IncidentLogsAdapte
         switch (incidentLog.getSeverity()) {
             case "Low":
                 holder.severityChip.setText("Low");
-                holder.severityChip.setBackgroundResource(R.drawable.severity_background_low);
-                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_low_dark));
+                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_low_text));
+                holder.severityChip.setChipBackgroundColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_low_background));
+                holder.severityChip.setChipStrokeColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_low_outline));
                 break;
             case "Medium":
                 holder.severityChip.setText("Medium");
-                holder.severityChip.setBackgroundResource(R.drawable.severity_background_medium);
-                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_medium_dark));
+                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_medium_text));
+                holder.severityChip.setChipBackgroundColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_medium_background));
+                holder.severityChip.setChipStrokeColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_medium_outline));
                 break;
             case "High":
                 holder.severityChip.setText("High");
-                holder.severityChip.setBackgroundResource(R.drawable.severity_background_high);
-                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_high_dark));
+                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_high_text));
+                holder.severityChip.setChipBackgroundColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_high_background));
+                holder.severityChip.setChipStrokeColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_high_outline));
                 break;
         }
     }
