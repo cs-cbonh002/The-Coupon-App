@@ -53,6 +53,8 @@ public class WakeWordsFragment extends Fragment {
     private PermissionManager permissionManager;
     private SharedPreferences sharedPreferences;
 
+    ArrayList<String> keywords = new ArrayList<String>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +129,12 @@ public class WakeWordsFragment extends Fragment {
 
     private void startService() {
         Intent serviceIntent = new Intent(requireContext(), PorcupineService.class);
-        requireContext().startService(serviceIntent);
+        keywords.add("COMPUTER");
+        keywords.add("PORCUPINE");
+        keywords.add("BLUEBERRY");
+        keywords.add("TERMINATOR");
+        serviceIntent.putExtra("keywords",keywords);
+        requireContext().startForegroundService(serviceIntent);
     }
 
     private void stopService() {
