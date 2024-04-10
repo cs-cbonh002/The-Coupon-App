@@ -30,6 +30,7 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
     private TextInputEditText notesInput;
     private Slider severitySlider;
     private Button saveButton;
+    private ImageButton closeButton;
 
     public static IncidentLogsDetailsFragment newInstance(IncidentLog incidentLog) {
         IncidentLogsDetailsFragment fragment = new IncidentLogsDetailsFragment();
@@ -57,6 +58,7 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
         notesInput = view.findViewById(R.id.notes_input);
         severitySlider = view.findViewById(R.id.severity_slider);
         saveButton = view.findViewById(R.id.save_button);
+        closeButton = view.findViewById(R.id.close_button);
 
         if (getArguments() != null && getArguments().containsKey(ARG_INCIDENT_LOG)) {
             incidentLog = getArguments().getParcelable(ARG_INCIDENT_LOG);
@@ -64,6 +66,7 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
         }
 
         saveButton.setOnClickListener(v -> saveIncidentLog());
+        closeButton.setOnClickListener(v -> dismiss());
     }
 
     private void saveIncidentLog() {
