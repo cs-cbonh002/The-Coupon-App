@@ -50,18 +50,20 @@
     <ImageButton
         android:id="@+id/imageButton1"
         android:layout_width="0dp"
-        android:layout_height="124dp"
+        android:layout_height="145dp"
         android:layout_marginStart="80dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="80dp"
+        android:layout_marginBottom="16dp"
         android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewStoreName"
         app:layout_constraintVertical_bias="0.016"
-        app:srcCompat="@drawable/grocery_coupon_1" />
+        app:srcCompat="@drawable/grocery_coupon_6" />
 
     <ImageButton
         android:id="@+id/imageButton2"
@@ -71,43 +73,49 @@
         android:layout_marginEnd="80dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton1"
         app:layout_constraintVertical_bias="0.023"
-        app:srcCompat="@drawable/grocery_coupon_2" />
+        app:srcCompat="@drawable/grocery_coupon_5" />
 
     <ImageButton
         android:id="@+id/imageButton3"
         android:layout_width="0dp"
-        android:layout_height="133dp"
+        android:layout_height="145dp"
         android:layout_marginStart="80dp"
         android:layout_marginEnd="80dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton2"
         app:layout_constraintVertical_bias="0.035"
-        app:srcCompat="@drawable/grocery_coupon_1" />
+        app:srcCompat="@drawable/grocery_coupon_2" />
 
     <ImageButton
         android:id="@+id/imageButton4"
         android:layout_width="0dp"
-        android:layout_height="168dp"
+        android:layout_height="145dp"
         android:layout_marginStart="80dp"
         android:layout_marginEnd="80dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton3"
-        app:srcCompat="@drawable/grocery_coupon_2" />
+        app:srcCompat="@drawable/grocery_coupon_8" />
 
 
 
