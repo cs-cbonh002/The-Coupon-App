@@ -106,5 +106,6 @@
     <string name="channelInfo" />
     <string name="label" />
     <string name="add_note_hint">Add notes.</string>
+    <string name="close">Close</string>
 
 </resources>

@@ -2,52 +2,60 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/bottom_sheet_background"
+    android:elevation="16dp">
+
+    <ImageButton
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/close"
+        android:src="@drawable/ic_cancel"
+        app:tint="?attr/colorSurfaceDim" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/severity_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:valueFrom="0"
+        android:valueTo="2"
+        android:stepSize="1"
+        app:tickColor="?attr/colorSecondary"
+        app:trackColor="?attr/colorSecondaryFixedDim"
+        app:trackHeight="4dp"
+        app:thumbColor="?attr/colorPrimary"
+        app:labelBehavior="gone"
+        android:layout_marginTop="16dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/notes_input_layout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Notes">
+        android:hint="Notes"
+        android:layout_marginTop="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/notes_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine" />
-
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/severity_input_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Severity Level"
-        android:layout_marginTop="16dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/severity_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Save"
-        android:layout_marginTop="16dp" />
-
-    <Button
-        android:id="@+id/delete_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Delete"
-        android:layout_marginTop="8dp"
-        android:visibility="gone" />
+        app:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary"
+        app:cornerRadius="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
 
 </LinearLayout>

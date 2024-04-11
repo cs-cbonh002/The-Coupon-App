@@ -1,4 +1,5 @@
 <resources>
+
     <color name="md_theme_primary">#8692f7</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
     <color name="md_theme_primaryContainer">#E2DFFF</color>
@@ -144,4 +145,22 @@
 
     <color name="textColorEnabled">#FF000000</color>
     <color name="textColorDisabled">#FF787878</color>
+
+    <!-- Low Severity (Yellow) -->
+    <color name="severity_low_background">#FFF9C4</color> <!-- Light yellow for 'low' severity background -->
+    <color name="severity_low_text">#C79100</color> <!-- Dark yellow for readability on light yellow background -->
+    <color name="severity_low_outline">#FBC02D</color> <!-- Vibrant yellow for outline -->
+
+    <!-- Medium Severity (Orange) -->
+    <color name="severity_medium_background">#FFE0B2</color> <!-- Light orange for 'medium' severity background -->
+    <color name="severity_medium_text">#E65100</color> <!-- Dark orange for readability on light orange background -->
+    <color name="severity_medium_outline">#FF9800</color> <!-- Bright orange for outline -->
+
+    <!-- High Severity (Red) -->
+    <color name="severity_high_background">#FFCDD2</color> <!-- Light red/pink for 'high' severity background -->
+    <color name="severity_high_text">#B71C1C</color> <!-- Dark red for readability on light red background -->
+    <color name="severity_high_outline">#D32F2F</color> <!-- Strong red for outline -->
+
+
 </resources>
+

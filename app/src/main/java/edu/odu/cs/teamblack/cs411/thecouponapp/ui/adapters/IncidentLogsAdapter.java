@@ -1,5 +1,7 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.ui.adapters;
 
+import androidx.core.content.ContextCompat;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +53,27 @@ public class IncidentLogsAdapter extends RecyclerView.Adapter<IncidentLogsAdapte
                 listener.onItemClick(incidentLog);
             }
         });
+
+        switch (incidentLog.getSeverity()) {
+            case "Low":
+                holder.severityChip.setText("Low");
+                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_low_text));
+                holder.severityChip.setChipBackgroundColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_low_background));
+                holder.severityChip.setChipStrokeColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_low_outline));
+                break;
+            case "Medium":
+                holder.severityChip.setText("Medium");
+                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_medium_text));
+                holder.severityChip.setChipBackgroundColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_medium_background));
+                holder.severityChip.setChipStrokeColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_medium_outline));
+                break;
+            case "High":
+                holder.severityChip.setText("High");
+                holder.severityChip.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.severity_high_text));
+                holder.severityChip.setChipBackgroundColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_high_background));
+                holder.severityChip.setChipStrokeColor(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.severity_high_outline));
+                break;
+        }
     }
 
     @Override
