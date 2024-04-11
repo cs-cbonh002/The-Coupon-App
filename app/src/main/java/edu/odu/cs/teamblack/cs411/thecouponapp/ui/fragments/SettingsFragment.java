@@ -68,12 +68,17 @@ public class SettingsFragment extends Fragment {
 
     private void initializeUI(View rootView) {
         // Obtain the featuresGroup LinearLayout by its ID
+        View accountGroup = rootView.findViewById(R.id.accountGroup);
         View featuresGroup = rootView.findViewById(R.id.featuresGroup);
+        View personalizationGroup = rootView.findViewById(R.id.personalizationGroup);
 
         SwitchMaterial switchNotifications = featuresGroup.findViewById(R.id.switchNotifications);
         RelativeLayout wakeWordsSetting = featuresGroup.findViewById(R.id.wakeWordsSetting);
         RelativeLayout safetyMonitoringSetting = featuresGroup.findViewById(R.id.safetyMonitoringSetting);
         RelativeLayout gpsSpoofingSetting = featuresGroup.findViewById(R.id.gpsSpoofingSetting);
+        RelativeLayout emergencyContactsSetting = accountGroup.findViewById(R.id.emergencyContactsSetting);
+        RelativeLayout familyInformationSetting = accountGroup.findViewById(R.id.familyInformationSetting);
+        RelativeLayout dangerAssessmentSetting = personalizationGroup.findViewById(R.id.dangerAssessmentSetting);
 
         switchNotifications.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -86,6 +91,9 @@ public class SettingsFragment extends Fragment {
         wakeWordsSetting.setOnClickListener(v -> navigateToWakeWordsFragment());
         safetyMonitoringSetting.setOnClickListener(v -> navigateToSafetyMonitoringFragment());
         gpsSpoofingSetting.setOnClickListener(v -> navigateToGpsSpoofingFragment());
+        emergencyContactsSetting.setOnClickListener(v -> navigateToEmergencyContactsFragment());
+        familyInformationSetting.setOnClickListener(v -> navigateToFamilyInformationFragment());
+        dangerAssessmentSetting.setOnClickListener(v -> navigateToDangerAssessmentFragment());
     }
 
     private void navigateToWakeWordsFragment() {
@@ -103,6 +111,26 @@ public class SettingsFragment extends Fragment {
     private void navigateToGpsSpoofingFragment() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).navigateTo(new GpsSpoofingFragment(), true);
+        }
+    }
+
+    private void navigateToEmergencyContactsFragment() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateTo(new EmergencyContactsFragment(), true);
+        }
+    }
+
+    private void navigateToDangerAssessmentFragment() {
+        // Navigate to the Danger Assessment Fragment
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateTo(new DangerAssessmentFragment(), true);
+        }
+    }
+
+    private void navigateToFamilyInformationFragment() {
+        // Check if the hosting activity is MainActivity
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateTo(new FamilyInformationFragment(), true);
         }
     }
 
