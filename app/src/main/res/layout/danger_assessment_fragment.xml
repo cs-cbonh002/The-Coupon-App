@@ -20,7 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/app_background"
+            android:background="@android:color/darker_gray"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,10 +32,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:paddingTop="20dp"
+                android:background="@color/white"
+                android:paddingTop="10dp"
                 android:text="**These questions are designed to better assist the customer. Please ensure you are in a safe and private area before answering.**"
                 android:textSize="16sp"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:textColor="@android:color/black"/>
 
             <!-- Question 1 -->
             <TextView
@@ -46,7 +48,8 @@
                 android:layout_marginEnd="16dp"
                 android:paddingTop="30dp"
                 android:text="1. Have you ever been physically abused?"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@android:color/black"/>
 
             <RadioGroup
                 android:id="@+id/radioGroup1"
@@ -60,19 +63,22 @@
                     android:id="@+id/yes1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes" />
+                    android:text="Yes"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/no1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No" />
+                    android:text="No"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/notSure1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Not sure" />
+                    android:text="Not sure"
+                    android:textColor="@android:color/black"/>
             </RadioGroup>
 
             <TextView
@@ -82,7 +88,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="2. Has your partner ever threatened you with physical violence?"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@android:color/black"/>
 
             <RadioGroup
                 android:id="@+id/radioGroup2"
@@ -90,25 +97,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <RadioButton
                     android:id="@+id/yes2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes" />
+                    android:text="Yes"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/no2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No" />
+                    android:text="No"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/notSure2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Not sure" />
+                    android:text="Not sure"
+                    android:textColor="@android:color/black"/>
             </RadioGroup>
 
             <TextView
@@ -118,7 +129,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="3. Have you ever felt afraid of your partner?"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@android:color/black"/>
 
             <RadioGroup
                 android:id="@+id/radioGroup3"
@@ -132,19 +144,22 @@
                     android:id="@+id/yes3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes" />
+                    android:text="Yes"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/no3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No" />
+                    android:text="No"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/notSure3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Not sure" />
+                    android:text="Not sure"
+                    android:textColor="@android:color/black"/>
             </RadioGroup>
 
             <TextView
@@ -154,7 +169,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="4. Have you ever been forced to engage in sexual activity against your will?"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@android:color/black"/>
 
             <RadioGroup
                 android:id="@+id/radioGroup4"
@@ -168,19 +184,22 @@
                     android:id="@+id/yes4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes" />
+                    android:text="Yes"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/no4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No" />
+                    android:text="No"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/notSure4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Not sure" />
+                    android:text="Not sure"
+                    android:textColor="@android:color/black"/>
             </RadioGroup>
 
             <TextView
@@ -190,7 +209,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="5. Do you feel safe in your current living situation?"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@android:color/black"/>
 
             <RadioGroup
                 android:id="@+id/radioGroup5"
@@ -204,19 +224,22 @@
                     android:id="@+id/yes5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes" />
+                    android:text="Yes"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/no5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No" />
+                    android:text="No"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/notSure5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Not sure" />
+                    android:text="Not sure"
+                    android:textColor="@android:color/black"/>
             </RadioGroup>
 
             <TextView
@@ -226,7 +249,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="6. Do you have a safe place to go if you need to leave your current situation?"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@android:color/black"/>
 
             <RadioGroup
                 android:id="@+id/radioGroup6"
@@ -240,19 +264,22 @@
                     android:id="@+id/yes6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes" />
+                    android:text="Yes"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/no6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No" />
+                    android:text="No"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/notSure6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Not sure" />
+                    android:text="Not sure"
+                    android:textColor="@android:color/black"/>
             </RadioGroup>
 
             <TextView
@@ -262,7 +289,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="7. Have you ever been emotionally or psychologically manipulated by your partner?"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@android:color/black"/>
 
             <RadioGroup
                 android:id="@+id/radioGroup7"
@@ -276,19 +304,22 @@
                     android:id="@+id/yes7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes" />
+                    android:text="Yes"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/no7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No" />
+                    android:text="No"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/notSure7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Not sure" />
+                    android:text="Not sure"
+                    android:textColor="@android:color/black"/>
             </RadioGroup>
 
             <TextView
@@ -298,7 +329,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="8. Are you financially dependent on your partner?"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@android:color/black"/>
 
             <RadioGroup
                 android:id="@+id/radioGroup8"
@@ -312,19 +344,22 @@
                     android:id="@+id/yes8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes" />
+                    android:text="Yes"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/no8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No" />
+                    android:text="No"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/notSure8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Not sure" />
+                    android:text="Not sure"
+                    android:textColor="@android:color/black"/>
             </RadioGroup>
 
 
@@ -334,6 +369,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Save"
+                android:textColor="@android:color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/questionnaireLayout" />
