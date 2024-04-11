@@ -38,7 +38,8 @@ public class SafetyMonitoringFragment extends Fragment {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CALL_PHONE,
             Manifest.permission.CAMERA,
-            Manifest.permission.POST_NOTIFICATIONS
+            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.SEND_SMS
     };
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
     //UI

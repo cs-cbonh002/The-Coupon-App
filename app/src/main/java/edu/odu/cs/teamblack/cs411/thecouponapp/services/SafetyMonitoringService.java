@@ -1,20 +1,26 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.services;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioRecord;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.telephony.SmsManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.tensorflow.lite.InterpreterApi;
 import org.tensorflow.lite.task.core.BaseOptions;
@@ -36,6 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -55,6 +62,16 @@ public class SafetyMonitoringService extends Service {
     private ServiceHandler serviceHandler;
     Notification notification;
 
+    //call to action
+    int count = 0;
+
+    //phone
+    Intent phoneIntent = new Intent(Intent.ACTION_CALL);
+    PendingIntent pendingPhoneIntent;
+
+    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+    PendingIntent pendingEmailIntent;
+
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
         public ServiceHandler(Looper looper) {
@@ -66,6 +83,8 @@ public class SafetyMonitoringService extends Service {
                 return;
             }
             audioRecord.startRecording();
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            assert notificationManager != null;
             timerTask = new TimerTask() {
                 @Override
                 public void run() {
@@ -91,14 +110,37 @@ public class SafetyMonitoringService extends Service {
                             case "Shout":
                             case "Yell":
                             case "Grunt":
-                                notification = getNotification("Safety Monitoring","you're " + category.getLabel());
-                                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                                assert notificationManager != null;
+                            case "Slap, smack":
+                            case "Hands":
+                                count++;
+                                notification = getNotification("Safety Monitoring","you're " + category.getLabel() + "\nCount: " + count);
                                 notificationManager.notify(4321, notification);
                                 break;
                             default:
-
+                                if (count > 0) {
+                                    count--;
+                                }
                                 break;
+                            }
+                            if (count == 0) {
+                                //stop documenting
+                            }
+                            else if (count == 5/*&& pendingIntent == null*/) {
+                                //start documenting
+                                notification = getNotification("Safety Monitoring","Start Documenting");
+                                notificationManager.notify(4321, notification);
+                            }
+                            else if (count == 7 && pendingPhoneIntent == null) {
+                                //call 911
+                                try {
+                                    sendSMS("540-214-0551");
+                                    //sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service");
+                                    dialPhoneNumber("540-241-0551");
+                                } catch (PendingIntent.CanceledException e) {
+                                    Log.e(CHANNEL_ID, "can't call",e);
+                                }
+                                notification = getNotification("Safety Monitoring","Calling 911");
+                                notificationManager.notify(4321, notification);
                             }
                             Log.d(TAG,category.getLabel());
                         }
@@ -133,8 +175,9 @@ public class SafetyMonitoringService extends Service {
                 .build();
 
         AudioClassifier.AudioClassifierOptions options = AudioClassifier.AudioClassifierOptions.builder()
-                .setScoreThreshold(0.5f)
+                .setScoreThreshold(0.7f)
                 .setBaseOptions(baseOptions)
+                .setMaxResults(1)
                 .build();
 
         try {
@@ -189,4 +232,45 @@ public class SafetyMonitoringService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {return null; }
+
+    ////////////////communications
+    private void dialPhoneNumber(String phoneNumber) throws PendingIntent.CanceledException {
+
+        if (getApplicationContext().checkSelfPermission(Manifest.permission.CALL_PHONE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            Toast toast = Toast.makeText(this, "Permission not granted to call", Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
+        phoneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        phoneIntent.setData(Uri.parse("tel:" + phoneNumber));
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntent(phoneIntent);
+
+        pendingPhoneIntent = PendingIntent.getActivity(this,0,phoneIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+    }
+    private void sendEmail(String email,String message) {
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Sending from Porcupine Service");
+        emailIntent.putExtra(Intent.EXTRA_TEXT,message);
+
+        emailIntent.setType("message/rfc822");
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntent(emailIntent);
+
+        pendingEmailIntent = PendingIntent.getActivity(this,0,emailIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+    }
+
+    private void sendSMS(String phoneNumber) {
+        if (getApplicationContext().checkSelfPermission(Manifest.permission.SEND_SMS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            Toast toast = Toast.makeText(this, "Permission not granted to call", Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
+        String message = "Hello from Porcupine Service";
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phoneNumber,null,message,null,null);
+    }
 }
