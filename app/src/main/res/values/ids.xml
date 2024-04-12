@@ -11,4 +11,9 @@
     <item name="nav_logout" type="id"/>
     <item name="text_view_timestamp" type="id" />
     <item name="text_view_severity" type="id" />
+    <item name="buttonSave1" type="id" />
+    <item name="textViewPasswordResetLabel" type="id" />
+    <item name="editTextCurrentPassword" type="id" />
+    <item name="editTextNewPassword" type="id" />
+    <item name="editTextConfirmPassword" type="id" />
 </resources>
