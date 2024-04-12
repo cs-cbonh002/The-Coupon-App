@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,16 @@ public class CommunicationsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Switch Email, GPS_Email,Message, Emergency, Phone, Authorities;
-        return inflater.inflate(R.layout.communications_activity, container, false);
+        View view;
+        view = inflater.inflate(R.layout.communications_activity, container, false);
+        Button Save = view.findViewById(R.id.save_button);
+        Switch Email = view.findViewById(R.id.Email_Switch);
+        Switch GPS_Email = view.findViewById(R.id.GPS_Email_Switch);
+        Switch Message_Switch = view.findViewById(R.id.Message_Switch);
+        Switch Emergency = view.findViewById(R.id.Emergency_Contact_Phone);
+        Switch Phone = view.findViewById(R.id.Phone_Call_Switch);
+        Switch Authorities = view.findViewById(R.id.Authority_Phone_Call);
+
+        return view;
     }
 }

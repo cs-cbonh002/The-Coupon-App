@@ -84,6 +84,12 @@
             android:layout_height="wrap_content"
             android:text="Send Call to Authorities" />
 
+        <Button
+            android:id="@+id/Save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+
     </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>
