@@ -78,6 +78,7 @@ public class SettingsFragment extends Fragment {
         RelativeLayout gpsSpoofingSetting = featuresGroup.findViewById(R.id.gpsSpoofingSetting);
         RelativeLayout emergencyContactsSetting = accountGroup.findViewById(R.id.emergencyContactsSetting);
         RelativeLayout familyInformationSetting = accountGroup.findViewById(R.id.familyInformationSetting);
+        RelativeLayout profileSetting = accountGroup.findViewById(R.id.profileSetting);
         RelativeLayout dangerAssessmentSetting = personalizationGroup.findViewById(R.id.dangerAssessmentSetting);
 
         switchNotifications.setOnClickListener(v -> {
@@ -93,6 +94,7 @@ public class SettingsFragment extends Fragment {
         gpsSpoofingSetting.setOnClickListener(v -> navigateToGpsSpoofingFragment());
         emergencyContactsSetting.setOnClickListener(v -> navigateToEmergencyContactsFragment());
         familyInformationSetting.setOnClickListener(v -> navigateToFamilyInformationFragment());
+        profileSetting.setOnClickListener(v -> navigateToProfileFragment());
         dangerAssessmentSetting.setOnClickListener(v -> navigateToDangerAssessmentFragment());
     }
 
@@ -131,6 +133,12 @@ public class SettingsFragment extends Fragment {
         // Check if the hosting activity is MainActivity
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).navigateTo(new FamilyInformationFragment(), true);
+        }
+    }
+
+    private void navigateToProfileFragment() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateTo(new ProfileFragment(), true);
         }
     }
 
