@@ -50,7 +50,7 @@ class Counsel(models.Model):
     phone_number = models.IntegerField(default=0)
     address = models.TextField(max_length=30)
     email = models.EmailField(max_length=50)
-    website = models.URLField(max_length=200)  # URLField for website URLs
+   # website = models.URLField(default=0, 'https://www.lawyer.com/')  # URLField for website URLs
 
     def __str__(self):
         return (self.first_name + " "+ self.last_name)
@@ -59,7 +59,7 @@ class Recording(models.Model):
     Recording_ID = models.PositiveIntegerField(primary_key=True)
     audioSegment_number = models.IntegerField(default=0)
     videdoSegment_number = models.IntegerField(default=0)
-    recording_date = models.DateField()
+    recording_date = models.DateField() #save location on here but create path to native storage on phone
     audio_duration = models.DateTimeField()
     video_duration = models.DateTimeField()
     audioFile_size = models.FloatField()
