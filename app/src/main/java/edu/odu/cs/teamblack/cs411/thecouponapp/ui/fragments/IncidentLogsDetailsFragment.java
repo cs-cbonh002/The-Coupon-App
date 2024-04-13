@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.data.local.entity.IncidentLog;
@@ -26,7 +25,6 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
 
     private IncidentLogsViewModel viewModel;
     private IncidentLog incidentLog;
-    private TextInputLayout notesInputLayout;
     private TextInputEditText notesInput;
     private Slider severitySlider;
     private Button saveButton;
@@ -54,20 +52,50 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(IncidentLogsViewModel.class);
 
-        notesInputLayout = view.findViewById(R.id.notes_input_layout);
+        initializeViews(view);
+        setupListeners();
+
+        if (getArguments() != null && getArguments().containsKey(ARG_INCIDENT_LOG)) {
+            incidentLog = getArguments().getParcelable(ARG_INCIDENT_LOG, IncidentLog.class);
+
+            if (incidentLog != null) {
+                populateViews();
+            }
+        }
+    }
+
+    private void initializeViews(View view) {
         notesInput = view.findViewById(R.id.notes_input);
         severitySlider = view.findViewById(R.id.severity_slider);
         saveButton = view.findViewById(R.id.save_button);
         closeButton = view.findViewById(R.id.close_button);
+    }
 
-        if (getArguments() != null && getArguments().containsKey(ARG_INCIDENT_LOG)) {
-            incidentLog = getArguments().getParcelable(ARG_INCIDENT_LOG);
-            // Populate the views with the properties of incidentLog
+    private void populateViews() {
+        notesInput.setText(incidentLog.getNotes());
+        int severityValue;
+        switch (incidentLog.getSeverity()) {
+            case "Low":
+                severityValue = 0;
+                break;
+            case "Medium":
+                severityValue = 1;
+                break;
+            case "High":
+                severityValue = 2;
+                break;
+            default:
+                severityValue = 0; // Default to low severity
+                break;
         }
+        severitySlider.setValue(severityValue);
+    }
 
+    private void setupListeners() {
         saveButton.setOnClickListener(v -> saveIncidentLog());
         closeButton.setOnClickListener(v -> dismiss());
     }
+
 
     private void saveIncidentLog() {
         String notes = notesInput.getText().toString().trim();
