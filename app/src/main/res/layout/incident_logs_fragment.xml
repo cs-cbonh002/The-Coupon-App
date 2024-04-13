@@ -20,8 +20,8 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="32dp"
         app:srcCompat="@drawable/ic_add"
-        app:tint="?attr/colorOnPrimary"
-        app:backgroundTint="?attr/colorTertiary"
+        app:tint="?attr/colorTertiary"
+        app:backgroundTint="?attr/colorTertiaryContainer"
         android:contentDescription="@string/add_incident"/>
 
 </FrameLayout>

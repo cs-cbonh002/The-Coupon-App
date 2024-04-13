@@ -2,6 +2,7 @@ package edu.odu.cs.teamblack.cs411.thecouponapp.ui.adapters;
 
 import androidx.core.content.ContextCompat;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +43,11 @@ public class IncidentLogsAdapter extends RecyclerView.Adapter<IncidentLogsAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         IncidentLog incidentLog = incidentLogs.get(position);
+        Log.d("Adapter", "Original incidentDate: " + incidentLog.getIncidentDate());
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         holder.timestampTextView.setText(sdf.format(incidentLog.getIncidentDate()));
+
         holder.timestampTextView.setText(incidentLog.getFormattedTimestamp());
         holder.durationTextView.setText(incidentLog.getFormattedDuration());
 
