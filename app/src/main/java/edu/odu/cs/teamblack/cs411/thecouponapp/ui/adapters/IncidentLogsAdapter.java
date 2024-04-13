@@ -9,7 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
@@ -41,8 +42,12 @@ public class IncidentLogsAdapter extends RecyclerView.Adapter<IncidentLogsAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         IncidentLog incidentLog = incidentLogs.get(position);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        holder.timestampTextView.setText(sdf.format(incidentLog.getIncidentDate()));
         holder.timestampTextView.setText(incidentLog.getFormattedTimestamp());
         holder.durationTextView.setText(incidentLog.getFormattedDuration());
+
         if (incidentLog.isCreatedByUser())
             holder.userChip.setText("User");
         else

@@ -38,6 +38,7 @@ public class IncidentLog implements Parcelable {
 
     public String notes = ""; // Default to an empty string
 
+
     public IncidentLog() {
         this.notes = "";
         this.severity = "Low";
@@ -101,6 +102,15 @@ public class IncidentLog implements Parcelable {
 
     public void setSeverity(String severity) {
         this.severity = severity;
+    }
+
+
+    public Date getIncidentDate() {
+        return incidentDate;
+    }
+
+    public void setIncidentDate(Date incidentDate) {
+        this.incidentDate = incidentDate;
     }
 
     public String getFormattedTimestamp() {
