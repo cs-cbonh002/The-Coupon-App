@@ -11,48 +11,21 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 
-# import os
-# from pathlib import Path
-# from datetime import timedelta
-# from dotenv import load_dotenv
-
-# # Loading environment variables from .env file
-# load_dotenv()
-
-# # Base directory for project
-# BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
-# # SECURITY SETTINGS
-# SECRET_KEY = os.getenv('SECRET_KEY')
-# DEBUG = True
-# ALLOWED_HOSTS = ['localhost', 'localhost:8000', '127.0.0.1', '127.0.0.1:8000', '10.0.2.2', '10.0.2.2:8000']
-
 import os
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 
-
 # Loading environment variables from .env file
 load_dotenv()
 
-from pathlib import Path
+# Base directory for project
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-w=y1!h)$7!n$f4d0c&nr(!*w*dojoesb&9)5yxjyp)u94triwc'
-
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECURITY SETTINGS
+SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', 'localhost:8000', '127.0.0.1', '127.0.0.1:8000', '10.0.2.2', '10.0.2.2:8000']
 
 # Application definition
 
