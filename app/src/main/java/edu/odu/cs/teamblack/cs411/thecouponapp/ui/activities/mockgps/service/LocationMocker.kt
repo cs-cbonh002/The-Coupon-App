@@ -1,3 +1,5 @@
+package edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities;
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location

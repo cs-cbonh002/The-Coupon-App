@@ -1,4 +1,4 @@
-package com.lilstiffy.mockgps.extensions
+package edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities;
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
