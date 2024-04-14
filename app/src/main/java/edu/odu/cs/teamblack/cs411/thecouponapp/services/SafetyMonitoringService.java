@@ -90,66 +90,68 @@ public class SafetyMonitoringService extends Service {
                 public void run() {
                     int numOfSamples = tensorAudio.load(audioRecord);
                     List<Classifications> output = audioClassifier.classify(tensorAudio);
+                    Notification notification;
 
                     List<Category> finalOutput = new ArrayList<>(numOfSamples);
                     for (Classifications classifications : output) {
                         for (Category category : classifications.getCategories()) {
-                            finalOutput.add(category);
-                            switch (category.getLabel()) {
-                            case "Whistling":
-                            case "Whack":
-                            case "Thwack":
-                            case "Crying":
-                            case "Sobbing":
-                            case "Slap":
-                            case "Whimper":
-                            case "Screaming":
-                            case "Wail":
-                            case "Moan":
-                            case "Whipping":
-                            case "Shout":
-                            case "Yell":
-                            case "Grunt":
-                            case "Slap, smack":
-                            case "Hands":
-                                count++;
-                                notification = getNotification("Safety Monitoring","you're " + category.getLabel() + "\nCount: " + count);
-                                notificationManager.notify(4321, notification);
-                                break;
-                            default:
-                                if (count > 0) {
-                                    count--;
+                            if (category.getScore() > 0.7f) {
+                                finalOutput.add(category);
+                                switch (category.getLabel()) {
+                                    case "Whistling":
+                                    case "Whack":
+                                    case "Thwack":
+                                    case "Crying":
+                                    case "Sobbing":
+                                    case "Slap":
+                                    case "Whimper":
+                                    case "Screaming":
+                                    case "Wail":
+                                    case "Moan":
+                                    case "Whipping":
+                                    case "Shout":
+                                    case "Yell":
+                                    case "Grunt":
+                                    case "Slap, smack":
+                                    case "Hands":
+                                        count++;
+                                        notification = getNotification("Safety Monitoring", "you're " + category.getLabel() + "\nCount: " + count);
+                                        notificationManager.notify(4321, notification);
+                                        break;
+                                    default:
+                                        if (count > 0) {
+                                            count--;
+                                        }
+                                        break;
                                 }
-                                break;
-                            }
-                            if (count == 0) {
-                                //stop documenting
-                            }
-                            else if (count == 5/*&& pendingIntent == null*/) {
-                                //start documenting
-                                notification = getNotification("Safety Monitoring","Start Documenting");
-                                notificationManager.notify(4321, notification);
-                            }
-                            else if (count == 7 && pendingPhoneIntent == null) {
-                                //call 911
-                                try {
-                                    sendSMS("540-214-0551");
-                                    //sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service");
-                                    dialPhoneNumber("540-241-0551");
-                                } catch (PendingIntent.CanceledException e) {
-                                    Log.e(CHANNEL_ID, "can't call",e);
+                                if (count == 0) {
+                                    //stop documenting
+                                } else if (count == 5/*&& pendingIntent == null*/) {
+                                    //start documenting
+                                    notification = getNotification("Safety Monitoring", "Start Documenting");
+                                    notificationManager.notify(4321, notification);
+                                } else if (count == 7 && pendingPhoneIntent == null) {
+                                    //call 911
+                                    try {
+                                        sendSMS("540-214-0551");
+                                        //sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service");
+                                        dialPhoneNumber("540-241-0551");
+                                    } catch (PendingIntent.CanceledException e) {
+                                        Log.e(CHANNEL_ID, "can't call", e);
+                                    }
+                                    notification = getNotification("Safety Monitoring", "Calling 911");
+                                    notificationManager.notify(4321, notification);
                                 }
-                                notification = getNotification("Safety Monitoring","Calling 911");
-                                notificationManager.notify(4321, notification);
+                                Log.d(TAG, category.getLabel());
                             }
-                            Log.d(TAG,category.getLabel());
                         }
                     }
                 }
             };
             new Timer().scheduleAtFixedRate(timerTask, 1, 500);
+            }
         }
-    }
+
 
     @Override
     public void onCreate() {
