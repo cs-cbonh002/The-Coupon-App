@@ -27,7 +27,14 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 # DEBUG = True
 # ALLOWED_HOSTS = ['localhost', 'localhost:8000', '127.0.0.1', '127.0.0.1:8000', '10.0.2.2', '10.0.2.2:8000']
 
+import os
+from pathlib import Path
+from datetime import timedelta
+from dotenv import load_dotenv
 
+
+# Loading environment variables from .env file
+load_dotenv()
 
 from pathlib import Path
 
@@ -91,21 +98,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'app.wsgi.application'
 
 
-# # REST FRAMEWORK CONFIGURATION
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',  # Add this
-#     ),
-# }
+# REST FRAMEWORK CONFIGURATION
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  # Add this
+    ),
+}
 
-# # JWT AUTHENTICATION
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-#     'ROTATE_REFRESH_TOKENS': True,
-#     'BLACKLIST_AFTER_ROTATION': True,
-# }
+# JWT AUTHENTICATION
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
 
 
 # Database
@@ -162,17 +169,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-# # INTERNATIONALIZATION
-# LANGUAGE_CODE = 'en-us'
-# TIME_ZONE = 'UTC'
-# USE_I18N = True
-# USE_TZ = True
+# INTERNATIONALIZATION
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
 
-# # STATIC FILES (CSS, JavaScript, Images)
-# STATIC_URL = '/static/'
+# STATIC FILES (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
 
-# # DEFAULT PRIMARY KEY FIELD TYPE
-# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# DEFAULT PRIMARY KEY FIELD TYPE
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# # LOGIN URL
-# LOGIN_URL = 'login'
+# LOGIN URL
+LOGIN_URL = 'login'
