@@ -22,15 +22,8 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.tensorflow.lite.InterpreterApi;
-import org.tensorflow.lite.task.core.BaseOptions;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tflite.gpu.support.TfLiteGpu;
-import com.google.android.gms.tflite.java.TfLite;
 
 import org.tensorflow.lite.support.audio.TensorAudio;
 import org.tensorflow.lite.support.label.Category;
@@ -42,7 +35,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -88,13 +80,13 @@ public class SafetyMonitoringService extends Service {
             timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    int numOfSamples = tensorAudio.load(audioRecord);
+                    //int numOfSamples = tensorAudio.load(audioRecord);
                     List<Classifications> output = audioClassifier.classify(tensorAudio);
 
-                    List<Category> finalOutput = new ArrayList<>(numOfSamples);
+                   //List<Category> finalOutput = new ArrayList<>(numOfSamples);
                     for (Classifications classifications : output) {
                         for (Category category : classifications.getCategories()) {
-                            finalOutput.add(category);
+                            //finalOutput.add(category);
                             switch (category.getLabel()) {
                             case "Whistling":
                             case "Whack":
@@ -269,7 +261,7 @@ public class SafetyMonitoringService extends Service {
             toast.show();
             return;
         }
-        String message = "Hello from Porcupine Service";
+        String message = "Hello from Safety Monitoring Service";
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(phoneNumber,null,message,null,null);
     }

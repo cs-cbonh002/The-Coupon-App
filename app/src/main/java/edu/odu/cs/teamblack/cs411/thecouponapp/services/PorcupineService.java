@@ -32,12 +32,19 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.video.FileOutputOptions;
+import androidx.camera.video.Recording;
+import androidx.camera.video.VideoRecordEvent;
+import androidx.camera.view.CameraController;
+import androidx.camera.view.LifecycleCameraController;
+import androidx.camera.view.video.AudioConfig;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import ai.picovoice.porcupine.Porcupine;
 import ai.picovoice.porcupine.PorcupineActivationException;
@@ -62,15 +69,58 @@ public class PorcupineService extends Service {
 
     ArrayList<String> keywords = new ArrayList<String>();
 
-    Porcupine.BuiltInKeyword[] pWords;
+    Porcupine.BuiltInKeyword[] porcupineWords;
 
     //phone
     Intent phoneIntent = new Intent(Intent.ACTION_CALL);
     PendingIntent pendingPhoneIntent;
-
     Intent emailIntent = new Intent(Intent.ACTION_SEND);
     PendingIntent pendingEmailIntent;
 
+    //camera
+
+    private Recording recording = null;
+
+    LifecycleCameraController controller;
+
+    //camera
+    @SuppressLint("MissingPermission")
+    private void recordVideo(LifecycleCameraController controller) {
+        if (recording != null) {
+            recording.stop();
+            recording = null;
+            return;
+        }
+
+        File outFile = new File(getFilesDir(),"testRecording.mp4");
+        recording = controller.startRecording(
+            new FileOutputOptions.Builder(outFile).build(),
+            AudioConfig.create(false),
+            getApplication().getMainExecutor(),
+            videoRecordEvent -> {
+                if (videoRecordEvent instanceof VideoRecordEvent.Finalize) {
+                    VideoRecordEvent.Finalize finalizeEvent = (VideoRecordEvent.Finalize) videoRecordEvent;
+
+                    if (finalizeEvent.hasError()) {
+                        recording.close();
+                        recording = null;
+
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "video capture failed",
+                                Toast.LENGTH_LONG
+                        ).show();
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "video capture succeeded",
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                }
+            }
+        );
+    }
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     // Handler that receives messages from the thread
@@ -83,7 +133,7 @@ public class PorcupineService extends Service {
             try {
                 porcupineManager = new PorcupineManager.Builder()
                         .setAccessKey(ACCESS_KEY)
-                        .setKeywords(pWords)
+                        .setKeywords(porcupineWords)
                         .setSensitivities(new float[]{0.7f,0.6f,0.7f,0.7f}).build(
                                 getApplicationContext(),
                                 porcupineManagerCallback);
@@ -148,6 +198,7 @@ public class PorcupineService extends Service {
             case 1:
                 //start documenting
                 numUtterances++;
+                recordVideo(controller);
                 n = getNotification(
                         "Start Documenting",
                         "Detected " + numUtterances + contentText);
@@ -215,7 +266,7 @@ public class PorcupineService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         keywords = intent.getExtras().getStringArrayList("keywords");
-        pWords = new Porcupine.BuiltInKeyword[]{
+        porcupineWords = new Porcupine.BuiltInKeyword[]{
                 Porcupine.BuiltInKeyword.valueOf(keywords.get(0)),
                 Porcupine.BuiltInKeyword.valueOf(keywords.get(1)),
                 Porcupine.BuiltInKeyword.valueOf(keywords.get(2)),
@@ -224,6 +275,11 @@ public class PorcupineService extends Service {
 
         numUtterances = 0;
         createNotificationChannel();
+
+        controller = new LifecycleCameraController(this);
+        //controller.bindToLifecycle(Lifecycle.get);
+        controller.setEnabledUseCases(CameraController.VIDEO_CAPTURE);
+        controller.setCameraSelector(CameraSelector.DEFAULT_BACK_CAMERA);
 
         Message msg = serviceHandler.obtainMessage();
         msg.arg1 = startId;
@@ -320,7 +376,7 @@ public class PorcupineService extends Service {
     ///////start stop safety monitoring
     private void startService() {
         Intent serviceIntent = new Intent(getApplicationContext(), SafetyMonitoringService.class);
-        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
+        getApplicationContext().startForegroundService(serviceIntent);
     }
 
     private void stopService() {

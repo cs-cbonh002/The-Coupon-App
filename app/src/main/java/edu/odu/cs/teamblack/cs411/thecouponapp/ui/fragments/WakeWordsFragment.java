@@ -43,7 +43,8 @@ public class WakeWordsFragment extends Fragment {
     private static final String[] REQUIRED_PERMISSIONS = {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CALL_PHONE,
-            Manifest.permission.SEND_SMS
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.CAMERA
     };
     private static final String SHARED_PREFS_NAME = "wake_word_settings";
     private static final String KEY_WAKE_WORD_ENABLED = "wake_word_enabled";

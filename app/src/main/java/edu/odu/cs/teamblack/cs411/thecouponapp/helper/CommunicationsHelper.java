@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
-public class CallHelper {
+public class CommunicationsHelper {
    public Intent call(Context context, String phoneNumber) {
         Intent phoneIntent = new Intent(Intent.ACTION_CALL);
         phoneIntent.setData(Uri.parse("tel:" + phoneNumber));

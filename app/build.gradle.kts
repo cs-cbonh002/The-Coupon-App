@@ -54,6 +54,14 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("ai.picovoice:porcupine-android:3.0.1")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    //camera
+    implementation("androidx.camera:camera-core:1.3.2")
+    implementation("androidx.camera:camera-camera2:1.3.2")
+    implementation("androidx.camera:camera-lifecycle:1.3.2")
+    implementation("androidx.camera:camera-video:1.3.2")
+
+    implementation("androidx.camera:camera-view:1.3.2")
+    implementation("androidx.camera:camera-extensions:1.3.2")
     // Tensorflow Lite dependencies for Google Play services
     implementation("com.google.android.gms:play-services-tflite-java:16.1.0")
     // Optional: include Tensorflow Lite Support Library
