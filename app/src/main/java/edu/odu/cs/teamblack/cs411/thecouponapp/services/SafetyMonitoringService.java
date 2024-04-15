@@ -171,21 +171,10 @@ public class SafetyMonitoringService extends Service {
         createNotificationChannel();
         Notification notification;
 
-        BaseOptions baseOptions = BaseOptions.builder()
-                .setNumThreads(1)
-                .useNnapi()
-                .build();
-
-        AudioClassifier.AudioClassifierOptions options = AudioClassifier.AudioClassifierOptions.builder()
-                .setScoreThreshold(0.7f)
-                .setBaseOptions(baseOptions)
-                .setMaxResults(1)
-                .build();
-
         try {
             //tensorflow
             final String model = "audioClassifier.tflite";
-            audioClassifier = AudioClassifier.createFromFileAndOptions(getApplicationContext(), model, options);
+            audioClassifier = AudioClassifier.createFromFile(getApplicationContext(), model);
             tensorAudio = audioClassifier.createInputTensorAudio();
             audioRecord = audioClassifier.createAudioRecord();
             notification = getNotification("Safety Monitoring Service","Now listing\nTry Whistling");
