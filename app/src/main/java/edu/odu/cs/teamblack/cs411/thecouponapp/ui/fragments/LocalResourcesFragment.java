@@ -34,7 +34,7 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 public class LocalResourcesFragment extends Fragment {
 
     private EditText zipCode;
-    private Button enterButton, searchButton;
+    private Button searchButton;
     private WebView webView;
     private CheckBox housingCheckBox, shelterCheckBox, legalCheckBox;
 
@@ -44,13 +44,13 @@ public class LocalResourcesFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.local_resources_activity, container, false);
 
         zipCode = rootView.findViewById(R.id.editTextZipcode);
-        enterButton = rootView.findViewById(R.id.enterButton);
+        searchButton = rootView.findViewById(id.searchButton);
 
         housingCheckBox = rootView.findViewById(R.id.housingCheckBox);
         shelterCheckBox = rootView.findViewById(R.id.shelterCheckBox);
         legalCheckBox = rootView.findViewById(R.id.legalCheckBox);
 
-        enterButton.setOnClickListener(new View.OnClickListener() {
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 performSearch();
