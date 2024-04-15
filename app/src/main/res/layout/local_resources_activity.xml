@@ -37,7 +37,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="88dp"
             android:ems="10"
-            android:hint="Zipcode:"
+            android:hint="Zip Code:"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.119"
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="220dp"
-            android:text="Housing"
+            android:text="@string/housing"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="268dp"
-            android:text="Shelters"
+            android:text="@string/shelters"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="316dp"
-            android:text="Legal   "
+            android:text="@string/legal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -110,30 +110,28 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/localRes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Local"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/legalCheckBox" />
-
-        <Button
             android:id="@+id/legalRes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="32dp"
+            android:paddingHorizontal="55dp"
             android:text="Legal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/localRes" />
+            app:layout_constraintTop_toBottomOf="@+id/genRes" />
 
         <Button
             android:id="@+id/genRes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:paddingHorizontal="50dp"
             android:text="General"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/legalRes" />
+            app:layout_constraintTop_toBottomOf="@+id/searchButton" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
