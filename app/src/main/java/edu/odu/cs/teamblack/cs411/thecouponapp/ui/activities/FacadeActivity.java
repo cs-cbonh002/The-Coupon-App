@@ -82,7 +82,30 @@ public class FacadeActivity extends AppCompatActivity {
                 btn3.setImageResource(R.drawable.walmart_coupon3);
                 btn4.setImageResource(R.drawable.walmart_coupon4);
                 break;
-
+            case "Family Dollar":
+                btn1.setImageResource(R.drawable.familydollar_coupon);
+                btn2.setImageResource(R.drawable.familydollar_coupon2);
+                btn3.setImageResource(R.drawable.familydollar_coupon);
+                btn4.setImageResource(R.drawable.familydollar_coupon2);
+                break;
+            case "Kroger":
+                btn1.setImageResource(R.drawable.kroger_coupon);
+                btn2.setImageResource(R.drawable.kroger_coupon);
+                btn3.setImageResource(R.drawable.kroger_coupon);
+                btn4.setImageResource(R.drawable.kroger_coupon);
+                break;
+            case "Safeway":
+                btn1.setImageResource(R.drawable.grocery_coupon_6);
+                btn2.setImageResource(R.drawable.grocery_coupon_7);
+                btn3.setImageResource(R.drawable.grocery_coupon_8);
+                btn4.setImageResource(R.drawable.grocery_coupon_6);
+                break;
+            case "Publix":
+                btn1.setImageResource(R.drawable.publix_coupon);
+                btn2.setImageResource(R.drawable.publix_coupon2);
+                btn3.setImageResource(R.drawable.publix_coupon);
+                btn4.setImageResource(R.drawable.publix_coupon2);
+                break;
         }
     }
 
