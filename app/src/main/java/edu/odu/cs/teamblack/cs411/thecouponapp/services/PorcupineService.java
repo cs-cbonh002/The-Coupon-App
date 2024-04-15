@@ -135,10 +135,10 @@ public class PorcupineService extends Service {
             case 0:
                 //calling
                 try {
-                    sendSMS("540-214-0551");
-                    //sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service");
-                    dialPhoneNumber("540-241-0551");
-                } catch (PendingIntent.CanceledException e) {
+                    //sendSMS("757-510-5034");
+                    sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service");
+                    //dialPhoneNumber("540-241-0551");
+                } catch (Exception e) {
                     Log.e(CHANNEL_ID, "can't call",e);
                 }
                 n = getNotification(
@@ -244,7 +244,7 @@ public class PorcupineService extends Service {
                 .setContentTitle(title)
                 .setContentText(message)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentIntent(pendingPhoneIntent)
+                .setContentIntent(pendingEmailIntent)
                 .build();
     }
 
@@ -288,6 +288,8 @@ public class PorcupineService extends Service {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Sending from Porcupine Service");
         emailIntent.putExtra(Intent.EXTRA_TEXT,message);
+
+        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         emailIntent.setType("message/rfc822");
 

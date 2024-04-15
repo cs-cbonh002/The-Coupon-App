@@ -18,19 +18,13 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.tensorflow.lite.InterpreterApi;
-import org.tensorflow.lite.task.core.BaseOptions;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tflite.gpu.support.TfLiteGpu;
-import com.google.android.gms.tflite.java.TfLite;
 
 import org.tensorflow.lite.support.audio.TensorAudio;
 import org.tensorflow.lite.support.label.Category;
@@ -42,9 +36,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 
@@ -58,12 +53,14 @@ public class SafetyMonitoringService extends Service {
     private AudioClassifier audioClassifier;
     private TensorAudio tensorAudio;
     private AudioRecord audioRecord;
-    private TimerTask timerTask;
     private ServiceHandler serviceHandler;
+
+    private ScheduledThreadPoolExecutor executor;
     Notification notification;
 
     //call to action
     int count = 0;
+    List<Classifications> output;
 
     //phone
     Intent phoneIntent = new Intent(Intent.ACTION_CALL);
@@ -85,73 +82,76 @@ public class SafetyMonitoringService extends Service {
             audioRecord.startRecording();
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             assert notificationManager != null;
-            timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    int numOfSamples = tensorAudio.load(audioRecord);
-                    List<Classifications> output = audioClassifier.classify(tensorAudio);
-                    Notification notification;
+            executor = new ScheduledThreadPoolExecutor(2);
+            long lengthInMilliSeconds = (long) (((audioClassifier.getRequiredInputBufferSize() * 1.0f) /
+                                audioClassifier.getRequiredTensorAudioFormat().getSampleRate()) * 1000);
 
-                    List<Category> finalOutput = new ArrayList<>(numOfSamples);
-                    for (Classifications classifications : output) {
-                        for (Category category : classifications.getCategories()) {
-                            if (category.getScore() > 0.7f) {
-                                finalOutput.add(category);
-                                switch (category.getLabel()) {
-                                    case "Whistling":
-                                    case "Whack":
-                                    case "Thwack":
-                                    case "Crying":
-                                    case "Sobbing":
-                                    case "Slap":
-                                    case "Whimper":
-                                    case "Screaming":
-                                    case "Wail":
-                                    case "Moan":
-                                    case "Whipping":
-                                    case "Shout":
-                                    case "Yell":
-                                    case "Grunt":
-                                    case "Slap, smack":
-                                    case "Hands":
-                                        count++;
-                                        notification = getNotification("Safety Monitoring", "you're " + category.getLabel() + "\nCount: " + count);
-                                        notificationManager.notify(4321, notification);
-                                        break;
-                                    default:
-                                        if (count > 0) {
-                                            count--;
-                                        }
-                                        break;
-                                }
-                                if (count == 0) {
-                                    //stop documenting
-                                } else if (count == 5/*&& pendingIntent == null*/) {
-                                    //start documenting
-                                    notification = getNotification("Safety Monitoring", "Start Documenting");
-                                    notificationManager.notify(4321, notification);
-                                } else if (count == 7 && pendingPhoneIntent == null) {
-                                    //call 911
-                                    try {
-                                        sendSMS("540-214-0551");
-                                        //sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service");
-                                        dialPhoneNumber("540-241-0551");
-                                    } catch (PendingIntent.CanceledException e) {
-                                        Log.e(CHANNEL_ID, "can't call", e);
+            long interval = (long) (lengthInMilliSeconds * (1 - 0.5f));
+
+            executor.scheduleAtFixedRate(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            int numOfSamples = tensorAudio.load(audioRecord);
+                            long inferenceTime = SystemClock.uptimeMillis();
+                            output = audioClassifier.classify(tensorAudio);
+                            inferenceTime = SystemClock.uptimeMillis() - inferenceTime;
+                            Log.d(TAG, String.format("Inference time %d", inferenceTime));
+                            Log.d(TAG,output.get(0).getCategories().get(0).getLabel());
+                            Notification notification;
+
+                            switch (output.get(0).getCategories().get(0).getLabel()) {
+                                case "Whistling":
+                                case "Whack":
+                                case "Thwack":
+                                case "Crying":
+                                case "Sobbing":
+                                case "Slap":
+                                case "Whimper":
+                                case "Screaming":
+                                case "Wail":
+                                case "Moan":
+                                case "Whipping":
+                                case "Shout":
+                                case "Yell":
+                                case "Grunt":
+                                case "Slap, smack":
+                                case "Hands":
+                                    count++;
+                                    //notification = getNotification("Safety Monitoring", "you're " + category.getLabel() + "\nCount: " + count);
+                                    //notificationManager.notify(4321, notification);
+                                    break;
+                                default:
+                                    if (count > 0) {
+                                        count--;
                                     }
-                                    notification = getNotification("Safety Monitoring", "Calling 911");
-                                    notificationManager.notify(4321, notification);
+                                    break;
+                            }
+                            if (count == 0) {
+                                //stop documenting
+                            } else if (count == 5/*&& pendingIntent == null*/) {
+                                //start documenting
+                                notification = getNotification("Safety Monitoring", "Start Documenting");
+                                notificationManager.notify(4921, notification);
+                            } else if (count == 7 && pendingPhoneIntent == null) {
+                                //call 911
+                                try {
+                                    sendSMS("540-214-0551");
+                                    //sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service");
+                                    dialPhoneNumber("540-241-0551");
+                                } catch (PendingIntent.CanceledException e) {
+                                    Log.e(CHANNEL_ID, "can't call", e);
                                 }
-                                Log.d(TAG, category.getLabel());
+                                notification = getNotification("Safety Monitoring", "Calling 911");
+                                notificationManager.notify(9321, notification);
                             }
                         }
-                    }
-                }
-            };
-            new Timer().scheduleAtFixedRate(timerTask, 1, 500);
-            }
+                    },
+                    1,
+                    interval,
+                    TimeUnit.MILLISECONDS);
         }
-
+    }
 
     @Override
     public void onCreate() {
@@ -171,21 +171,10 @@ public class SafetyMonitoringService extends Service {
         createNotificationChannel();
         Notification notification;
 
-        BaseOptions baseOptions = BaseOptions.builder()
-                .setNumThreads(1)
-                .useNnapi()
-                .build();
-
-        AudioClassifier.AudioClassifierOptions options = AudioClassifier.AudioClassifierOptions.builder()
-                .setScoreThreshold(0.7f)
-                .setBaseOptions(baseOptions)
-                .setMaxResults(1)
-                .build();
-
         try {
             //tensorflow
             final String model = "audioClassifier.tflite";
-            audioClassifier = AudioClassifier.createFromFileAndOptions(getApplicationContext(), model, options);
+            audioClassifier = AudioClassifier.createFromFile(getApplicationContext(), model);
             tensorAudio = audioClassifier.createInputTensorAudio();
             audioRecord = audioClassifier.createAudioRecord();
             notification = getNotification("Safety Monitoring Service","Now listing\nTry Whistling");
@@ -208,8 +197,8 @@ public class SafetyMonitoringService extends Service {
     @Override
     public void onDestroy() {
         audioRecord.stop();
-        timerTask.cancel();
         stopSelf();
+        executor.shutdown();
     }
 
     //////Notifications
@@ -271,7 +260,7 @@ public class SafetyMonitoringService extends Service {
             toast.show();
             return;
         }
-        String message = "Hello from Porcupine Service";
+        String message = "Hello from Safety Monitoring Service";
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(phoneNumber,null,message,null,null);
     }
