@@ -77,10 +77,10 @@ public class FacadeActivity extends AppCompatActivity {
                 btn4.setImageResource(R.drawable.walmart_coupon4);
                 break;
             case "Sam's Club":
-                btn1.setImageResource(R.drawable.walmart_coupon);
-                btn2.setImageResource(R.drawable.walmart_coupon2);
-                btn3.setImageResource(R.drawable.walmart_coupon3);
-                btn4.setImageResource(R.drawable.walmart_coupon4);
+                btn1.setImageResource(R.drawable.sams_coupon);
+                btn2.setImageResource(R.drawable.sams_coupon);
+                btn3.setImageResource(R.drawable.sams_coupon);
+                btn4.setImageResource(R.drawable.sams_coupon);
                 break;
             case "Family Dollar":
                 btn1.setImageResource(R.drawable.familydollar_coupon);
@@ -105,6 +105,24 @@ public class FacadeActivity extends AppCompatActivity {
                 btn2.setImageResource(R.drawable.publix_coupon2);
                 btn3.setImageResource(R.drawable.publix_coupon);
                 btn4.setImageResource(R.drawable.publix_coupon2);
+                break;
+            case "Aldi":
+                btn1.setImageResource(R.drawable.aldi_coupon);
+                btn2.setImageResource(R.drawable.aldi_coupon2);
+                btn3.setImageResource(R.drawable.aldi_coupon);
+                btn4.setImageResource(R.drawable.aldi_coupon2);
+                break;
+            case "Costco":
+                btn1.setImageResource(R.drawable.costco_coupon);
+                btn2.setImageResource(R.drawable.costco_coupon2);
+                btn3.setImageResource(R.drawable.costco_coupon);
+                btn4.setImageResource(R.drawable.costco_coupon2);
+                break;
+            case "Target":
+                btn1.setImageResource(R.drawable.target_coupon);
+                btn2.setImageResource(R.drawable.target_coupon2);
+                btn3.setImageResource(R.drawable.target_coupon3);
+                btn4.setImageResource(R.drawable.target_coupon2);
                 break;
         }
     }
