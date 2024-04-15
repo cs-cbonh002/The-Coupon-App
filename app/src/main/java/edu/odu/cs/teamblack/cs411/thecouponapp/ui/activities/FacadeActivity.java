@@ -58,8 +58,32 @@ public class FacadeActivity extends AppCompatActivity {
         builder.setItems(stores, (dialog, which) -> {
             TextView textViewStoreName = findViewById(R.id.textViewStoreName);
             textViewStoreName.setText(stores[which]);
+            updateCouponImages(stores[which].toString());
         });
         builder.show();
+    }
+
+    private void updateCouponImages(String storeName) {
+        ImageButton btn1 = findViewById(R.id.imageButton1);
+        ImageButton btn2 = findViewById(R.id.imageButton2);
+        ImageButton btn3 = findViewById(R.id.imageButton3);
+        ImageButton btn4 = findViewById(R.id.imageButton4);
+
+        switch (storeName) {
+            case "Walmart":
+                btn1.setImageResource(R.drawable.walmart_coupon);
+                btn2.setImageResource(R.drawable.walmart_coupon2);
+                btn3.setImageResource(R.drawable.walmart_coupon3);
+                btn4.setImageResource(R.drawable.walmart_coupon4);
+                break;
+            case "Sam's Club":
+                btn1.setImageResource(R.drawable.walmart_coupon);
+                btn2.setImageResource(R.drawable.walmart_coupon2);
+                btn3.setImageResource(R.drawable.walmart_coupon3);
+                btn4.setImageResource(R.drawable.walmart_coupon4);
+                break;
+
+        }
     }
 
 }
