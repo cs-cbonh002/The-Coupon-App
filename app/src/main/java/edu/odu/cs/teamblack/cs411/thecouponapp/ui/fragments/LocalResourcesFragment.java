@@ -29,12 +29,14 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 
 public class LocalResourcesFragment extends Fragment {
 
     private EditText zipCode;
-    private Button searchButton;
+    private Button searchButton, savedResourcesButton;
     private WebView webView;
     private CheckBox housingCheckBox, shelterCheckBox, legalCheckBox;
 
@@ -45,6 +47,7 @@ public class LocalResourcesFragment extends Fragment {
 
         zipCode = rootView.findViewById(R.id.editTextZipcode);
         searchButton = rootView.findViewById(id.searchButton);
+        savedResourcesButton = rootView.findViewById(R.id.savedResourcesButton);
 
         housingCheckBox = rootView.findViewById(R.id.housingCheckBox);
         shelterCheckBox = rootView.findViewById(R.id.shelterCheckBox);
@@ -57,8 +60,16 @@ public class LocalResourcesFragment extends Fragment {
             }
         });
 
+        savedResourcesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToSavedResourcesFragment();
+            }
+        });
+
         return rootView;
     }
+
 
     private void performSearch() {
         // Get the search query from the EditText field
@@ -97,6 +108,17 @@ public class LocalResourcesFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    private void navigateToSavedResourcesFragment() {
+        // Create a new instance of SavedResourcesFragment
+        SavedResourcesFragment savedResourcesFragment = new SavedResourcesFragment();
+
+        // Replace the current fragment with the SavedResourcesFragment
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, savedResourcesFragment)
+                .addToBackStack(null)  // Add to back stack for navigation back
+                .commit();
     }
 
 }

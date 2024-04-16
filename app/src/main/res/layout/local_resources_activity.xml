@@ -11,7 +11,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/saveArea"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -92,7 +92,7 @@
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="428dp"
+            android:layout_marginTop="375dp"
             android:paddingHorizontal="50dp"
             android:text="Search"
             app:layout_constraintEnd_toEndOf="parent"
@@ -122,6 +122,16 @@
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchButton" />
+
+        <Button
+            android:id="@+id/savedResourcesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Saved Resources"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/legalRes" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
