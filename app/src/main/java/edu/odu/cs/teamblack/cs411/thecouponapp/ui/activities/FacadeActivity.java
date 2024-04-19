@@ -124,6 +124,18 @@ public class FacadeActivity extends AppCompatActivity {
                 btn3.setImageResource(R.drawable.target_coupon3);
                 btn4.setImageResource(R.drawable.target_coupon2);
                 break;
+            case "Trader Joe's":
+                btn1.setImageResource(R.drawable.traderjoecoupon1);
+                btn2.setImageResource(R.drawable.traderjoecoupon2);
+                btn3.setImageResource(R.drawable.traderjoecoupon3);
+                btn4.setImageResource(R.drawable.traderjoecoupon4);
+                break;
+            case "Piggly Wiggly":
+                btn1.setImageResource(R.drawable.pigglycoupon1);
+                btn2.setImageResource(R.drawable.pigglycoupon2);
+                btn3.setImageResource(R.drawable.pigglycoupon3);
+                btn4.setImageResource(R.drawable.pigglycoupon4);
+                break;
         }
     }
 
