@@ -92,60 +92,63 @@ public class SafetyMonitoringService extends Service {
                     new Runnable() {
                         @Override
                         public void run() {
-                            int numOfSamples = tensorAudio.load(audioRecord);
+                            tensorAudio.load(audioRecord);
                             long inferenceTime = SystemClock.uptimeMillis();
                             output = audioClassifier.classify(tensorAudio);
                             inferenceTime = SystemClock.uptimeMillis() - inferenceTime;
                             Log.d(TAG, String.format("Inference time %d", inferenceTime));
-                            Log.d(TAG,output.get(0).getCategories().get(0).getLabel());
                             Notification notification;
+                            for (int i = 0; i < 2; i++) {
+                                Log.d(TAG,output.get(0).getCategories().get(i).getLabel());
+                            }
 
-                            switch (output.get(0).getCategories().get(0).getLabel()) {
-                                case "Whistling":
-                                case "Whack":
-                                case "Thwack":
-                                case "Crying":
-                                case "Sobbing":
-                                case "Slap":
-                                case "Whimper":
-                                case "Screaming":
-                                case "Wail":
-                                case "Moan":
-                                case "Whipping":
-                                case "Shout":
-                                case "Yell":
-                                case "Grunt":
-                                case "Slap, smack":
-                                case "Hands":
-                                    count++;
-                                    //notification = getNotification("Safety Monitoring", "you're " + category.getLabel() + "\nCount: " + count);
-                                    //notificationManager.notify(4321, notification);
-                                    break;
-                                default:
-                                    if (count > 0) {
-                                        count--;
-                                    }
-                                    break;
-                            }
-                            if (count == 0) {
-                                //stop documenting
-                            } else if (count == 5/*&& pendingIntent == null*/) {
-                                //start documenting
-                                notification = getNotification("Safety Monitoring", "Start Documenting");
-                                notificationManager.notify(4921, notification);
-                            } else if (count == 7 && pendingPhoneIntent == null) {
-                                //call 911
-                                try {
-                                    sendSMS("540-214-0551");
-                                    //sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service");
-                                    dialPhoneNumber("540-241-0551");
-                                } catch (PendingIntent.CanceledException e) {
-                                    Log.e(CHANNEL_ID, "can't call", e);
+                                switch (output.get(0).getCategories().get(0).getLabel()) {
+                                    case "Whistling":
+                                    case "Whack":
+                                    case "Thwack":
+                                    case "Crying":
+                                    case "Sobbing":
+                                    case "Slap":
+                                    case "Whimper":
+                                    case "Screaming":
+                                    case "Wail, moan":
+                                    case "Whipping":
+                                    case "Shout":
+                                    case "Yell":
+                                    case "Grunt":
+                                    case "Groan":
+                                    case "Slap, smack":
+                                    case "Hands":
+                                    case "Crying, sobbing":
+                                        count++;
+                                        //notification = getNotification("Safety Monitoring", "you're " + category.getLabel() + "\nCount: " + count);
+                                        //notificationManager.notify(4321, notification);
+                                        break;
+                                    default:
+                                        if (count > 0) {
+                                            count--;
+                                        }
+                                        break;
                                 }
-                                notification = getNotification("Safety Monitoring", "Calling 911");
-                                notificationManager.notify(9321, notification);
+                                if (count == 0) {
+                                    //stop documenting
+                                } else if (count == 5/*&& pendingIntent == null*/) {
+                                    //start documenting
+                                    notification = getNotification("Safety Monitoring", "Start Documenting");
+                                    notificationManager.notify(4921, notification);
+                                } else if (count == 7 && pendingPhoneIntent == null) {
+                                    //call 911
+                                    try {
+                                        sendSMS("540-214-0551");
+                                        //sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service");
+                                        dialPhoneNumber("540-241-0551");
+                                    } catch (PendingIntent.CanceledException e) {
+                                        Log.e(CHANNEL_ID, "can't call", e);
+                                    }
+                                    notification = getNotification("Safety Monitoring", "Calling 911");
+                                    notificationManager.notify(9321, notification);
+                                }
                             }
-                        }
                     },
                     1,
                     interval,
