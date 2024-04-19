@@ -89,6 +89,89 @@ public class WakeWordsScreenTest {
         onView(withId(R.id.keyword_dropdown_1)).check(matches(isClickable()));
     }
 
+    @Test
+    public void keyword2Test()
+    {
+        onView(withId(R.id.keyword_title_2)).check(matches(isDisplayed()));
+        onView(withId(R.id.keyword_title_2))
+                .check(isCompletelyBelow(withId(R.id.keyword_dropdown_1)));
+        onView(withId(R.id.keyword_title_2))
+                .check(isCompletelyAbove(withId(R.id.keyword_subtitle_2)));
+        onView(withId(R.id.keyword_title_2)).check(matches(isNotClickable()));
+
+        onView(ViewMatchers.withId(R.id.keyword_subtitle_2)).check(matches(isDisplayed()));
+        onView(withId(R.id.keyword_subtitle_2))
+                .check(isCompletelyBelow(withId(R.id.keyword_title_2)));
+        onView(withId(R.id.keyword_subtitle_2))
+                .check(isCompletelyAbove(withId(R.id.keyword_menu_2)));
+        onView(withId(R.id.keyword_subtitle_2)).check(matches(isNotClickable()));
+
+        onView(ViewMatchers.withId(R.id.keyword_menu_2)).check(matches(isDisplayed()));
+        onView(withId(R.id.keyword_menu_2))
+                .check(isCompletelyBelow(withId(R.id.keyword_subtitle_2)));
+        onView(withId(R.id.keyword_menu_2))
+                .check(isCompletelyAbove(withId(R.id.keyword_title_3)));
+        onView(withId(R.id.keyword_menu_2)).check(matches(isNotClickable()));
+
+        onView(ViewMatchers.withId(R.id.keyword_dropdown_2)).check(matches(isDisplayed()));
+        onView(withId(R.id.keyword_dropdown_2))
+                .check(isCompletelyBelow(withId(R.id.keyword_subtitle_2)));
+        onView(withId(R.id.keyword_dropdown_2))
+                .check(isCompletelyAbove(withId(R.id.keyword_title_3)));
+        onView(withId(R.id.keyword_dropdown_2)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void keyword3Test()
+    {
+        onView(withId(R.id.keyword_title_3)).check(matches(isDisplayed()));
+        onView(withId(R.id.keyword_title_3))
+                .check(isCompletelyBelow(withId(R.id.keyword_dropdown_2)));
+        onView(withId(R.id.keyword_title_3))
+                .check(isCompletelyAbove(withId(R.id.keyword_subtitle_3)));
+        onView(withId(R.id.keyword_title_3)).check(matches(isNotClickable()));
+
+        onView(ViewMatchers.withId(R.id.keyword_subtitle_3)).check(matches(isDisplayed()));
+        onView(withId(R.id.keyword_subtitle_3))
+                .check(isCompletelyBelow(withId(R.id.keyword_title_3)));
+        onView(withId(R.id.keyword_subtitle_3))
+                .check(isCompletelyAbove(withId(R.id.keyword_menu_3)));
+        onView(withId(R.id.keyword_subtitle_3)).check(matches(isNotClickable()));
+
+        onView(ViewMatchers.withId(R.id.keyword_menu_3)).check(matches(isDisplayed()));
+        onView(withId(R.id.keyword_menu_3))
+                .check(isCompletelyBelow(withId(R.id.keyword_subtitle_3)));
+        onView(withId(R.id.keyword_menu_3))
+                .check(isCompletelyAbove(withId(R.id.keyword_title_4)));
+        onView(withId(R.id.keyword_menu_3)).check(matches(isNotClickable()));
+
+        onView(ViewMatchers.withId(R.id.keyword_dropdown_3)).check(matches(isDisplayed()));
+        onView(withId(R.id.keyword_dropdown_3))
+                .check(isCompletelyBelow(withId(R.id.keyword_subtitle_3)));
+        onView(withId(R.id.keyword_dropdown_3))
+                .check(isCompletelyAbove(withId(R.id.keyword_title_4)));
+        onView(withId(R.id.keyword_dropdown_3)).check(matches(isClickable()));
+    }
+
+    @Test
+    public void keyword4Test()
+    {
+        onView(withId(R.id.keyword_title_4)).check(matches(isDisplayed()));
+        onView(withId(R.id.keyword_title_4))
+                .check(isCompletelyBelow(withId(R.id.keyword_dropdown_3)));
+        onView(withId(R.id.keyword_title_4))
+                .check(isCompletelyAbove(withId(R.id.keyword_subtitle_4)));
+        onView(withId(R.id.keyword_title_4)).check(matches(isNotClickable()));
+
+        onView(ViewMatchers.withId(R.id.keyword_subtitle_4)).check(matches(isDisplayed()));
+        onView(withId(R.id.keyword_subtitle_4))
+                .check(isCompletelyBelow(withId(R.id.keyword_title_4)));
+        onView(withId(R.id.keyword_subtitle_4))
+                .check(isCompletelyAbove(withId(R.id.keyword_menu_4)));
+        onView(withId(R.id.keyword_subtitle_4)).check(matches(isNotClickable()));
+
+    }
+
 
 
 }
