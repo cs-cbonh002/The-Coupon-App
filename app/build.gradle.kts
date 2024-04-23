@@ -73,6 +73,9 @@ dependencies {
     implementation ("com.google.android.gms:play-services-tflite-gpu:16.2.0")
     implementation("org.tensorflow:tensorflow-lite-task-audio:0.4.4")
 
+    //google play location service
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
