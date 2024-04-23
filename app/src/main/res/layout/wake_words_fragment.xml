@@ -38,14 +38,14 @@
                 android:id="@+id/keyword_title_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Keyword 1"
+                android:text="Wake Word 1"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
                 android:id="@+id/keyword_subtitle_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Function explanation for keyword 1"
+                android:text="Enable/Disable IPV Detection"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:layout_margin="8dp"/>
 
@@ -97,14 +97,14 @@
                 android:id="@+id/keyword_title_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Keyword 2"
+                android:text="Wake Word 2"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
                 android:id="@+id/keyword_subtitle_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Function explanation for keyword 2"
+                android:text="Start Recording Audio"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:layout_margin="8dp"/>
 
@@ -156,14 +156,14 @@
                 android:id="@+id/keyword_title_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Keyword 3"
+                android:text="Wake Word 3"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
                 android:id="@+id/keyword_subtitle_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Function explanation for keyword 3"
+                android:text="Stop Recording Audio"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:layout_margin="8dp"/>
 
@@ -215,14 +215,14 @@
                 android:id="@+id/keyword_title_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Keyword 4"
+                android:text="Wake Word 4"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
                 android:id="@+id/keyword_subtitle_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Function explanation for keyword 4"
+                android:text="Access Hidden Application"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:layout_margin="8dp"/>
 
