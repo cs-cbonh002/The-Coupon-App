@@ -112,30 +112,33 @@
     <string name="legal">Legal</string>
     <string name="ndvhUrl">https://www.thehotline.org/</string>
     <string name="twoPartyStates">
-        List of States That Require Two-Party Consent for Recording:
-        California
-        Delaware
-        Florida
-        Illinois
-        Maryland
-        Massachusetts
-        Michigan
-        Montana
-        New Hampshire
-        Pennsylvania
+        List of States That Require Two-Party Consent for Recording:\n
+        California\n
+        Delaware\n
+        Florida\n
+        Illinois\n
+        Maryland\n
+        Massachusetts\n
+        Michigan\n
+        Montana\n
+        New Hampshire\n
+        Pennsylvania\n
         Washington
     </string>
     <string name="mixedConsentStates">
-        List of States That Have Mixed Consent:
-        Oregon
+        List of States That Have Mixed Consent for Recording:\n
+        Oregon\n
         Connecticut
     </string>
     <string name="legalNotice">
         Notice: Recording Laws in the US differ from state to state.
-        Always check your state's laws before recording. 
+        Always check your state\'s laws before recording.
     </string>
     <string name="legalWebResource">
         https://worldpopulationreview.com/state-rankings/two-party-consent-states
     </string>
+    <string name="consentDefinition">In Two-Party (or all-party) consent states it is required by
+        state law that all parties that partake in a conversation must have given consent for that
+        conversation to be recorded when there is an expectation of privacy.</string>
 
 </resources>
