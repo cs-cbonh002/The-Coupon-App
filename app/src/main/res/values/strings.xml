@@ -110,5 +110,12 @@
     <string name="housing">Housing</string>
     <string name="shelters">Shelters</string>
     <string name="legal">Legal</string>
+    <string name="select_wake_word">Select wake word</string>
+    <string name="send_sms_phone_call_email">Send SMS, Phone call, Email</string>
+    <string name="choose_a_wake_word">Choose a wake word</string>
+    <string name="enable_wake_word_control">Enable wake word control</string>
+    <string name="start_recording">Start Recording</string>
+    <string name="stop_recording">Stop Recording</string>
+    <string name="pause_safety_monitoring">Pause Safety Monitoring</string>
 
 </resources>

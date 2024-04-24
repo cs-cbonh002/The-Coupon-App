@@ -105,7 +105,7 @@ public class PorcupineService extends Service {
 
             Notification notification = porcupineManager == null ?
                     getNotification("Porcupine init failed", "Service will be shut down") :
-                    getNotification("Wake word service", "Say 'Computer'!");
+                    getNotification("Wake word service", "Say "+ pWords[0] +"!");
             startForeground(1234, notification);
 
         }
