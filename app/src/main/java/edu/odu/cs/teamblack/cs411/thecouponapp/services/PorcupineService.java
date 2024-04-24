@@ -83,8 +83,10 @@ public class PorcupineService extends Service {
             try {
                 porcupineManager = new PorcupineManager.Builder()
                         .setAccessKey(ACCESS_KEY)
-                        .setKeywords(pWords)
-                        .setSensitivities(new float[]{0.7f,0.6f,0.7f,0.7f}).build(
+                        .setKeywords(pWords) //built in keywords
+                        //.setKeywordPaths(new String[]{"stopHittingMe.ppn","please-please-please_en_android.ppn","please-i-don--t-know_en_android_v3_0_0.ppn","stopHittingMe.ppn"})
+                        .setSensitivities(new float[]{0.7f,0.7f,0.7f,0.7f})
+                        .build(
                                 getApplicationContext(),
                                 porcupineManagerCallback);
                 porcupineManager.start();
