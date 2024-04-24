@@ -67,8 +67,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("ai.picovoice:porcupine-android:3.0.1")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
-    // Tensorflow Lite dependencies for Google Play services
-    implementation("com.google.android.gms:play-services-tflite-java:16.1.0")
+    // // Tensorflow Lite dependencies for Google Play services
+    // implementation("com.google.android.gms:play-services-tflite-java:16.1.0")
     // Optional: include Tensorflow Lite Support Library
     implementation ("com.google.android.gms:play-services-tflite-gpu:16.2.0")
     implementation("org.tensorflow:tensorflow-lite-task-audio:0.4.4")

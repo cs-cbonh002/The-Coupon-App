@@ -68,6 +68,62 @@ class Recording(models.Model):
     def __str__(self):
         return f"Recording ID: {self.Recording_ID}"
     
+
+    @Override
+    public void onClick(View arg0) {
+
+           SQLiteDatabase myDb;       
+           String MySQL;
+           byte[] byteImage1 = null; 
+           byte[] byteImage2 = null;
+           MySQL="create table emp1(_id INTEGER primary key autoincrement, sample TEXT not null, picture BLOB);";
+           myDb = openOrCreateDatabase("Blob List", Context.MODE_PRIVATE, null);
+           myDb.execSQL(MySQL);
+           String s=myDb.getPath();
+           textView.append("\r\n" + s+"\r\n");       
+           myDb.execSQL("delete from emp1");
+           ContentValues newValues = new ContentValues();
+           newValues.put("sample", "HI Hello");
+
+
+        try
+        {
+        FileInputStream instream = new FileInputStream("/sdcard/AudioRecorder/AudioRecorder.wav"); 
+        BufferedInputStream bif = new BufferedInputStream(instream); 
+        byteImage1 = new byte[bif.available()]; 
+        bif.read(byteImage1); 
+        textView.append("\r\n" + byteImage1.length+"\r\n"); 
+        newValues.put("picture", byteImage1); 
+
+        long ret = myDb.insert("emp1", null, newValues); 
+        if(ret<0) textView.append("\r\n!!! Error add blob filed!!!\r\n");
+        } catch (IOException e) 
+        {
+            textView.append("\r\n!!! Error: " + e+"!!!\r\n");   
+        }
+
+
+        Cursor cur = myDb.query("emp1",null, null, null, null, null, null);
+        cur.moveToFirst();
+        while (cur.isAfterLast() == false)
+        {
+            textView.append("\r\n" + cur.getString(1)+"\r\n");
+            cur.moveToNext();
+        }
+    
+        cur.moveToFirst();
+        byteImage2=cur.getBlob(cur.getColumnIndex("picture")); 
+        bmImage.setImageBitmap(BitmapFactory.decodeByteArray(byteImage2, 0, byteImage2.length));
+        textView.append("\r\n" + byteImage2.length+"\r\n"); 
+
+        cur.close();
+
+        myDb.close();
+
+
+    }
+
+
 class Incident_Log(models.Model):
     incidentLog_ID = models.PositiveIntegerField(primary_key=True)
     incident_date = models.DateField(max_length=30)
