@@ -111,5 +111,31 @@
     <string name="shelters">Shelters</string>
     <string name="legal">Legal</string>
     <string name="ndvhUrl">https://www.thehotline.org/</string>
+    <string name="twoPartyStates">
+        List of States That Require Two-Party Consent for Recording:
+        California
+        Delaware
+        Florida
+        Illinois
+        Maryland
+        Massachusetts
+        Michigan
+        Montana
+        New Hampshire
+        Pennsylvania
+        Washington
+    </string>
+    <string name="mixedConsentStates">
+        List of States That Have Mixed Consent:
+        Oregon
+        Connecticut
+    </string>
+    <string name="legalNotice">
+        Notice: Recording Laws in the US differ from state to state.
+        Always check your state's laws before recording. 
+    </string>
+    <string name="legalWebResource">
+        https://worldpopulationreview.com/state-rankings/two-party-consent-states
+    </string>
 
 </resources>
