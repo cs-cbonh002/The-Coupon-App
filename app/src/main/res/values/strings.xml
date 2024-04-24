@@ -110,5 +110,6 @@
     <string name="housing">Housing</string>
     <string name="shelters">Shelters</string>
     <string name="legal">Legal</string>
+    <string name="ndvhUrl">https://www.thehotline.org/</string>
 
 </resources>

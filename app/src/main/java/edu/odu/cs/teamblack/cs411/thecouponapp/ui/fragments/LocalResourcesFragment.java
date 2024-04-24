@@ -36,7 +36,7 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 public class LocalResourcesFragment extends Fragment {
 
     private EditText zipCode;
-    private Button searchButton, savedResourcesButton;
+    private Button searchButton, savedResourcesButton, generalResourcesButton;
     private WebView webView;
     private CheckBox housingCheckBox, shelterCheckBox, legalCheckBox;
 
@@ -52,6 +52,7 @@ public class LocalResourcesFragment extends Fragment {
         housingCheckBox = rootView.findViewById(R.id.housingCheckBox);
         shelterCheckBox = rootView.findViewById(R.id.shelterCheckBox);
         legalCheckBox = rootView.findViewById(R.id.legalCheckBox);
+        generalResourcesButton = rootView.findViewById(id.genRes);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +65,13 @@ public class LocalResourcesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 navigateToSavedResourcesFragment();
+            }
+        });
+
+        generalResourcesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToGeneralResourcesFragment();
             }
         });
 
@@ -117,6 +125,17 @@ public class LocalResourcesFragment extends Fragment {
         // Replace the current fragment with the SavedResourcesFragment
         requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, savedResourcesFragment)
+                .addToBackStack(null)  // Add to back stack for navigation back
+                .commit();
+    }
+
+    private void navigateToGeneralResourcesFragment() {
+        // Create a new instance of GeneralResourcesFragment
+        GeneralResourcesFragment generalResourcesFragment = new GeneralResourcesFragment();
+
+        // Replace the current fragment with the GeneralResourcesFragment
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, generalResourcesFragment)
                 .addToBackStack(null)  // Add to back stack for navigation back
                 .commit();
     }
