@@ -25,7 +25,7 @@ public class CommunicationsFragment extends Fragment {
         Switch GPS_Email = view.findViewById(R.id.GPS_Email_Switch);
         Switch Message_Switch = view.findViewById(R.id.Message_Switch);
         Switch Emergency = view.findViewById(R.id.Emergency_Contact_Phone);
-        Switch Phone = view.findViewById(R.id.Phone_Call_Switch);
+        Switch Phone = view.findViewById(R.id.GPS_SMS_Switch);
         Switch Authorities = view.findViewById(R.id.Authority_Phone_Call);
 
         return view;
