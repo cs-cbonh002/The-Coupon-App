@@ -82,6 +82,36 @@ public class LocalResourcesFragment extends Fragment {
             }
         });
 
+        housingCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (housingCheckBox.isChecked()) {
+                    shelterCheckBox.setChecked(false);
+                    legalCheckBox.setChecked(false);
+                }
+            }
+        });
+
+        shelterCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (shelterCheckBox.isChecked()) {
+                    housingCheckBox.setChecked(false);
+                    legalCheckBox.setChecked(false);
+                }
+            }
+        });
+
+        legalCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (legalCheckBox.isChecked()) {
+                    housingCheckBox.setChecked(false);
+                    shelterCheckBox.setChecked(false);
+                }
+            }
+        });
+
         return rootView;
     }
 
