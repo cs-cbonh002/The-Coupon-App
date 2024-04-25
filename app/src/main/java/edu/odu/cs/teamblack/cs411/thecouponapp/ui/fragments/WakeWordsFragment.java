@@ -149,11 +149,34 @@ public class WakeWordsFragment extends Fragment implements PorcupineService.Wake
         AutoCompleteTextView dropdown = wakeWordDropdowns.get(index);
         String currentWakeWord = selectedWakeWords.getOrDefault(index, DEFAULT_WAKE_WORDS[index]);
         List<String> adapterWakeWords = new ArrayList<>(availableWakeWords);
-        adapterWakeWords.add(currentWakeWord);
-        Collections.sort(adapterWakeWords);
+        adapterWakeWords.add(currentWakeWord);  // Add the current selection to the top or ensure it's included
+        Collections.sort(adapterWakeWords);     // Sort the wake words for better UI experience
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, adapterWakeWords);
         dropdown.setAdapter(adapter);
-        dropdown.setText(currentWakeWord, false);
+        dropdown.setText(currentWakeWord, false);  // Set the currently selected word in the dropdown
+
+        // Set the listener for when an item is selected
+        dropdown.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedWord = adapter.getItem(position);
+            if (!selectedWord.equals(selectedWakeWords.get(index))) {
+                selectedWakeWords.put(index, selectedWord);  // Update the selected wake words
+                updateServiceWithSelectedWakeWords();         // Update the service with the new selection
+            }
+        });
+    }
+
+    private void updateServiceWithSelectedWakeWords() {
+        // Save the selected wake words to the SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        for (Map.Entry<Integer, String> entry : selectedWakeWords.entrySet()) {
+            editor.putString("wake_word_" + entry.getKey(), entry.getValue());
+        }
+        editor.apply();
+
+        // Restart the PorcupineService with the new wake words
+        stopWakeWordDetection(); // This will unbind and stop the service
+        startWakeWordService();  // This will start and bind the service with new wake words
     }
 
     private void toggleWakeWordDetection(boolean enable) {
@@ -169,11 +192,14 @@ public class WakeWordsFragment extends Fragment implements PorcupineService.Wake
     }
 
     private void checkPermissionsAndStart() {
-        String[] permissions = {
-                Manifest.permission.RECORD_AUDIO
-
+        String[] requiredPermissions = {
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.CAMERA,
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.SEND_SMS
         };
-        permissionsManager.requestPermissions(permissions, new PermissionsManager.MultiplePermissionsListener() {
+        permissionsManager.requestPermissions(requiredPermissions, new PermissionsManager.MultiplePermissionsListener() {
             @Override
             public void onAllPermissionsGranted() {
                 startWakeWordService();
