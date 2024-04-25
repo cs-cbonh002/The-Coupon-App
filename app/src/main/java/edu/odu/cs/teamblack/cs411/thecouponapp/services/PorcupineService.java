@@ -1,280 +1,227 @@
-/*
-    Copyright 2021 Picovoice Inc.
-    You may not use this file except in compliance with the license. A copy of the license is
-    located in the "LICENSE" file accompanying this source.
-    Unless required by applicable law or agreed to in writing, software distributed under the
-    License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-    express or implied. See the License for the specific language governing permissions and
-    limitations under the License.
-*/
 package edu.odu.cs.teamblack.cs411.thecouponapp.services;
 
-import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.HandlerThread;
+import android.content.ServiceConnection;
+import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
-import java.util.Objects;
-
+import java.util.List;
 import ai.picovoice.porcupine.Porcupine;
-import ai.picovoice.porcupine.PorcupineActivationException;
-import ai.picovoice.porcupine.PorcupineActivationLimitException;
-import ai.picovoice.porcupine.PorcupineActivationRefusedException;
-import ai.picovoice.porcupine.PorcupineActivationThrottledException;
 import ai.picovoice.porcupine.PorcupineException;
-import ai.picovoice.porcupine.PorcupineInvalidArgumentException;
 import ai.picovoice.porcupine.PorcupineManager;
 import ai.picovoice.porcupine.PorcupineManagerCallback;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
-import edu.odu.cs.teamblack.cs411.thecouponapp.helper.CommunicationsHelper;
+import edu.odu.cs.teamblack.cs411.thecouponapp.managers.SafetyResponseManager;
+import edu.odu.cs.teamblack.cs411.thecouponapp.managers.SafetyResponseManager.TriggerType;
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsFragment;
 
 public class PorcupineService extends Service {
+    private static final String TAG = "PORCUPINE";
     private static final String CHANNEL_ID = "PorcupineServiceChannel";
     @SuppressWarnings("SpellCheckingInspection")
     private static final String ACCESS_KEY = "ir/zJzrvkSCpbURXMlpFz1nL5VEHIsNf2snqMTDwXDiEDzc4Cp4zzQ==";
+    private static final int NOTIFICATION_ID = 4321;
+    private static final long DEBOUNCE_DELAY = 1000;
+    private static final int WAKE_WORD_COMMUNICATION_INDEX = 0;
+    private static final int WAKE_WORD_LOGGING_START_INDEX = 1;
+    private static final int WAKE_WORD_LOGGING_STOP_INDEX = 2;
+    private static final int WAKE_WORD_TOGGLE_AUDIO_CLASSIFIER_INDEX = 3;
+    private final IBinder binder = new LocalBinder();
     private PorcupineManager porcupineManager;
-    private int numUtterances;
-    private ServiceHandler serviceHandler;
+    private boolean isWakeWordDetectionActive = false;
+    private long lastDetectionTime = 0;
+    private WakeWordDetectionListener listener;
+    private SafetyResponseManager safetyResponseManager;
 
-    ArrayList<String> keywords = new ArrayList<>();
+    public interface WakeWordDetectionListener {
+        void onWakeWordDetected(int keywordIndex);
+        void onError(Exception e);
+    }
 
-    Porcupine.BuiltInKeyword[] pWords;
+    public void setWakeWordDetectionListener(WakeWordDetectionListener listener) {
+        this.listener = listener;
+    }
 
-    CommunicationsHelper communicationsHelper = new CommunicationsHelper();
-    PendingIntent pendingPhoneIntent;
-    PendingIntent pendingEmailIntent;
-
-    private final Handler handler = new Handler(Looper.getMainLooper());
-
-    // Handler that receives messages from the thread
-    private final class ServiceHandler extends Handler {
-        public ServiceHandler(Looper looper) {
-            super(looper);
-        }
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            try {
-                porcupineManager = new PorcupineManager.Builder()
-                        .setAccessKey(ACCESS_KEY)
-                        .setKeywords(pWords) //built in keywords
-                        //.setKeywordPaths(new String[]{"stopHittingMe.ppn","please-please-please_en_android.ppn","please-i-don--t-know_en_android_v3_0_0.ppn","stopHittingMe.ppn"})
-                        .setSensitivities(new float[]{0.7f,0.7f,0.7f,0.7f})
-                        .build(
-                                getApplicationContext(),
-                                porcupineManagerCallback);
-                porcupineManager.start();
-
-            } catch (PorcupineInvalidArgumentException e) {
-                onPorcupineInitError(e.getMessage());
-            } catch (PorcupineActivationException e) {
-                onPorcupineInitError("AccessKey activation error");
-            } catch (PorcupineActivationLimitException e) {
-                onPorcupineInitError("AccessKey reached its device limit");
-            } catch (PorcupineActivationRefusedException e) {
-                onPorcupineInitError("AccessKey refused");
-            } catch (PorcupineActivationThrottledException e) {
-                onPorcupineInitError("AccessKey has been throttled");
-            } catch (PorcupineException e) {
-                onPorcupineInitError("Failed to initialize Porcupine: " + e.getMessage());
+    private final PorcupineManagerCallback porcupineManagerCallback = keywordIndex -> {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastDetectionTime > DEBOUNCE_DELAY) {
+            lastDetectionTime = currentTime;
+            switch (keywordIndex) {
+                case WAKE_WORD_COMMUNICATION_INDEX:
+                    safetyResponseManager.handleTrigger(TriggerType.WAKE_WORD, "COMMUNICATE");
+                    break;
+                case WAKE_WORD_LOGGING_START_INDEX:
+                    safetyResponseManager.handleTrigger(TriggerType.WAKE_WORD, "START_LOGGING");
+                    break;
+                case WAKE_WORD_LOGGING_STOP_INDEX:
+                    safetyResponseManager.handleTrigger(TriggerType.WAKE_WORD, "STOP_LOGGING");
+                    break;
+                case WAKE_WORD_TOGGLE_AUDIO_CLASSIFIER_INDEX:
+                    safetyResponseManager.handleTrigger(TriggerType.WAKE_WORD, "TOGGLE_AUDIO_CLASSIFIER");
+                    break;
             }
-
-            Notification notification = porcupineManager == null ?
-                    getNotification("Porcupine init failed", "Service will be shut down") :
-                    getNotification("Wake word service", "Say "+ pWords[0] +"!");
-            startForeground(1234, notification);
-
-        }
-    }
-
-    @Override
-    public void onCreate() {
-        // Start up the thread running the service. Note that we create a
-        // separate thread because the service normally runs in the process's
-        // main thread, which we don't want to block. We also make it
-        // background priority so CPU-intensive work doesn't disrupt our UI.
-        HandlerThread thread = new HandlerThread("ServiceStartArguments",
-                Thread.MAX_PRIORITY);
-        thread.start();
-
-        // Get the HandlerThread's Looper and use it for our Handler
-        Looper serviceLooper = thread.getLooper();
-        serviceHandler = new ServiceHandler(serviceLooper);
-    }
-    private final PorcupineManagerCallback porcupineManagerCallback = (keywordIndex) -> {
-
-        Notification notification;
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        final String contentText = numUtterances == 1 ? " time!" : " times!";
-        switch (keywordIndex){
-            case 0:
-                //calling
-                try {
-                    communicationsHelper.sendSMS("540-214-0551");
-                    pendingEmailIntent = communicationsHelper.sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service", getApplicationContext());
-                    notification = getNotification("Safety Monitoring", "Send Email", pendingEmailIntent);
-                    notificationManager.notify(8322, notification);
-                    pendingPhoneIntent = communicationsHelper.dialPhoneNumber("540-241-0551",getApplicationContext());
-                    notification = getNotification("Safety Monitoring", "Calling 911", pendingPhoneIntent);
-                    notificationManager.notify(8321, notification);
-                } catch (Exception e) {
-                    Log.e(CHANNEL_ID, "can't call",e);
-                }
-                break;
-            case 1:
-                //start documenting
-                numUtterances++;
-                notification = getNotification(
-                        "Start Documenting",
-                        "Detected " + numUtterances + contentText);
-                notificationManager.notify(8323, notification);
-                break;
-            case 2:
-                //stop documenting
-                numUtterances--;
-                notification = getNotification(
-                        "Stop Documenting",
-                        "Detected " + numUtterances + contentText);
-                notificationManager.notify(8323, notification);
-                break;
-            case 3:
-                //pause audio classifier
-                if (isMyServiceRunning()) {
-                    stopService();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            startService();
-                            //pauses for 5 seconds
-                        }
-                    }, 5000);
-                }
-
-                notification = getNotification(
-                        "start stop safety monitoring",
-                        "Detected " + numUtterances + contentText);
-                notificationManager.notify(8323, notification);
-                break;
-            default:
-
-                break;
         }
     };
 
-    private boolean isMyServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (SafetyMonitoringService.class.getName().equals(service.service.getClassName())) {
-                return true;
+
+    private ArrayList<Porcupine.BuiltInKeyword> loadKeywords(List<String> wakeWords) {
+        ArrayList<Porcupine.BuiltInKeyword> loadedKeywords = new ArrayList<>();
+        for (String keyword : wakeWords) {
+            try {
+                Porcupine.BuiltInKeyword keywordEnum = Porcupine.BuiltInKeyword.valueOf(keyword.toUpperCase().replace(" ", "_"));
+                loadedKeywords.add(keywordEnum);
+            } catch (IllegalArgumentException e) {
+                Log.e("PORCUPINE", "Invalid keyword: " + keyword, e);
             }
         }
-        return false;
+        return loadedKeywords;
     }
 
-    private void createNotificationChannel() {
-        NotificationChannel notificationChannel = new NotificationChannel(
-                CHANNEL_ID,
-                "Porcupine",
-                NotificationManager.IMPORTANCE_HIGH);
-
-        NotificationManager manager = getSystemService(NotificationManager.class);
-        manager.createNotificationChannel(notificationChannel);
+    public void startWakeWordDetection(List<String> wakeWords) {
+        Log.d(TAG, "Starting wake word detection");
+        if (isWakeWordDetectionActive) {
+            stopWakeWordDetection(); // Stop the existing PorcupineManager
+        }
+        try {
+            ArrayList<Porcupine.BuiltInKeyword> keywords = loadKeywords(wakeWords);
+            if (!keywords.isEmpty()) {
+                porcupineManager = buildPorcupineManager(keywords);
+                porcupineManager.start();
+                isWakeWordDetectionActive = true;
+            } else {
+                Log.e(TAG, "No wake words provided, cannot start detection.");
+            }
+        } catch (PorcupineException e) {
+            Log.e(TAG, "Failed to start Porcupine Manager", e);
+        }
     }
 
-    @SuppressLint("ForegroundServiceType")
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        keywords = Objects.requireNonNull(intent.getExtras()).getStringArrayList("keywords");
-        assert keywords != null;
-        pWords = new Porcupine.BuiltInKeyword[]{
-                Porcupine.BuiltInKeyword.valueOf(keywords.get(0)),
-                Porcupine.BuiltInKeyword.valueOf(keywords.get(1)),
-                Porcupine.BuiltInKeyword.valueOf(keywords.get(2)),
-                Porcupine.BuiltInKeyword.valueOf(keywords.get(3)),
-        };
-
-        numUtterances = 0;
-        createNotificationChannel();
-
-        Message msg = serviceHandler.obtainMessage();
-        msg.arg1 = startId;
-        serviceHandler.sendMessage(msg);
-
-        return Service.START_STICKY;
-    }
-
-    private void onPorcupineInitError(String message) {
-        Intent i = new Intent("PorcupineInitError");
-        i.putExtra("errorMessage", message);
-        sendBroadcast(i);
-    }
-
-    private Notification getNotification(String title, String message, PendingIntent pendingIntent) {
-
-        return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentIntent(pendingIntent)
-                .build();
-    }
-    private Notification getNotification(String title, String message) {
-
-        return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .build();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onDestroy() {
+    public void stopWakeWordDetection() {
         if (porcupineManager != null) {
             try {
                 porcupineManager.stop();
                 porcupineManager.delete();
+                porcupineManager = null;
+                isWakeWordDetectionActive = false;
+                lastDetectionTime = 0;
+                Log.d("PORCUPINE", "Wake word detection stopped.");
             } catch (PorcupineException e) {
-                Log.e("PORCUPINE", e.toString());
+                Log.e("PORCUPINE", "Failed to stop Porcupine Manager", e);
+                if (listener != null) {
+                    listener.onError(e);
+                }
             }
         }
-        stopSelf();
+    }
+    private ArrayList<String> getCustomKeywordPaths(String[] customWakeWords) {
+        ArrayList<String> keywordPaths = new ArrayList<>();
+        for (String wakeWord : customWakeWords) {
+            String path = "assets/" + wakeWord + ".ppn"; // Assuming the .ppn files are named after the wake words
+            keywordPaths.add(path);
+        }
+        return keywordPaths;
+    }
+
+    private PorcupineManager buildPorcupineManager(ArrayList<Porcupine.BuiltInKeyword> keywords) throws PorcupineException {
+        if (keywords.isEmpty()) {
+            Log.e(TAG, "No keywords provided for PorcupineManager.");
+            throw new IllegalArgumentException("No keywords provided");
+        }
+        return new PorcupineManager.Builder()
+                .setAccessKey(ACCESS_KEY)
+                .setKeywords(keywords.toArray(new Porcupine.BuiltInKeyword[0]))
+                .setSensitivities(new float[]{0.5f, 0.5f, 0.5f, 0.5f})
+                .build(this, porcupineManagerCallback);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d(TAG, "Service created");
+
+        // Create notification channel for the service's foreground notification
+        createNotificationChannel();
+        safetyResponseManager = SafetyResponseManager.getInstance(this);
+    }
+
+
+    public boolean isWakeWordDetectionActive() {
+        return isWakeWordDetectionActive;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null && intent.hasExtra("selected_wake_words_bundle")) {
+            Bundle wakeWordsBundle = intent.getBundleExtra("selected_wake_words_bundle");
+            if (wakeWordsBundle != null) {
+                List<String> wakeWords = new ArrayList<>();
+                for (String key : wakeWordsBundle.keySet()) {
+                    wakeWords.add(wakeWordsBundle.getString(key));
+                }
+                if (!wakeWords.isEmpty()) {
+                    startWakeWordDetection(wakeWords);
+                } else {
+                    Log.e(TAG, "No wake words received to start detection.");
+                }
+            }
+        }
+        Notification notification = createNotification();
+        startForeground(NOTIFICATION_ID, notification);
+        return START_STICKY;
+    }
+
+    private Notification createNotification() {
+        // If you are targeting API level 26+, you must implement a user-visible notification channel
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Wake Word Detection", NotificationManager.IMPORTANCE_DEFAULT);
+        channel.setDescription("Notification channel for wake word detection service");
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+
+        return new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Wake Word Detection Active")
+                .setContentText("Tap to return to the app.")
+                .setSmallIcon(R.drawable.ic_mic) // Replace with your own drawable icon
+                .setContentIntent(createPendingIntent())
+                .build();
+    }
+
+    private PendingIntent createPendingIntent() {
+        Intent notificationIntent = new Intent(this, WakeWordsFragment.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        return PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+    }
+
+    private void createNotificationChannel() {
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Porcupine Service", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.createNotificationChannel(channel);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
+    public class LocalBinder extends Binder {
+        public PorcupineService getService() {
+            return PorcupineService.this;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
-    }
-
-    ///////start stop safety monitoring
-    private void startService() {
-        Intent serviceIntent = new Intent(getApplicationContext(), SafetyMonitoringService.class);
-        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
-    }
-
-    private void stopService() {
-        Intent serviceIntent = new Intent(getApplicationContext(), SafetyMonitoringService.class);
-        getApplicationContext().stopService(serviceIntent);
+        stopWakeWordDetection();
     }
 }
-
-

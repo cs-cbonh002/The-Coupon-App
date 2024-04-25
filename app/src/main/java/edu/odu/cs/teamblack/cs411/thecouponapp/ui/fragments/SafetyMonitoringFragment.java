@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
-import edu.odu.cs.teamblack.cs411.thecouponapp.services.SafetyMonitoringService;
+import edu.odu.cs.teamblack.cs411.thecouponapp.services.AudioClassifierService;
 
 public class SafetyMonitoringFragment extends Fragment {
 
@@ -52,7 +52,6 @@ public class SafetyMonitoringFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //receiver = new WakeWordsFragment.ServiceBroadcastReceiver();
-
         initPermission();
 
         //ask permissions
@@ -85,12 +84,12 @@ public class SafetyMonitoringFragment extends Fragment {
 
     /////////// TensorFlow
     private void startService() {
-        Intent serviceIntent = new Intent(requireContext(), SafetyMonitoringService.class);
+        Intent serviceIntent = new Intent(requireContext(), AudioClassifierService.class);
         ContextCompat.startForegroundService(requireContext(), serviceIntent);
     }
 
     private void stopService() {
-        Intent serviceIntent = new Intent(requireContext(), SafetyMonitoringService.class);
+        Intent serviceIntent = new Intent(requireContext(), AudioClassifierService.class);
         requireActivity().stopService(serviceIntent);
     }
 

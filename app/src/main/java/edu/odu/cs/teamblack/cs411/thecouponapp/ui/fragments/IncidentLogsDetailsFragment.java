@@ -1,12 +1,15 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.media.MediaPlayer;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +22,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -49,12 +53,21 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
     private Slider severitySlider;
     private Button saveButton;
     private ImageButton closeButton;
+    private TextInputEditText transcriptionInput;
+    private ImageButton  audioButton;
+    private ProgressBar mediaProgressBar;
+    private MediaPlayer mediaPlayer = null;
+    private boolean isPlaying = false;
 
     public static IncidentLogsDetailsFragment newInstance(IncidentLog incidentLog) {
         IncidentLogsDetailsFragment fragment = new IncidentLogsDetailsFragment();
         Bundle args = new Bundle();
         if (incidentLog != null) {
             args.putParcelable(ARG_INCIDENT_LOG, incidentLog);
+        } else {
+            // If incidentLog is null, indicating a new log is being added,
+            // set a flag to hide transcription and playback controls
+            args.putBoolean("isNewLog", true);
         }
         fragment.setArguments(args);
         return fragment;
@@ -74,10 +87,17 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
         initializeViews(view);
         setupListeners();
 
-        if (getArguments() != null && getArguments().containsKey(ARG_INCIDENT_LOG)) {
-            incidentLog = getArguments().getParcelable(ARG_INCIDENT_LOG);
-            if (incidentLog != null) {
-                populateViews();
+        if (getArguments() != null) {
+            if (getArguments().getBoolean("isNewLog", false)) {
+                // Hide the transcription and playback controls
+                transcriptionInput.setVisibility(View.GONE);
+                audioButton.setVisibility(View.GONE);
+                mediaProgressBar.setVisibility(View.GONE);
+            } else if (getArguments().containsKey(ARG_INCIDENT_LOG)) {
+                incidentLog = getArguments().getParcelable(ARG_INCIDENT_LOG);
+                if (incidentLog != null) {
+                    populateViews();
+                }
             }
         }
     }
@@ -89,6 +109,9 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
         closeButton = view.findViewById(R.id.close_button);
         dateInput = view.findViewById(R.id.date_input);
         timeInput = view.findViewById(R.id.time_input);
+        transcriptionInput = view.findViewById(R.id.transcription_input);
+        audioButton = view.findViewById(R.id.audio_button);
+        mediaProgressBar = view.findViewById(R.id.media_progress_bar);
     }
 
     private void populateViews() {
@@ -100,6 +123,23 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
             LocalDateTime dateTime = incidentInstant.atZone(ZoneId.systemDefault()).toLocalDateTime();
             dateInput.setText(dateTime.format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
             timeInput.setText(dateTime.format(DateTimeFormatter.ofPattern(TIME_FORMAT)));
+
+            if (incidentLog.isCreatedByUser()) {
+                // Hide the transcription and playback controls for user-created logs
+                transcriptionInput.setVisibility(View.GONE);
+                audioButton.setVisibility(View.GONE);
+                mediaProgressBar.setVisibility(View.GONE);
+            } else {
+                // Only show the transcription and playback controls for system-created logs
+                transcriptionInput.setVisibility(View.VISIBLE);
+                audioButton.setVisibility(View.VISIBLE); // Show only if there is an audio file
+                mediaProgressBar.setVisibility(View.GONE);   // Initially hidden, shown during playback
+
+                transcriptionInput.setText(incidentLog.getTranscription());
+                // Configure the play button and progress bar
+                Log.d("IncidentLogsDetails", "Audio file path: " + incidentLog.getAudioFilePath());
+                configureMediaPlayback(incidentLog.getAudioFilePath());
+            }
         }
     }
 
@@ -193,6 +233,79 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
         }
         dismiss();
     }
+
+
+
+    private void configureMediaPlayback(String audioFilePath) {
+        audioButton.setVisibility(audioFilePath != null && !audioFilePath.isEmpty() ? View.VISIBLE : View.GONE);
+        mediaProgressBar.setVisibility(View.GONE);
+
+        audioButton.setOnClickListener(v -> {
+            if (isPlaying) {
+                stopAudioPlayback();
+            } else {
+                startAudioPlayback(audioFilePath);
+            }
+        });
+    }
+
+    private void startAudioPlayback(String audioFilePath) {
+        mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(audioFilePath);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            // Update UI for playing state
+            isPlaying = true;
+            audioButton.setImageResource(R.drawable.ic_stop);
+
+            mediaProgressBar.setMax(mediaPlayer.getDuration() / 1000);
+            progressHandler.post(progressRunnable);
+
+            mediaPlayer.setOnCompletionListener(mp -> stopAudioPlayback());
+        } catch (IOException e) {
+            Log.e("IncidentLogsDetailsFragment", "Could not play audio", e);
+            // Handle error
+        }
+    }
+
+
+    private void stopAudioPlayback() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        // Update UI for not playing state
+        mediaProgressBar.setProgress(0);
+        isPlaying = false;
+        audioButton.setImageResource(R.drawable.ic_play);
+        progressHandler.removeCallbacks(progressRunnable);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        progressHandler.removeCallbacks(progressRunnable);
+        super.onDestroyView();
+    }
+
+    private Handler progressHandler = new Handler();
+    private Runnable progressRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mediaPlayer != null && isPlaying) {
+                int mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
+                mediaProgressBar.setProgress(mCurrentPosition);
+                // Schedule the runnable to run again after a delay
+                progressHandler.postDelayed(this, 1000);
+            }
+        }
+    };
 }
 
 

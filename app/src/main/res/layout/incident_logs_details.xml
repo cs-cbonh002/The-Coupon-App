@@ -125,6 +125,54 @@
                 android:focusable="false" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
+    <!-- Audio Playback Controls -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="12dp">
+
+        <ImageButton
+            android:id="@+id/audio_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_play"
+            android:contentDescription="@string/play_audio"
+            android:background="?attr/selectableItemBackground" />
+
+        <ProgressBar
+            android:id="@+id/media_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp">
+        <!-- Transcription Input Field -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/transcription_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Transcription">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/transcription_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:enabled="false" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 
 
 

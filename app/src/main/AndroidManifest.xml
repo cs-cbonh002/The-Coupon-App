@@ -45,7 +45,7 @@
             android:exported="false" />
 
         <service
-            android:name=".services.SafetyMonitoringService"
+            android:name=".services.AudioClassifierService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="microphone" />

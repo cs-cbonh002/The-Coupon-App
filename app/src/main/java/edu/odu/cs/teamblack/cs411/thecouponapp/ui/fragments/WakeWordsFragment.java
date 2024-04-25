@@ -2,263 +2,211 @@ package edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.pm.PackageManager;
-import android.os.Handler;
-
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
+import android.os.IBinder;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.textfield.TextInputLayout;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-
 import ai.picovoice.porcupine.Porcupine;
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.services.PorcupineService;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.common.PermissionManager;
+import edu.odu.cs.teamblack.cs411.thecouponapp.managers.PermissionsManager;
 
-public class WakeWordsFragment extends Fragment {
-
-    private static final String[] REQUIRED_PERMISSIONS = {
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.CALL_PHONE,
-            Manifest.permission.CAMERA,
-            Manifest.permission.POST_NOTIFICATIONS,
-            Manifest.permission.SEND_SMS
-    };
-    private static final String SHARED_PREFS_NAME = "wake_word_settings";
-    private static final String KEY_WAKE_WORD_ENABLED = "wake_word_enabled";
-    private static final String WAKE1 = "wake1";
-    private static final String WAKE2 = "wake2";
-    private static final String WAKE3 = "wake3";
-    private static final String WAKE4 = "wake4";
-    private static final long DEBOUNCE_DELAY_MS = 500;
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private List<AutoCompleteTextView> keywordDropdowns;
-    private SwitchMaterial enableWakeWordSwitch;
-    private PermissionManager permissionManager;
+public class WakeWordsFragment extends Fragment implements PorcupineService.WakeWordDetectionListener {
+    private static final String WAKE_WORD_PREFS = "WakeWordsPrefs";
+    private static final int NUM_WAKE_WORDS = 4;
+    private static final String[] DEFAULT_WAKE_WORDS = {"PORCUPINE", "BLUEBERRY", "TERMINATOR", "JARVIS"};
+    private static final Set<String> BUILT_IN_KEYWORDS;
+    private PorcupineService porcupineService;
     private SharedPreferences sharedPreferences;
+    private boolean isBound = false;
+    private List<AutoCompleteTextView> wakeWordDropdowns;
+    private SwitchMaterial enableWakeWordSwitch;
+    private PermissionsManager permissionsManager;
+    private ServiceConnection serviceConnection;
 
-    ArrayList<String> keywords = new ArrayList<String>();
+    private final Map<Integer, String> selectedWakeWords = new HashMap<>();
+    private Set<String> availableWakeWords = new HashSet<>();
+
+    static {
+        BUILT_IN_KEYWORDS = Arrays.stream(Porcupine.BuiltInKeyword.values())
+                .map(Enum::name)
+                .collect(Collectors.toSet());
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        permissionManager = new PermissionManager(this);
-        sharedPreferences = requireActivity().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = requireContext().getSharedPreferences(WAKE_WORD_PREFS, Context.MODE_PRIVATE);
+        permissionsManager = new PermissionsManager(this);
+        initializeServiceConnection();
+        initializeWakeWords();
+    }
+
+    private void initializeServiceConnection() {
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName className, IBinder service) {
+                porcupineService = ((PorcupineService.LocalBinder) service).getService();
+                porcupineService.setWakeWordDetectionListener(WakeWordsFragment.this);
+                isBound = true;
+                boolean isDetectionActive = porcupineService.isWakeWordDetectionActive();
+                enableWakeWordSwitch.setChecked(isDetectionActive);
+                setUIEnabled(true);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName arg0) {
+                isBound = false;
+                setUIEnabled(false);
+            }
+        };
+    }
+
+    private void initializeWakeWords() {
+        loadDefaultWakeWords();
+        loadAvailableWakeWords();
+        loadSelectedWakeWordsFromPreferences();
+    }
+
+    private void loadDefaultWakeWords() {
+        boolean wakeWordsSet = sharedPreferences.getBoolean("wake_words_set", false);
+        if (!wakeWordsSet) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            for (int i = 0; i < NUM_WAKE_WORDS; i++) {
+                editor.putString("wake_word_" + i, DEFAULT_WAKE_WORDS[i]);
+            }
+            editor.putBoolean("wake_words_set", true);
+            editor.apply();
+        }
+    }
+
+    private void loadAvailableWakeWords() {
+        availableWakeWords = new HashSet<>(BUILT_IN_KEYWORDS);
+    }
+
+    private void loadSelectedWakeWordsFromPreferences() {
+        for (int i = 0; i < NUM_WAKE_WORDS; i++) {
+            String wakeWord = sharedPreferences.getString("wake_word_" + i, DEFAULT_WAKE_WORDS[i]);
+            selectedWakeWords.put(i, wakeWord);
+            availableWakeWords.remove(wakeWord);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wake_words_fragment, container, false);
+        setupViews(view);
+        restoreSwitchState();
+        return view;
+    }
 
-        keywords.add(sharedPreferences.getString(WAKE1,"STOP HITTING ME"));
-        keywords.add(sharedPreferences.getString(WAKE2,"BUMBLEBEE"));
-        keywords.add(sharedPreferences.getString(WAKE3,"TERMINATOR"));
-        keywords.add(sharedPreferences.getString(WAKE4,"BLUEBERRY"));
-
+    private void setupViews(View view) {
         enableWakeWordSwitch = view.findViewById(R.id.enable_wake_word_control_switch);
-        keywordDropdowns = Arrays.asList(
+        wakeWordDropdowns = Arrays.asList(
                 view.findViewById(R.id.keyword_dropdown_1),
                 view.findViewById(R.id.keyword_dropdown_2),
                 view.findViewById(R.id.keyword_dropdown_3),
                 view.findViewById(R.id.keyword_dropdown_4)
         );
-
-        List<String> words = getKeywords();
-        words.removeAll(keywords);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, words);
-        keywordDropdowns.forEach(dropdown -> {
-            dropdown.setAdapter(adapter);
-            dropdown.setOnItemClickListener(dropdownListener);
-        });
-
-        // Set the default first dropdown to the first item in the list
-        keywordDropdowns.forEach(dropdown -> dropdown.setText(adapter.getItem(0), false));
-
-        // Get the saved switch state from SharedPreferences and apply it to the switch
-        boolean switchState = sharedPreferences.getBoolean(KEY_WAKE_WORD_ENABLED, false);
-        enableWakeWordSwitch.setChecked(switchState);
-
-        // Now set the switch listener
-        enableWakeWordSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Remove any existing callbacks to debounce
-            handler.removeCallbacksAndMessages(null);
-            handler.postDelayed(() -> {
-                sharedPreferences.edit().putBoolean(KEY_WAKE_WORD_ENABLED, isChecked).apply();
-                updateServiceAndUIState(isChecked);
-            }, DEBOUNCE_DELAY_MS);
-        });
-
-        return view;
+        setupDropdownAdapters();
+        setupSwitchListener();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        updateServiceAndUIState(sharedPreferences.getBoolean(KEY_WAKE_WORD_ENABLED, false));
-        populateDropdowns();
+    private void setupSwitchListener() {
+        enableWakeWordSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> toggleWakeWordDetection(isChecked));
     }
 
-    private List<String> getKeywords() {
-        List<String> getKey = Arrays.stream(Porcupine.BuiltInKeyword.values())
-                .map(keyword -> keyword.name())
-                .collect(Collectors.toList());
-        return getKey;
+    private void setupDropdownAdapters() {
+        for (int i = 0; i < wakeWordDropdowns.size(); i++) {
+            updateSingleDropdownAdapter(i);
+        }
     }
 
-    private void updateServiceAndUIState(boolean enabled) {
-        if (enabled) {
-            if (checkAllPermissionsGranted()) {
-                requestPermissions();
-            } else {
-                setUIEnabled(false);
-                startService();
-            }
+    private void updateSingleDropdownAdapter(int index) {
+        AutoCompleteTextView dropdown = wakeWordDropdowns.get(index);
+        String currentWakeWord = selectedWakeWords.getOrDefault(index, DEFAULT_WAKE_WORDS[index]);
+        List<String> adapterWakeWords = new ArrayList<>(availableWakeWords);
+        adapterWakeWords.add(currentWakeWord);
+        Collections.sort(adapterWakeWords);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, adapterWakeWords);
+        dropdown.setAdapter(adapter);
+        dropdown.setText(currentWakeWord, false);
+    }
+
+    private void toggleWakeWordDetection(boolean enable) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("switch_state", enable);
+        editor.apply();
+        if (enable) {
+            checkPermissionsAndStart();
         } else {
-            stopService();
-            setUIEnabled(true);
+            stopWakeWordDetection();
+            setUIEnabled(false);
         }
     }
 
-    private void startService() {
-        Intent serviceIntent = new Intent(requireContext(), PorcupineService.class);
-        serviceIntent.putExtra("keywords",keywords);
-        requireContext().startForegroundService(serviceIntent);
-    }
+    private void checkPermissionsAndStart() {
+        String[] permissions = {
+                Manifest.permission.RECORD_AUDIO
 
-    private void stopService() {
-        Intent serviceIntent = new Intent(requireContext(), PorcupineService.class);
-        requireActivity().stopService(serviceIntent);
-    }
-
-    private void setUIEnabled(boolean isEnabled) {
-        if (requireView() == null) return;
-
-        int textColor = isEnabled ? getResources().getColor(R.color.textColorEnabled, null) : getResources().getColor(R.color.textColorDisabled, null);
-        float alpha = isEnabled ? 1.0f : 0.5f;
-
-        boolean hasPermissions = !checkAllPermissionsGranted();
-        keywordDropdowns.forEach(dropdown -> {
-            dropdown.setEnabled(isEnabled && hasPermissions);
-            dropdown.setAlpha(alpha);
-        });
-
-        updateTextViewsColor(textColor);
-
-        // Enable/disable the TextInputLayout elements
-        int[] keywordMenuIDs = {R.id.keyword_menu_1, R.id.keyword_menu_2, R.id.keyword_menu_3, R.id.keyword_menu_4};
-        for (int menuID : keywordMenuIDs) {
-            TextInputLayout textInputLayout = requireView().findViewById(menuID);
-            textInputLayout.setEnabled(isEnabled && hasPermissions);
-        }
-    }
-
-    private void populateDropdowns() {
-        List<String> availableKeywords = new ArrayList<>(getKeywords());
-            availableKeywords.removeAll(keywords);
-
-        for (int i = 0; i < keywordDropdowns.size(); i++) {
-            AutoCompleteTextView dropdown = keywordDropdowns.get(i);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, availableKeywords);
-            dropdown.setAdapter(adapter);
-            dropdown.setText(keywords.get(i), false);
-            dropdown.setOnItemClickListener(getDropdownListener(i));
-        }
-    }
-
-    private AdapterView.OnItemClickListener getDropdownListener(int index) {
-        return (parent, view, position, id) -> {
-            String selectedKeyword = parent.getItemAtPosition(position).toString();
-            updateAdapters(index);
-            keywords.set(index,selectedKeyword);
-            handler.removeCallbacksAndMessages(null);
-            handler.postDelayed(() -> {
-                switch (index) {
-                    case 0:
-                        sharedPreferences.edit().putString(WAKE1,selectedKeyword).apply();
-                        break;
-                    case 1:
-                        sharedPreferences.edit().putString(WAKE2,selectedKeyword).apply();
-                        break;
-                    case 2:
-                        sharedPreferences.edit().putString(WAKE3,selectedKeyword).apply();
-                        break;
-                    case 3:
-                        sharedPreferences.edit().putString(WAKE4,selectedKeyword).apply();
-                        break;
-                }
-            }, DEBOUNCE_DELAY_MS);
-            populateDropdowns();
         };
-    }
-
-    private void updateAdapters(int excludeIndex) {
-        List<String> availableKeywords = new ArrayList<>(getKeywords());
-        availableKeywords.removeAll(keywords);
-        for (int i = 0; i < keywordDropdowns.size(); i++) {
-            if (i != excludeIndex) {
-                AutoCompleteTextView dropdown = keywordDropdowns.get(i);
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, availableKeywords);
-                dropdown.setAdapter(adapter);
+        permissionsManager.requestPermissions(permissions, new PermissionsManager.MultiplePermissionsListener() {
+            @Override
+            public void onAllPermissionsGranted() {
+                startWakeWordService();
             }
-        }
-    }
 
-    private void updateTextViewsColor(int textColor) {
-        int[] titleIDs = {R.id.keyword_title_1, R.id.keyword_title_2, R.id.keyword_title_3, R.id.keyword_title_4};
-        for (int i = 0; i < titleIDs.length; i++) {
-            TextView titleView = requireView().findViewById(titleIDs[i]);
-            if (titleView != null) titleView.setTextColor(textColor);
-        }
-    }
-
-    private void requestPermissions() {
-        permissionManager.requestPermissions(REQUIRED_PERMISSIONS, permissionsListener);
-    }
-
-    private boolean checkAllPermissionsGranted() {
-        for (String permission : REQUIRED_PERMISSIONS) {
-            if (requireContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                return true;
+            @Override
+            public void onPermissionsDenied(List<String> deniedPermissions) {
+                enableWakeWordSwitch.setChecked(false);
+                View view = getView();
+                if (view != null) {
+                    Snackbar.make(view, "Permission Denied", Snackbar.LENGTH_SHORT).show();
+                }
             }
-        }
-        return false;
+
+            @Override
+            public void onPermissionsDeniedForever(List<String> deniedForeverPermissions) {
+                showPermissionDialog();
+            }
+        });
     }
 
-    private void showSnackbarMessage(String message) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show();
+    private void restoreSwitchState() {
+        boolean switchState = sharedPreferences.getBoolean("switch_state", false);
+        enableWakeWordSwitch.setChecked(switchState);
+        toggleWakeWordDetection(switchState);
     }
 
     private void showPermissionDialog() {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Permission Required")
-                .setMessage("Microphone and call permissions are required for this feature. Please enable them in the app settings.")
-                .setPositiveButton("Go to Settings", (dialog, which) -> {
-                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", requireContext().getPackageName(), null));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        new AlertDialog.Builder(getContext())
+                .setMessage("Permission is needed to access the microphone. Please enable it in settings.")
+                .setPositiveButton("Settings", (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.fromParts("package", requireContext().getPackageName(), null));
                     startActivity(intent);
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
@@ -266,27 +214,56 @@ public class WakeWordsFragment extends Fragment {
                 .show();
     }
 
-    private final AdapterView.OnItemClickListener dropdownListener = (parent, view, position, id) -> {
-        // Handle item selection
-        populateDropdowns();
-    };
-
-    private final PermissionManager.MultiplePermissionsListener permissionsListener = new PermissionManager.MultiplePermissionsListener() {
-        @Override
-        public void onAllPermissionsGranted() {
-            updateServiceAndUIState(true);
+    public void startWakeWordService() {
+        stopWakeWordDetection();
+        Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
+        Bundle wakeWordsBundle = new Bundle();
+        for (Map.Entry<Integer, String> entry : selectedWakeWords.entrySet()) {
+            wakeWordsBundle.putString(entry.getKey().toString(), entry.getValue());
         }
+        serviceIntent.putExtra("selected_wake_words_bundle", wakeWordsBundle);
+        requireContext().startService(serviceIntent);
+        requireContext().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
 
-        @Override
-        public void onPermissionsDenied(List<String> deniedPermissions) {
-            showSnackbarMessage("Permissions denied");
-            enableWakeWordSwitch.setChecked(false);
+    private void stopWakeWordDetection() {
+        if (porcupineService != null && isBound) {
+            try {
+                porcupineService.stopWakeWordDetection();
+                requireContext().unbindService(serviceConnection);
+                isBound = false;
+            } catch (Exception e) {
+                Log.e("WakeWordsFragment", "Failed to stop wake word detection", e);
+            }
         }
+        Intent serviceIntent = new Intent(getContext(), PorcupineService.class);
+        requireContext().stopService(serviceIntent);
+    }
 
-        @Override
-        public void onPermissionsDeniedForever(List<String> deniedForeverPermissions) {
-            showPermissionDialog();
-            enableWakeWordSwitch.setChecked(false);
+    private void setUIEnabled(boolean isEnabled) {
+        for (AutoCompleteTextView dropdown : wakeWordDropdowns) {
+            dropdown.setEnabled(isEnabled);
+            dropdown.setAlpha(isEnabled ? 1.0f : 0.5f);
         }
-    };
+    }
+
+    @Override
+    public void onDestroy() {
+        if (isBound) {
+            requireContext().unbindService(serviceConnection);
+            isBound = false;
+        }
+        super.onDestroy();
+    }
+
+
+    @Override
+    public void onWakeWordDetected(int keywordIndex) {
+        Log.d("WakeWordsFragment", "Wake word detected: " + keywordIndex);
+    }
+
+    @Override
+    public void onError(Exception e) {
+        Log.e("WakeWordsFragment", "Error from PorcupineService", e);
+    }
 }
