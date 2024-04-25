@@ -1,7 +1,17 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.services;
 import javax.swing.DefaultBoundedRangeModel;
+import android.location.location;
+import android.os.Build;
+import android.view.View;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities.MainActivity;
 
 
 public class gpsService extends Service {
@@ -56,7 +66,7 @@ public class gpsService extends Service {
                     locationRequest.setPriority(Locationrequest.PRIORITY_HIGH_ACCURACY);
                     tv_sensor.setText("Using GPS Sensors");
                 }
-                    else {
+                else {
                     locationRequest.setPriority(LocationRequest.Priority_BALANCED_POWER_ACCURACY);
                     tv_sensor.setText("Using Towers + WIFI");
                 }
@@ -65,7 +75,24 @@ public class gpsService extends Service {
         });
 
     }
- 
+ @Override
+ public void onRequestPermissionsResult(int requestCode, String[] permissions, int [] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    switch (requestCode) {
+        case PERMISSION_FINE_LOCATION:
+        if (grantResults[0] = PackageManager.PERMISSION_GRANTED){
+            updateGPS();
+        }
+        else {
+            Toast.makeText(this, "this app requires permission to be granted in order to work properly", Toast.Length_Short).show();
+            finish();
+        }
+        break;
+    }
+ }
+
+
     private void updateGPS () {
         //get permission from the user to track to GPS
         //get the current location from fused client
@@ -73,20 +100,46 @@ public class gpsService extends Service {
     
         fusedLocationProviderClient = LocationServices.getFusedFusedLocationProviderClient(gpsService.this);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //user provides the permission
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>()) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     // we got permissions. Put the values of location.XXX into UI Components
-                    updateUIValues();
+                    updateUIValues(location);
                 }
             });
         }
         else {
+            //permissions not granted yet
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 requestPermissions(new String [] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
             }
         }
 
+    }
+
+    private void updateUIValues(Location location){
+        //update all of the text view objects with a new location
+        tv_lat.setText(String.valueOf(location.getLatitude()));
+        tv_long.setText(String.valueOf(location.getLongitude()));
+        tv_accurancy.setText(String.valueOf(location.getAccuracy()));
+
+        if (location.hasAltitude()) {
+            tv_altitude.setText(String.valueOf(location.getAltitude()));
+        }
+        else {
+            tv_altitude.settext("Not available");
+        }
+
+        if (location.hasAltitude()) {
+            tv_speed.setText(String.valueOf(location.getSpeed()));
+        }
+        else {
+            tv_speed.settext("Not available");
+        }
+    }
+
 }
+
+
