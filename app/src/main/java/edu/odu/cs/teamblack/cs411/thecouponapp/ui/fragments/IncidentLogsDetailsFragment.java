@@ -44,7 +44,6 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String TIME_FORMAT = "hh:mm a";
     private static final String[] SEVERITY_LEVELS = {"Low", "Medium", "High"};
-
     private IncidentLogsViewModel viewModel;
     private IncidentLog incidentLog;
     private TextInputEditText dateInput;
@@ -88,7 +87,7 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
         setupListeners();
 
         if (getArguments() != null) {
-            if (getArguments().getBoolean("isNewLog", false)) {
+            if (getArguments().containsKey(ARG_INCIDENT_LOG)) {
                 // Hide the transcription and playback controls
                 transcriptionInput.setVisibility(View.GONE);
                 audioButton.setVisibility(View.GONE);
