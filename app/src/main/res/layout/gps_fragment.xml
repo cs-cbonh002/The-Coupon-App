@@ -165,7 +165,8 @@
         android:layout_height="1dp"
         android:layout_marginTop="24dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintTop_toBottomOf="@+id/tv_address"
-        tools:layout_editor_absoluteX="1dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_address" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
