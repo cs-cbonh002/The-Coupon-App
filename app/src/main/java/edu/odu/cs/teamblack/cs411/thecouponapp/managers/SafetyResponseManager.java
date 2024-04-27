@@ -103,6 +103,7 @@ public class SafetyResponseManager {
 
 
     private void initiateCommunication() {
+        // get emergency contact primary phone number and/or email/text
         communicationsManager.sendSMS("540-214-0551"); // TODO: replace with emergency contact #
         communicationsManager.makeCall("540-241-0551"); // TODO: replace with emergency contact # or fake 911
         communicationsManager.sendEmail("marksilasgabriel@gmail.com", "HELP", "Sending from Porcupine Service"); // TODO: replace with emergency contact email

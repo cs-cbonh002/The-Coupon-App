@@ -47,4 +47,5 @@ public class EmergencyContactsViewModel extends AndroidViewModel {
     public LiveData<List<EmergencyContact>> getAllEmergencyContacts() {
         return allEmergencyContacts;
     }
+
 }

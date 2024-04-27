@@ -68,7 +68,7 @@ public class AudioClassifierService extends Service {
 
     private void initializeComponents() {
         Log.d(TAG, "Initializing components");
-        BaseOptions baseOptions = BaseOptions.builder().setNumThreads(1).build(); // Don't use NNAPI
+        BaseOptions baseOptions = BaseOptions.builder().setNumThreads(1).useNnapi().build(); // Don't use NNAPI
         AudioClassifier.AudioClassifierOptions options = AudioClassifier.AudioClassifierOptions.builder()
                 .setScoreThreshold(0.7f)
                 .setBaseOptions(baseOptions)
@@ -111,7 +111,7 @@ public class AudioClassifierService extends Service {
         for (Classifications classification : results) {
             for (Category category : classification.getCategories()) {
                 Log.d("AudioEventDetection", "Category: " + category.getLabel() + ", Score: " + category.getScore());
-                if ("Hands".equals(category.getLabel())) // CHECKING IF LOGS WORK
+                if ("Whistling".equals(category.getLabel())) // CHECKING IF LOGS WORK
                     safetyResponseManager.handleTrigger(TriggerType.AUDIO_EVENT, "START_LOGGING");
 
                 switch (category.getLabel()) {
