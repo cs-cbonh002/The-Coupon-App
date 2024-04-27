@@ -30,6 +30,7 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.gpsFragment;
 
 public class gpsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.gps_spoofing_fragment, container, false);
     }
 }
