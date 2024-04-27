@@ -5,12 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProvider;
+
 import java.io.File;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.data.repository.IncidentLogRepository;
 import edu.odu.cs.teamblack.cs411.thecouponapp.services.AudioClassifierService;
+import edu.odu.cs.teamblack.cs411.thecouponapp.data.local.entity.EmergencyContact;
+import edu.odu.cs.teamblack.cs411.thecouponapp.data.repository.EmergencyContactRepository;
 
 public class SafetyResponseManager {
+
 
     public enum TriggerType {
         WAKE_WORD,
@@ -18,6 +25,7 @@ public class SafetyResponseManager {
     }
 
     private CommunicationsManager communicationsManager;
+    private EmergencyContactRepository emergencyContactRepository;
     private IncidentLogsManager incidentLogsManager;
     private static SafetyResponseManager instance;
     private Context context;
@@ -36,6 +44,7 @@ public class SafetyResponseManager {
         }
         this.communicationsManager = new CommunicationsManager(context);
         this.incidentLogsManager = new IncidentLogsManager(context, incidentLogRepository, audioFileDirectory);
+        this.emergencyContactRepository = new EmergencyContactRepository((Application) context.getApplicationContext());
     }
 
     public static synchronized SafetyResponseManager getInstance(Context context) {
@@ -103,11 +112,16 @@ public class SafetyResponseManager {
 
 
     private void initiateCommunication() {
-        // get emergency contact primary phone number and/or email/text
-        communicationsManager.sendSMS("540-214-0551"); // TODO: replace with emergency contact #
-        communicationsManager.makeCall("540-241-0551"); // TODO: replace with emergency contact # or fake 911
-        communicationsManager.sendEmail("marksilasgabriel@gmail.com", "HELP", "Sending from Porcupine Service"); // TODO: replace with emergency contact email
+        EmergencyContact primaryContact = emergencyContactRepository.getPrimaryEmergencyContact().getValue();
+        if (primaryContact != null) {
+            communicationsManager.sendCommunication(primaryContact);
+        } else {
+            Log.d("SafetyResponseManager", "No primary contact set");
+            communicationsManager.makeCall("5713760038"); // dummy 911
+        }
+
     }
+
 
     public void setAudioClassificationRunning(boolean running) {
         this.isAudioClassifierRunning = running;

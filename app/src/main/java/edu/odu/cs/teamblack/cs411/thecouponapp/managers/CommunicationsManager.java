@@ -11,9 +11,14 @@ import android.telephony.SmsManager;
 
 import androidx.core.app.NotificationCompat;
 
+import edu.odu.cs.teamblack.cs411.thecouponapp.data.local.entity.EmergencyContact;
+
 public class CommunicationsManager {
     private Context context;
     private NotificationManager notificationManager;
+    public static final int COMMUNICATION_CALL = 1;  // 0b001
+    public static final int COMMUNICATION_TEXT = 2;  // 0b010
+    public static final int COMMUNICATION_EMAIL = 4; // 0b100
 
     public CommunicationsManager(Context context) {
         this.context = context;
@@ -33,6 +38,21 @@ public class CommunicationsManager {
                 .setContentIntent(pendingIntent);
 
         notificationManager.notify(1, builder.build());
+    }
+
+    public void sendCommunication(EmergencyContact contact) {
+        int preferences = contact.getCommunicationPreferences();
+        if (preferences != 0) {
+            if ((preferences & COMMUNICATION_CALL) != 0) {
+                makeCall(contact.getPhoneNumber());
+            }
+            if ((preferences & COMMUNICATION_TEXT) != 0) {
+                sendSMS(contact.getPhoneNumber());
+            }
+            if ((preferences & COMMUNICATION_EMAIL) != 0) {
+                sendEmail(contact.getEmail(), "Emergency", "Please check your messages for details.");
+            }
+        }
     }
 
     public void sendSMS(String phoneNumber) {
@@ -56,6 +76,8 @@ public class CommunicationsManager {
         intent.putExtra(Intent.EXTRA_TEXT, body);
         sendNotification("Emergency Detected", "Tap to send an Email to the emergency contact.", intent);
     }
+
+
 
     private void createNotificationChannel() {
         NotificationChannel channel = new NotificationChannel("channel_id", "Channel Name", NotificationManager.IMPORTANCE_HIGH);

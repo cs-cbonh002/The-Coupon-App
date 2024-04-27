@@ -18,20 +18,11 @@ public class EmergencyContact implements Parcelable {
     public boolean isPrimary;
     public int communicationPreferences;
 
-    // Getters and setters
-    public boolean isPrimary() {
-        return isPrimary;
-    }
-
-    public void setPrimary(boolean primary) {
-        isPrimary = primary;
-    }
-
     public long getId() {
         return id;
     }
 
-    public void setId(long id) { // Changed setter to accept long
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -39,28 +30,24 @@ public class EmergencyContact implements Parcelable {
         return firstName;
     }
 
-    public void setFirstName(String name) {
-        this.firstName = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastname) {
-        this.lastName = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getRelationship() {
@@ -69,6 +56,34 @@ public class EmergencyContact implements Parcelable {
 
     public void setRelationship(String relationship) {
         this.relationship = relationship;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public boolean isPrimary() {
+        return isPrimary;
+    }
+
+    public void setPrimary(boolean primary) {
+        isPrimary = primary;
+    }
+
+    public int getCommunicationPreferences() {
+        return communicationPreferences;
     }
 
     public void setCommunicationPreferences(int communicationPreferences) {

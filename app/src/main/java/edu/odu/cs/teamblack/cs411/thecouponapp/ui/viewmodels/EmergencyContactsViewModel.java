@@ -36,8 +36,6 @@ public class EmergencyContactsViewModel extends AndroidViewModel {
     public void update(EmergencyContact emergencyContact, Runnable afterSave) {
         repository.update(emergencyContact, afterSave);
     }
-
-
     // Method to delete an emergency contact
     public void delete(EmergencyContact emergencyContact) {
         repository.delete(emergencyContact);
@@ -47,5 +45,8 @@ public class EmergencyContactsViewModel extends AndroidViewModel {
     public LiveData<List<EmergencyContact>> getAllEmergencyContacts() {
         return allEmergencyContacts;
     }
-
+    // Getter for the primary emergency contact LiveData
+    public LiveData<EmergencyContact> getPrimaryEmergencyContact() {
+        return repository.getPrimaryEmergencyContact();
+    }
 }

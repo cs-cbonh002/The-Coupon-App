@@ -50,7 +50,7 @@ public interface EmergencyContactDao {
      * @return LiveData containing the primary emergency contact.
      */
     @Query("SELECT * FROM emergency_contacts WHERE isPrimary = 1 LIMIT 1")
-    LiveData<EmergencyContact> getPrimaryContact();
+    LiveData<EmergencyContact> getPrimaryEmergencyContact();
 
     /**
      * Sets a unique primary contact, ensuring only one primary contact exists.

@@ -39,6 +39,10 @@ public class EmergencyContactRepository {
         return allEmergencyContacts;
     }
 
+    public LiveData<EmergencyContact> getPrimaryEmergencyContact() {
+        return emergencyContactDao.getPrimaryEmergencyContact();
+    }
+
     public void insert(EmergencyContact emergencyContact, Runnable afterSave) {
         executorService.execute(() -> {
             long id = emergencyContactDao.insert(emergencyContact); // This returns the new row ID
