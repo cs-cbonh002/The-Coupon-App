@@ -82,21 +82,19 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(IncidentLogsViewModel.class);
-
         initializeViews(view);
         setupListeners();
-
-        if (getArguments() != null) {
+        if (getArguments()!= null) {
             if (getArguments().containsKey(ARG_INCIDENT_LOG)) {
-                // Hide the transcription and playback controls
+                incidentLog = getArguments().getParcelable(ARG_INCIDENT_LOG);
+                if (incidentLog!= null) {
+                    populateViews();
+                }
+            } else if (getArguments().containsKey("isNewLog")) {
+                // Hide the transcription and playback controls for new logs
                 transcriptionInput.setVisibility(View.GONE);
                 audioButton.setVisibility(View.GONE);
                 mediaProgressBar.setVisibility(View.GONE);
-            } else if (getArguments().containsKey(ARG_INCIDENT_LOG)) {
-                incidentLog = getArguments().getParcelable(ARG_INCIDENT_LOG);
-                if (incidentLog != null) {
-                    populateViews();
-                }
             }
         }
     }
@@ -114,15 +112,13 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
     }
 
     private void populateViews() {
-        if (incidentLog != null) {
+        if (incidentLog!= null) {
             notesInput.setText(incidentLog.getNotes());
             severitySlider.setValue(getSeverityValue(incidentLog.getSeverity()));
-
             Instant incidentInstant = incidentLog.getIncidentDate().toInstant();
             LocalDateTime dateTime = incidentInstant.atZone(ZoneId.systemDefault()).toLocalDateTime();
             dateInput.setText(dateTime.format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
             timeInput.setText(dateTime.format(DateTimeFormatter.ofPattern(TIME_FORMAT)));
-
             if (incidentLog.isCreatedByUser()) {
                 // Hide the transcription and playback controls for user-created logs
                 transcriptionInput.setVisibility(View.GONE);
@@ -131,13 +127,15 @@ public class IncidentLogsDetailsFragment extends BottomSheetDialogFragment {
             } else {
                 // Only show the transcription and playback controls for system-created logs
                 transcriptionInput.setVisibility(View.VISIBLE);
-                audioButton.setVisibility(View.VISIBLE); // Show only if there is an audio file
-                mediaProgressBar.setVisibility(View.GONE);   // Initially hidden, shown during playback
-
-                transcriptionInput.setText(incidentLog.getTranscription());
-                // Configure the play button and progress bar
-                Log.d("IncidentLogsDetails", "Audio file path: " + incidentLog.getAudioFilePath());
-                configureMediaPlayback(incidentLog.getAudioFilePath());
+                if (incidentLog.getAudioFilePath()!= null &&!incidentLog.getAudioFilePath().isEmpty()) {
+                    audioButton.setVisibility(View.VISIBLE);
+                    mediaProgressBar.setVisibility(View.GONE);
+                    transcriptionInput.setText(incidentLog.getTranscription());
+                    configureMediaPlayback(incidentLog.getAudioFilePath());
+                } else {
+                    audioButton.setVisibility(View.GONE);
+                    mediaProgressBar.setVisibility(View.GONE);
+                }
             }
         }
     }

@@ -69,7 +69,7 @@ public class SafetyResponseManager {
                 initiateCommunication();
                 break;
             case "START_LOGGING":
-                incidentLogsManager.startIncidentLogging(false); // started by user
+                incidentLogsManager.startIncidentLogging(true); // started by user
                 break;
             case "STOP_LOGGING":
                 incidentLogsManager.stopIncidentLogging();
