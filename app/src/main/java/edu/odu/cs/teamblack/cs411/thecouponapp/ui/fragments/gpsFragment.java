@@ -30,7 +30,4 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.gpsFragment;
 
 public class gpsFragment extends Fragment {
 
-
-
-
 }
