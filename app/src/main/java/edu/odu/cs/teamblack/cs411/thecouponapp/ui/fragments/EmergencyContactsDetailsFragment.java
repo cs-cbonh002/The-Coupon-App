@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
@@ -42,6 +43,7 @@ public class EmergencyContactsDetailsFragment extends BottomSheetDialogFragment 
     private CheckBox emailCheckbox;
     private MaterialButton saveButton;
     private ImageButton closeButton;
+    private boolean shouldBePrimary = false; // Flag to hold primary status until the contact can be saved
     public static final int COMMUNICATION_CALL = 1;   // 001
     public static final int COMMUNICATION_TEXT = 2;   // 010
     public static final int COMMUNICATION_EMAIL = 4;  // 100
@@ -55,11 +57,13 @@ public class EmergencyContactsDetailsFragment extends BottomSheetDialogFragment 
         if (emergencyContact != null) {
             args.putParcelable(ARG_EMERGENCY_CONTACT, emergencyContact);
         } else {
-            args.putBoolean("isNewContact", true);
+            // Handle or log the absence of emergencyContact appropriately
+            Log.e("NewInstance", "Provided EmergencyContact is null");
         }
         fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,29 +75,29 @@ public class EmergencyContactsDetailsFragment extends BottomSheetDialogFragment 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(EmergencyContactsViewModel.class);
+
         initializeViews(view);
         setupListeners();
 
-        if (getArguments() != null) {
-            if (getArguments().containsKey(ARG_EMERGENCY_CONTACT)) {
-                emergencyContact = getArguments().getParcelable(ARG_EMERGENCY_CONTACT);
-                if (emergencyContact != null) {
-                    populateViews(emergencyContact);
-                }
-            } else {
-                // New emergency contact, initialize fields as needed
-                firstNameInput.setText("");
-                lastNameInput.setText("");
-                relationshipInput.setText("");
-                phoneInput.setText("");
-                emailInput.setText("");
-                primarySwitch.setChecked(false);
-                callCheckbox.setChecked(false);
-                textCheckbox.setChecked(false);
-                emailCheckbox.setChecked(false);
-            }
-        }
 
+        if (getArguments() != null && getArguments().containsKey(ARG_EMERGENCY_CONTACT)) {
+            emergencyContact = getArguments().getParcelable(ARG_EMERGENCY_CONTACT);
+            if (emergencyContact != null) {
+                populateViews(emergencyContact);
+                primarySwitch.setEnabled(!emergencyContact.isPrimary);  // Setup initial switch state
+            }
+        } else {
+            // New emergency contact, initialize fields as needed
+            firstNameInput.setText("");
+            lastNameInput.setText("");
+            relationshipInput.setText("");
+            phoneInput.setText("");
+            emailInput.setText("");
+            primarySwitch.setChecked(false);
+            callCheckbox.setChecked(false);
+            textCheckbox.setChecked(false);
+            emailCheckbox.setChecked(false);
+        }
     }
 
     private void initializeViews(View view) {
@@ -114,21 +118,15 @@ public class EmergencyContactsDetailsFragment extends BottomSheetDialogFragment 
         closeButton.setOnClickListener(v -> dismiss());
         saveButton.setOnClickListener(v -> saveEmergencyContact());
         primarySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Handle primary contact toggle
-            if (isChecked) {
-                // Update existing primary contact (if any)
-                EmergencyContact currentPrimary = viewModel.getPrimaryEmergencyContact();
-                if (currentPrimary!= null && currentPrimary.id!= emergencyContact.id) {
-                    currentPrimary.isPrimary = false;
-                    viewModel.update(currentPrimary);
-                }
-            }
+            shouldBePrimary = isChecked; // Update local flag based on user interaction
         });
+
 
         // Add text watchers to input fields
         firstNameInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -136,12 +134,14 @@ public class EmergencyContactsDetailsFragment extends BottomSheetDialogFragment 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         lastNameInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -149,12 +149,14 @@ public class EmergencyContactsDetailsFragment extends BottomSheetDialogFragment 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         relationshipInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -162,12 +164,14 @@ public class EmergencyContactsDetailsFragment extends BottomSheetDialogFragment 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         phoneInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -175,12 +179,14 @@ public class EmergencyContactsDetailsFragment extends BottomSheetDialogFragment 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         emailInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -188,20 +194,24 @@ public class EmergencyContactsDetailsFragment extends BottomSheetDialogFragment 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 
-    private void validateFields() {
+    private boolean validateFields() {
         String firstName = firstNameInput.getText().toString().trim();
         String lastName = lastNameInput.getText().toString().trim();
         String relationship = relationshipInput.getText().toString().trim();
         String phone = phoneInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
 
-        boolean isValid =!firstName.isEmpty() &&!lastName.isEmpty() &&!relationship.isEmpty() &&!(phone.isEmpty() && email.isEmpty());
-        saveButton.setEnabled(isValid);
+        // Validate each field and return false if any do not pass validation
+        boolean isValid = !firstName.isEmpty() && !lastName.isEmpty() && !relationship.isEmpty() && !(phone.isEmpty() && email.isEmpty());
+
+        return isValid;
     }
+
 
     private void populateViews(EmergencyContact emergencyContact) {
         Log.d("EmergencyContactsDetailsFragment", "Populating views with: " + emergencyContact.toString());
@@ -212,68 +222,52 @@ public class EmergencyContactsDetailsFragment extends BottomSheetDialogFragment 
         emailInput.setText(emergencyContact.email);
         primarySwitch.setChecked(emergencyContact.isPrimary);
 
-        // Set communication preferences checkboxes
-        callCheckbox.setChecked((emergencyContact.communicationPreferences & COMMUNICATION_CALL)!= 0);
-        textCheckbox.setChecked((emergencyContact.communicationPreferences & COMMUNICATION_TEXT)!= 0);
-        emailCheckbox.setChecked((emergencyContact.communicationPreferences & COMMUNICATION_EMAIL)!= 0);
-
-        if (emergencyContact.isPrimary) {
-            primarySwitch.setEnabled(false);
-        }
-    }
-
-    private void ensureOnlyOnePrimaryContact(EmergencyContact emergencyContact) {
-        EmergencyContact currentPrimaryContact = viewModel.getPrimaryEmergencyContact();
-
-        if (currentPrimaryContact!= null && currentPrimaryContact!= emergencyContact) {
-            if (currentPrimaryContact.isPrimary) {
-                currentPrimaryContact.setPrimary(false);
-                viewModel.update(currentPrimaryContact);
-            }
-        }
-
-        if (emergencyContact!= null && emergencyContact.isPrimary) {
-            emergencyContact.setPrimary(true);
-        }
+        callCheckbox.setChecked((emergencyContact.communicationPreferences & COMMUNICATION_CALL) != 0);
+        textCheckbox.setChecked((emergencyContact.communicationPreferences & COMMUNICATION_TEXT) != 0);
     }
 
     private void saveEmergencyContact() {
-        if (emergencyContact == null) {
-            emergencyContact = new EmergencyContact();
-        }
-
-        ensureOnlyOnePrimaryContact(emergencyContact);
-
-        String firstName = firstNameInput.getText().toString().trim();
-        String lastName = lastNameInput.getText().toString().trim();
-        String relationship = relationshipInput.getText().toString().trim();
-        String phone = phoneInput.getText().toString().trim();
-        String email = emailInput.getText().toString().trim();
-
-        // Input validation
-        if (!saveButton.isEnabled()) {
+        if (!validateFields()) {
             Toast.makeText(getContext(), "Please fill out all required fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Update fields of emergencyContact
-        emergencyContact.firstName = firstName;
-        emergencyContact.lastName = lastName;
-        emergencyContact.relationship = relationship;
-        emergencyContact.phoneNumber = phone;
-        emergencyContact.email = email;
-        emergencyContact.isPrimary = primarySwitch.isChecked();
+        if (emergencyContact == null) {
+            emergencyContact = new EmergencyContact();
+        }
+        collectContactData(); // Collect and update emergencyContact with UI data
 
-        // Communication preferences (using flags)
-        int communicationFlags = 0;
-        if (callCheckbox.isChecked()) communicationFlags |= 1; // 001
-        if (textCheckbox.isChecked()) communicationFlags |= 2; // 010
-        if (emailCheckbox.isChecked()) communicationFlags |= 4; // 100
-        emergencyContact.communicationPreferences = communicationFlags;
+        Runnable afterSave = () -> {
+            if (primarySwitch.isChecked()) {
+                viewModel.setUniquePrimaryContact(emergencyContact.getId());
+            }
+        };
 
-        // Save using ViewModel
-        viewModel.update(emergencyContact);
+        // Decide whether to insert a new contact or update an existing one
+        if (emergencyContact.getId() == 0) {
+            viewModel.insert(emergencyContact, afterSave);
+        } else {
+            viewModel.update(emergencyContact, afterSave);
+        }
+
         Log.d("EmergencyContactsDetailsFragment", "Saved emergency contact: " + emergencyContact.toString());
         dismiss();
+    }
+
+
+    private void collectContactData() {
+        // Assuming emergencyContact is not null or properly initialized
+        emergencyContact.firstName = firstNameInput.getText().toString().trim();
+        emergencyContact.lastName = lastNameInput.getText().toString().trim();
+        emergencyContact.relationship = relationshipInput.getText().toString().trim();
+        emergencyContact.phoneNumber = phoneInput.getText().toString().trim();
+        emergencyContact.email = emailInput.getText().toString().trim();
+        emergencyContact.isPrimary = primarySwitch.isChecked();
+
+        int communicationFlags = 0;
+        if (callCheckbox.isChecked()) communicationFlags |= COMMUNICATION_CALL;
+        if (textCheckbox.isChecked()) communicationFlags |= COMMUNICATION_TEXT;
+        if (emailCheckbox.isChecked()) communicationFlags |= COMMUNICATION_EMAIL;
+        emergencyContact.communicationPreferences = communicationFlags;
     }
 }

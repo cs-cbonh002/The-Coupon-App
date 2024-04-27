@@ -2,14 +2,13 @@ package edu.odu.cs.teamblack.cs411.thecouponapp.data.local.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "emergency_contacts")
 public class EmergencyContact implements Parcelable {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public long id; // Changed from int to long
     public String firstName;
     public String lastName;
     public String email;
@@ -17,8 +16,9 @@ public class EmergencyContact implements Parcelable {
     public String address;
     public String phoneNumber;
     public boolean isPrimary;
+    public int communicationPreferences;
 
-
+    // Getters and setters
     public boolean isPrimary() {
         return isPrimary;
     }
@@ -27,57 +27,36 @@ public class EmergencyContact implements Parcelable {
         isPrimary = primary;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) { // Changed setter to accept long
         this.id = id;
     }
 
     public String getFirstName() {
         return firstName;
     }
-    public String getLastName() {
-        return lastName;
-    }
-
-    public int getCommunicationPreferences() {
-        return communicationPreferences;
-    }
-
-    public void setCommunicationPreferences(int communicationPreferences) {
-        this.communicationPreferences = communicationPreferences;
-    }
-
-    public int communicationPreferences;
-
 
     public void setFirstName(String name) {
         this.firstName = name;
     }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     public void setLastName(String lastname) {
         this.lastName = lastname;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public void setAddress(String address) {
@@ -92,6 +71,11 @@ public class EmergencyContact implements Parcelable {
         this.relationship = relationship;
     }
 
+    public void setCommunicationPreferences(int communicationPreferences) {
+        this.communicationPreferences = communicationPreferences;
+    }
+
+    // Constructor
     public EmergencyContact() {
         this.firstName = "";
         this.lastName = "";
@@ -103,9 +87,9 @@ public class EmergencyContact implements Parcelable {
         this.communicationPreferences = 0;
     }
 
-    // implement parcelable
-
+    // Parcelable implementation
     public EmergencyContact(Parcel in) {
+        id = in.readLong(); // Changed to readLong
         firstName = in.readString();
         lastName = in.readString();
         email = in.readString();
@@ -123,7 +107,7 @@ public class EmergencyContact implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeLong(id); // Changed to writeLong
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeString(email);

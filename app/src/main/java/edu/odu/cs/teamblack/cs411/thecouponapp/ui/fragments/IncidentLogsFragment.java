@@ -19,7 +19,6 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.ui.adapters.IncidentLogsAdapter;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.viewmodels.IncidentLogsViewModel;
 
 public class IncidentLogsFragment extends Fragment {
-
     private IncidentLogsViewModel viewModel;
     private FloatingActionButton add_log_button;
     private IncidentLogsAdapter adapter;
@@ -40,6 +39,7 @@ public class IncidentLogsFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(IncidentLogsViewModel.class);
 
         adapter = new IncidentLogsAdapter();
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
