@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         RegistrationRequest registrationRequest = new RegistrationRequest(username, password);
-        ApiService apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
+        ApiService apiService = RetrofitClientInstance.getRetrofitInstance(RegisterActivity.this).create(ApiService.class);
 
         Call<RegistrationResponse> call = apiService.registerUser(registrationRequest);
         call.enqueue(new Callback<RegistrationResponse>() {

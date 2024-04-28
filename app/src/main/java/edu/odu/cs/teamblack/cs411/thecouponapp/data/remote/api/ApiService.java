@@ -12,6 +12,7 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.data.remote.responses.UserRespons
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -33,9 +34,14 @@ public interface ApiService {
     @GET("api/users/me/")
     Call<UserResponse> getCurrentUserProfile();
 
-    // Fetch user incident logs endpoint
-    @GET("api/users/{user_pk}/incident_logs/")
-    Call<List<IncidentLog>> getUserIncidentLogs(@Path("user_pk") int userPk);
+    @POST("api/users/me/incident-logs/")
+    Call<IncidentLog> createIncidentLog(
+            @Body IncidentLog incidentLog
+    );
 
-    // Other endpoints as needed...probably user profile info
+    @GET("api/users/me/incident-logs/")
+    Call<List<IncidentLog>> getUserIncidentLogs(@Header("Authorization") String authHeader);
+
+
+    // Other endpoints as needed...probably emergency contacts
 }
