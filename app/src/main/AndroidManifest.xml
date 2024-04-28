@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_Location"/>
 
     <application
         android:allowBackup="true"
@@ -45,7 +46,7 @@
             android:exported="false" />
 
         <service
-            android:name=".services.SafetyMonitoringService"
+            android:name=".services.AudioClassifierService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="microphone" />
@@ -54,6 +55,12 @@
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="microphone" />
+
+
+<!--        <service-->
+<!--            android:name=".services.gpsService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true" />-->
 
         <activity
             android:name=".ui.activities.LoginActivity"

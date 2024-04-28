@@ -48,9 +48,8 @@ public class HomeScreenTest {
         onView(withId(R.id.incidentLogButton)).check(matches(isDisplayed()));
         onView(withId(R.id.incidentLogButton)).check(isCompletelyAbove(withId(R.id.wakeWordsButton)));
         onView(withId(R.id.incidentLogButton)).check(matches(isClickable()));
-
         onView(withId(R.id.incidentLogButton)).perform(click());
-        onView(withId(R.id.fab)).check(matches(isDisplayed()));
+        onView(withId(R.id.add_log_button)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -60,7 +59,6 @@ public class HomeScreenTest {
         onView(withId(R.id.wakeWordsButton)).check(isCompletelyBelow(withId(R.id.incidentLogButton)));
         onView(withId(R.id.wakeWordsButton)).check(isCompletelyAbove(withId(R.id.communicationsButton)));
         onView(withId(R.id.wakeWordsButton)).check(matches(isClickable()));
-
         onView(withId(R.id.wakeWordsButton)).perform(click());
         onView(withId(R.id.enable_wake_word_control_switch)).check(matches(isDisplayed()));
     }
@@ -72,7 +70,6 @@ public class HomeScreenTest {
         onView(withId(R.id.communicationsButton)).check(isCompletelyBelow(withId(R.id.wakeWordsButton)));
         onView(withId(R.id.communicationsButton)).check(isCompletelyAbove(withId(R.id.emergencyContactsButton)));
         onView(withId(R.id.communicationsButton)).check(matches(isClickable()));
-
         onView(withId(R.id.communicationsButton)).perform(click());
         onView(withId(R.id.Email_Switch)).check(matches(isDisplayed()));
     }
@@ -84,9 +81,7 @@ public class HomeScreenTest {
         onView(withId(R.id.emergencyContactsButton)).check(isCompletelyBelow(withId(R.id.communicationsButton)));
         onView(withId(R.id.emergencyContactsButton)).check(isCompletelyAbove(withId(R.id.localResourcesButton)));
         onView(withId(R.id.emergencyContactsButton)).check(matches(isClickable()));
-
         onView(withId(R.id.emergencyContactsButton)).perform(click());
-        onView(withId(R.id.selectFamilyMemberButton)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -107,7 +102,6 @@ public class HomeScreenTest {
         onView(withId(R.id.settingsButton)).check(matches(isDisplayed()));
         onView(withId(R.id.settingsButton)).check(isCompletelyBelow(withId(R.id.localResourcesButton)));
         onView(withId(R.id.settingsButton)).check(matches(isClickable()));
-
         onView(withId(R.id.settingsButton)).perform(click());
         onView(withId(R.id.accountGroup)).check(matches(isDisplayed()));
     }

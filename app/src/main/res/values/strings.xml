@@ -147,5 +147,10 @@
     <string name="start_recording">Start Recording</string>
     <string name="stop_recording">Stop Recording</string>
     <string name="pause_safety_monitoring">Pause Safety Monitoring</string>
+    <string name="play_audio">Play/Stop Audio</string>
+    <string name="relationship">Relationship</string>
+    <string name="primary_contact">Primary Contact</string>
+    <string name="call">Call\n</string>
+    <string name="save">Save</string>
 
 </resources>

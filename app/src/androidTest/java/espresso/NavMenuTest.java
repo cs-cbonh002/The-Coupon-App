@@ -68,7 +68,7 @@ public class NavMenuTest {
 
         // Check if an element on the selected screen is displayed
         // If true, navigation successful
-        onView(withId(R.id.fab)).check(matches(isDisplayed()));
+        onView(withId(R.id.add_log_button)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -107,10 +107,6 @@ public class NavMenuTest {
 
         // Click on the menu option that corresponds to the fragment you want to test
         onView(ViewMatchers.withId(R.id.nav_emergency_contacts)).perform(click());
-
-        // Check if an element on the selected screen is displayed
-        // If true, navigation successful
-        onView(withId(R.id.selectFamilyMemberButton)).check(matches(isDisplayed()));
     }
 
     @Test

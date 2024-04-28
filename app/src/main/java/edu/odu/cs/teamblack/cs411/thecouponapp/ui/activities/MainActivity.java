@@ -18,7 +18,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
-import edu.odu.cs.teamblack.cs411.thecouponapp.ui.common.NavigationHost;
+import edu.odu.cs.teamblack.cs411.thecouponapp.utils.NavigationHost;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.CommunicationsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.EmergencyContactsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.HomeFragment;
@@ -26,7 +26,6 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.IncidentLogsFragment
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.LocalResourcesFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.SettingsFragment;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.fragments.WakeWordsFragment;
-import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
 
 public class MainActivity extends AppCompatActivity implements NavigationHost {
 
@@ -160,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationHost {
     }
 
     private void logout() {
-        SharedPreferences.clearAccessToken(this);
+        getSharedPreferences("auth_preferences", MODE_PRIVATE).edit().clear().apply();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

@@ -1,6 +1,7 @@
 package edu.odu.cs.teamblack.cs411.thecouponapp.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +15,7 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.data.remote.api.ApiService;
 import edu.odu.cs.teamblack.cs411.thecouponapp.data.remote.responses.JwtResponse;
 import edu.odu.cs.teamblack.cs411.thecouponapp.data.remote.requests.LoginRequest;
 import edu.odu.cs.teamblack.cs411.thecouponapp.data.remote.api.RetrofitClientInstance;
-import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SharedPreferences;
+import edu.odu.cs.teamblack.cs411.thecouponapp.utils.SecurePreferences;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,16 +72,17 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         LoginRequest loginRequest = new LoginRequest(username, password);
-        ApiService apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
+        ApiService apiService = RetrofitClientInstance.getRetrofitInstance(LoginActivity.this).create(ApiService.class);
 
         Call<JwtResponse> call = apiService.getToken(loginRequest);
         call.enqueue(new Callback<JwtResponse>() {
             @Override
             public void onResponse(Call<JwtResponse> call, Response<JwtResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body()!= null) {
                     JwtResponse jwtResponse = response.body();
-                    SharedPreferences.saveAccessToken(LoginActivity.this, jwtResponse.getAccess());
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    SharedPreferences preferences = SecurePreferences.getEncryptedSharedPreferences(LoginActivity.this);
+                    preferences.edit().putString("access_token", jwtResponse.getAccess()).apply();
+                    Intent intent = new Intent(LoginActivity.this, FacadeActivity.class);
                     startActivity(intent);
                     finish();
                 } else {

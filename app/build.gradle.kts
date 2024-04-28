@@ -59,6 +59,10 @@ dependencies {
     implementation ("com.google.android.gms:play-services-tflite-gpu:16.2.0")
     implementation("org.tensorflow:tensorflow-lite-task-audio:0.4.4")
 
+    //google play gps location service
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
+
     androidTestImplementation("androidx.test:rules:1.5.0")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 

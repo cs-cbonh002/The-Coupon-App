@@ -21,32 +21,42 @@ import android.os.Parcelable;
 public class IncidentLog implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
-    public int id; // No need for a default value since it's auto-generated
+    public int id;
 
     @TypeConverters({DateConverter.class})
-    public Date incidentDate = new Date(); // Default to the current system date and time
+    public Date incidentDate = new Date();
 
-    public boolean createdByUser = true; // Default to true, assuming the user creates the log
+    public boolean createdByUser = true;
 
-    public Date timestamp = new Date(); // Default to the current system date and time
+    @TypeConverters({DateConverter.class})
+    public Date startTime;
 
-    public int duration = 0; // Default to 0 seconds
+    @TypeConverters({DateConverter.class})
+    public Date endTime;
 
-    public String transcription = ""; // Default to an empty string
+    public int duration = 0;
 
-    public String severity = "Low"; // Default to "Low" or any other default value you see fit
+    public String transcription = "";
 
-    public String notes = ""; // Default to an empty string
+    public String severity = "Low";
 
+    public String notes = "";
+
+    private String audioFilePath;
+
+    private String error;
 
     public IncidentLog() {
         this.notes = "";
         this.severity = "Low";
         this.transcription = "";
         this.duration = 0;
-        this.timestamp = new Date();
+        this.startTime = new Date();
+        this.endTime = new Date();
         this.incidentDate = new Date();
     }
+
+    // getters and setters
 
     public int getId() {
         return id;
@@ -56,12 +66,36 @@ public class IncidentLog implements Parcelable {
         this.id = id;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public Date getIncidentDate() {
+        return incidentDate;
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public void setIncidentDate(Date incidentDate) {
+        this.incidentDate = incidentDate;
+    }
+
+    public boolean isCreatedByUser() {
+        return createdByUser;
+    }
+
+    public void setCreatedByUser(boolean createdByUser) {
+        this.createdByUser = createdByUser;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     public int getDuration() {
@@ -80,22 +114,6 @@ public class IncidentLog implements Parcelable {
         this.transcription = transcription;
     }
 
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public boolean isCreatedByUser() {
-        return createdByUser;
-    }
-
-    public void setCreatedByUser(boolean createdByUser) {
-        this.createdByUser = createdByUser;
-    }
-
     public String getSeverity() {
         return severity;
     }
@@ -104,49 +122,76 @@ public class IncidentLog implements Parcelable {
         this.severity = severity;
     }
 
-
-    public Date getIncidentDate() {
-        return incidentDate;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setIncidentDate(Date incidentDate) {
-        this.incidentDate = incidentDate;
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getAudioFilePath() {
+        return audioFilePath;
+    }
+
+    public void setAudioFilePath(String audioFilePath) {
+        this.audioFilePath = audioFilePath;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public String getFormattedTimestamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        return sdf.format(this.timestamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+        return sdf.format(getIncidentDate());
     }
 
     public String getFormattedDuration() {
-        long hours = TimeUnit.SECONDS.toHours(this.duration);
-        long minutes = TimeUnit.SECONDS.toMinutes(this.duration) - TimeUnit.HOURS.toMinutes(hours);
-        long seconds = TimeUnit.SECONDS.toSeconds(this.duration) - TimeUnit.MINUTES.toSeconds(minutes) - TimeUnit.HOURS.toSeconds(hours);
-        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+        int totalSeconds = getDuration() / 1000;
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+        return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
     }
+
+
+    // Parcelable implementation
 
     public IncidentLog(Parcel in) {
         id = in.readInt();
         long tmpIncidentDate = in.readLong();
-        incidentDate = tmpIncidentDate != -1 ? new Date(tmpIncidentDate) : null;
-        createdByUser = in.readByte() != 0;
-        timestamp = new Date(in.readLong());
+        incidentDate = tmpIncidentDate!= -1? new Date(tmpIncidentDate) : null;
+        createdByUser = in.readByte()!= 0;
+        long tmpStartTime = in.readLong();
+        startTime = tmpStartTime!= -1? new Date(tmpStartTime) : null;
+        long tmpEndTime = in.readLong();
+        endTime = tmpEndTime!= -1? new Date(tmpEndTime) : null;
         duration = in.readInt();
         transcription = in.readString();
         severity = in.readString();
         notes = in.readString();
+        audioFilePath = in.readString();
+        error = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
-        dest.writeLong(incidentDate != null ? incidentDate.getTime() : -1);
-        dest.writeByte((byte) (createdByUser ? 1 : 0));
-        dest.writeLong(timestamp.getTime());
+        dest.writeLong(incidentDate!= null? incidentDate.getTime() : -1);
+        dest.writeByte((byte) (createdByUser? 1 : 0));
+        dest.writeLong(startTime!= null? startTime.getTime() : -1);
+        dest.writeLong(endTime!= null? endTime.getTime() : -1);
         dest.writeInt(duration);
         dest.writeString(transcription);
         dest.writeString(severity);
         dest.writeString(notes);
+        dest.writeString(audioFilePath);
+        dest.writeString(error);
     }
 
     @Override

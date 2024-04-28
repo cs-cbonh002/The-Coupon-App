@@ -19,9 +19,8 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.ui.adapters.IncidentLogsAdapter;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.viewmodels.IncidentLogsViewModel;
 
 public class IncidentLogsFragment extends Fragment {
-
     private IncidentLogsViewModel viewModel;
-    private FloatingActionButton fab;
+    private FloatingActionButton add_log_button;
     private IncidentLogsAdapter adapter;
     private RecyclerView recyclerView;
 
@@ -35,11 +34,12 @@ public class IncidentLogsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recycler_view_incident_logs);
-        fab = view.findViewById(R.id.fab);
+        add_log_button = view.findViewById(R.id.add_log_button);
 
         viewModel = new ViewModelProvider(this).get(IncidentLogsViewModel.class);
 
         adapter = new IncidentLogsAdapter();
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
@@ -47,7 +47,7 @@ public class IncidentLogsFragment extends Fragment {
             adapter.setIncidentLogs(incidentLogs);
         });
 
-        fab.setOnClickListener(v -> {
+        add_log_button.setOnClickListener(v -> {
             IncidentLogsDetailsFragment addFragment = IncidentLogsDetailsFragment.newInstance(null);
             addFragment.show(getParentFragmentManager(), "IncidentLogDetailsFragment");
         });

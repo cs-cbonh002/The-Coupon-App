@@ -14,6 +14,10 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 
 public class FacadeActivity extends AppCompatActivity {
 
+    private int[] expectedSequence = {R.id.imageButton1, R.id.imageButton3, R.id.imageButton2, R.id.imageButton4};
+    // Current position in the sequence of button presses.
+    private int currentPosition = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,17 +31,31 @@ public class FacadeActivity extends AppCompatActivity {
         // If they're supposed to navigate to different parts of the app,
         // they should create an Intent for MainActivity with extras indicating which fragment to display.
 
-        ImageButton btn = findViewById(R.id.imageButton1);
-        btn.setOnClickListener(v -> navigateToMain());
-
+        ImageButton btn1 = findViewById(R.id.imageButton1);
         ImageButton btn2 = findViewById(R.id.imageButton2);
-        btn2.setOnClickListener(v -> navigateToMain());
-
         ImageButton btn3 = findViewById(R.id.imageButton3);
-        btn3.setOnClickListener(v -> navigateToMain());
-
         ImageButton btn4 = findViewById(R.id.imageButton4);
-        btn4.setOnClickListener(v -> navigateToMain());
+
+        // Set up click listeners for image buttons.
+        btn1.setOnClickListener(v -> handleButtonClick(R.id.imageButton1));
+        btn2.setOnClickListener(v -> handleButtonClick(R.id.imageButton2));
+        btn3.setOnClickListener(v -> handleButtonClick(R.id.imageButton3));
+        btn4.setOnClickListener(v -> handleButtonClick(R.id.imageButton4));
+    }
+
+    private void handleButtonClick(int clickedButtonId) {
+        // Check if the clicked button is the expected button in the sequence
+        if (clickedButtonId == expectedSequence[currentPosition]) {
+            currentPosition++; // Move to the next position in the sequence
+            // Check if the user has completed the sequence
+            if (currentPosition == expectedSequence.length) {
+                // Navigate to MainActivity
+                navigateToMain();
+            }
+        } else {
+            // Reset the sequence if the user clicks the wrong button
+            currentPosition = 0;
+        }
     }
 
     private void navigateToMain() {

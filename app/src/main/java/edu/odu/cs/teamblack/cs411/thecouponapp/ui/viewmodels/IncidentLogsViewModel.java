@@ -18,7 +18,6 @@ public class IncidentLogsViewModel extends AndroidViewModel {
         allIncidentLogs = repository.getAllIncidentLogs();
     }
 
-
     public LiveData<List<IncidentLog>> getAllIncidentLogs() {
         return allIncidentLogs;
     }

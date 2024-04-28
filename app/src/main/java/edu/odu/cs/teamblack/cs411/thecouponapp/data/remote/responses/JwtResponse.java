@@ -20,4 +20,3 @@ public class JwtResponse {
         this.refresh = refresh;
     }
 }
-

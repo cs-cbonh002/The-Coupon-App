@@ -6,37 +6,29 @@ import android.content.SharedPreferences;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 public class SecurePreferences {
 
-    private static final String PREFERENCES_FILE_KEY = "secure_preferences";
-    private static final String PIN_KEY = "pin_key";
-    private SharedPreferences sharedPreferences;
+    private static final String FILE_NAME = "secure_auth_preferences";
 
-    public SecurePreferences(Context context) {
+    public static SharedPreferences getEncryptedSharedPreferences(Context context) {
         try {
             MasterKey masterKey = new MasterKey.Builder(context)
                     .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                     .build();
 
-            sharedPreferences = EncryptedSharedPreferences.create(
+            return EncryptedSharedPreferences.create(
                     context,
-                    PREFERENCES_FILE_KEY,
+                    FILE_NAME,
                     masterKey,
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             );
-        } catch (Exception e) {
-            // Handle the error.
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException("Could not create EncryptedSharedPreferences", e);
         }
     }
-
-    public void saveUserPin(String pin) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(PIN_KEY, pin);
-        editor.apply();
-    }
-
-    public String getUserPin() {
-        return sharedPreferences.getString(PIN_KEY, null);
-    }
 }
+
