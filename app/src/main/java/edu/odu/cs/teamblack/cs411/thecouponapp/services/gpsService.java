@@ -153,6 +153,7 @@
 //         //get permission from the user to track to GPS
 //         //get the current location from fused client
 //         // update the ui set all properties in their associated view items
+//         //send location
     
 //         fusedLocationProviderClient = LocationServices.getFusedFusedLocationProviderClient(gpsService.this);
 
@@ -204,6 +205,46 @@
 //             tv_address.setText("Unable to get street address");
 //         }
 //     }
+
+//     @Override
+// public void onCreate() {
+//     super.onCreate();
+//     Log.d(TAG, "Service created");
+
+//     // Create notification channel for the service's foreground notification
+//     createNotificationChannel();
+//     safetyResponseManager = SafetyResponseManager.getInstance(this);
+// }
+
+
+// private Notification createNotification() {
+//     // If you are targeting API level 26+, you must implement a user-visible notification channel
+//     NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "gps location", NotificationManager.IMPORTANCE_DEFAULT);
+//     NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//     notificationManager.createNotificationChannel(channel);
+
+//     return new NotificationCompat.Builder(this, CHANNEL_ID)
+//             .setSmallIcon(R.drawable.ic_mic) // Replace with your own drawable icon
+//             .setContentIntent(createPendingIntent())
+//             .build();
+// }
+
+// private PendingIntent createPendingIntent() {
+//     Intent notificationIntent = new Intent(this, gpsService.class);
+//     notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//     return PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+// }
+
+// private void createNotificationChannel() {
+//     NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "gpsService", NotificationManager.IMPORTANCE_DEFAULT);
+//     NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//     manager.createNotificationChannel(channel);
+// }
+
+// @Override
+// public IBinder onBind(Intent intent) {
+//     return binder;
+// }
 
 // }
 

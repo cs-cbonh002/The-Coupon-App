@@ -52,6 +52,9 @@ public class CommunicationsManager {
             if ((preferences & COMMUNICATION_EMAIL) != 0) {
                 sendEmail(contact.getEmail(), "Emergency", "Please check your messages for details.");
             }
+            // if ((preferences & COMMUNICATION_EMAIL) != 0) {
+            //     sendLocation(contact.getLocation());
+            // }
         }
     }
 
@@ -77,7 +80,10 @@ public class CommunicationsManager {
         sendNotification("Emergency Detected", "Tap to send an Email to the emergency contact.", intent);
     }
 
-
+    // public void sendLocation(String location) {
+    //     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse ("coordinates" + location));
+    //     sendNotification("Emergency Detected", intent);
+    // }
 
     private void createNotificationChannel() {
         NotificationChannel channel = new NotificationChannel("channel_id", "Channel Name", NotificationManager.IMPORTANCE_HIGH);
