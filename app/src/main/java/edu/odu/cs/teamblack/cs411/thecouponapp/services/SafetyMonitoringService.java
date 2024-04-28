@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
 import edu.odu.cs.teamblack.cs411.thecouponapp.helper.CommunicationsHelper;
+import edu.odu.cs.teamblack.cs411.thecouponapp.managers.SafetyResponseManager;
 
 public class SafetyMonitoringService extends Service {
     final String TAG = "Audio Classifier Service";
@@ -61,6 +62,7 @@ public class SafetyMonitoringService extends Service {
 
     //call to action
     int count = 0;
+    private SafetyResponseManager safetyResponseManager;
     boolean toggles = true;
     List<Classifications> output;
 
@@ -145,6 +147,7 @@ public class SafetyMonitoringService extends Service {
                             notification = getNotification("Safety Monitoring", "Start Documenting");
                             notificationManager.notify(4921, notification);
                             getLastLocation();
+                            safetyResponseManager.handleTrigger(SafetyResponseManager.TriggerType.AUDIO_EVENT, "START_LOGGING");
                         } else if (count == 7 && toggles) {
                             toggles = false;
                             //call 911
@@ -160,7 +163,7 @@ public class SafetyMonitoringService extends Service {
                             } catch (PendingIntent.CanceledException e) {
                                 Log.e(CHANNEL_ID, "can't call", e);
                             }
-
+                            safetyResponseManager.handleTrigger(SafetyResponseManager.TriggerType.AUDIO_EVENT, "COMMUNICATE");
                         }
                     },
                 1,
@@ -184,6 +187,8 @@ public class SafetyMonitoringService extends Service {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
 
         fusedLocationClient.getLastLocation();
+
+        safetyResponseManager = SafetyResponseManager.getInstance(this);
     }
 
     @SuppressLint("ForegroundServiceType")
@@ -234,7 +239,6 @@ public class SafetyMonitoringService extends Service {
         manager.createNotificationChannel(notificationChannel);
     }
     private Notification getNotification(String title, String message, PendingIntent pendingIntent) {
-
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(message)

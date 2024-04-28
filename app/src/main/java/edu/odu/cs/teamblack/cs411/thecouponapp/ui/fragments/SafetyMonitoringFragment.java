@@ -81,7 +81,7 @@ public class SafetyMonitoringFragment extends Fragment {
                 if (hasPermission(requireContext(),permissionsStr)) {
                     startService();
                 } else {
-                    initPermission();
+                    //initPermission();
                 }
             } else {
                 stopService();
