@@ -127,8 +127,8 @@ public class PorcupineService extends Service {
             case 0:
                 //calling
                 try {
-                    communicationsHelper.sendSMS("540-214-0551");
-                    pendingEmailIntent = communicationsHelper.sendEmail("marksilasgabriel@gmial.com","Sending from Porcupine Service", getApplicationContext());
+                    communicationsHelper.sendSMS("540-214-0551","Please help me call or find me last location\n");
+                    pendingEmailIntent = communicationsHelper.sendEmail("marksilasgabriel@gmial.com","Please call or come to my location", getApplicationContext());
                     notification = getNotification("Safety Monitoring", "Send Email", pendingEmailIntent);
                     notificationManager.notify(8322, notification);
                     pendingPhoneIntent = communicationsHelper.dialPhoneNumber("540-241-0551",getApplicationContext());

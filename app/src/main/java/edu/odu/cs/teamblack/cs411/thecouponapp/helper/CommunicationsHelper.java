@@ -18,7 +18,7 @@ public class CommunicationsHelper {
     public PendingIntent sendEmail(String email,String message, Context context) {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Sending from Porcupine Service");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Need help");
         emailIntent.putExtra(Intent.EXTRA_TEXT,message);
 
         emailIntent.setType("message/rfc822");
@@ -37,8 +37,7 @@ public class CommunicationsHelper {
         return PendingIntent.getActivity(context,0,phoneIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
     }
 
-    public void sendSMS(String phoneNumber) {
-        String message = "Hello from Safety Monitoring Service";
+    public void sendSMS(String phoneNumber, String message) {
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(phoneNumber,null,message,null,null);
     }
