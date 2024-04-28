@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -40,13 +42,17 @@ import edu.odu.cs.teamblack.cs411.thecouponapp.services.PorcupineService;
 import edu.odu.cs.teamblack.cs411.thecouponapp.ui.common.PermissionManager;
 
 public class WakeWordsFragment extends Fragment {
+    private static final int LOCATION_PERMISSION = 44;
 
     private static final String[] REQUIRED_PERMISSIONS = {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CALL_PHONE,
             Manifest.permission.CAMERA,
             Manifest.permission.POST_NOTIFICATIONS,
-            Manifest.permission.SEND_SMS
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
     };
     private static final String SHARED_PREFS_NAME = "wake_word_settings";
     private static final String KEY_WAKE_WORD_ENABLED = "wake_word_enabled";
@@ -74,7 +80,7 @@ public class WakeWordsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wake_words_fragment, container, false);
 
-        keywords.add(sharedPreferences.getString(WAKE1,"STOP HITTING ME"));
+        keywords.add(sharedPreferences.getString(WAKE1,"ALEXA"));
         keywords.add(sharedPreferences.getString(WAKE2,"BUMBLEBEE"));
         keywords.add(sharedPreferences.getString(WAKE3,"TERMINATOR"));
         keywords.add(sharedPreferences.getString(WAKE4,"BLUEBERRY"));
@@ -133,6 +139,7 @@ public class WakeWordsFragment extends Fragment {
         if (enabled) {
             if (checkAllPermissionsGranted()) {
                 requestPermissions();
+                requestGpsPermissions();
             } else {
                 setUIEnabled(false);
                 startService();
@@ -240,6 +247,11 @@ public class WakeWordsFragment extends Fragment {
     }
 
     private boolean checkAllPermissionsGranted() {
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_DENIED) {
+            return true;
+        }
         for (String permission : REQUIRED_PERMISSIONS) {
             if (requireContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
                 return true;
@@ -289,4 +301,25 @@ public class WakeWordsFragment extends Fragment {
             enableWakeWordSwitch.setChecked(false);
         }
     };
+
+    private void requestGpsPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_BACKGROUND_LOCATION) &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed to record GPS in the background.\nPlease select \"Allow all the time\" in settings")
+                    .setPositiveButton("ok", (dialogInterface, i) ->
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{
+                                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION}, LOCATION_PERMISSION))
+                    .setNegativeButton("cancel", (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create().show();
+
+        }else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION);
+        }
+    }
 }

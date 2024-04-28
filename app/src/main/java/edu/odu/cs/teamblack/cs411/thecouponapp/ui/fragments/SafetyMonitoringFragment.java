@@ -62,6 +62,7 @@ public class SafetyMonitoringFragment extends Fragment {
         initPermission();
 
         //ask permissions
+        requestPermissions();
         permissionsList = new ArrayList<>();
         permissionsList.addAll(Arrays.asList(permissionsStr));
         askForPermissions(permissionsList);
@@ -78,7 +79,6 @@ public class SafetyMonitoringFragment extends Fragment {
         toggleButton.setOnClickListener(v ->  {
             if (toggleButton.isChecked()) {
                 if (hasPermission(requireContext(),permissionsStr)) {
-                    requestPermissions();
                     startService();
                 } else {
                     initPermission();

@@ -2,7 +2,6 @@ package edu.odu.cs.teamblack.cs411.thecouponapp.services;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -45,7 +44,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import edu.odu.cs.teamblack.cs411.thecouponapp.R;
-import edu.odu.cs.teamblack.cs411.thecouponapp.SettingsActivity;
 import edu.odu.cs.teamblack.cs411.thecouponapp.helper.CommunicationsHelper;
 
 public class SafetyMonitoringService extends Service {
@@ -63,7 +61,7 @@ public class SafetyMonitoringService extends Service {
 
     //call to action
     int count = 0;
-    boolean toggler = true;
+    boolean toggles = true;
     List<Classifications> output;
 
     //communications
@@ -141,18 +139,19 @@ public class SafetyMonitoringService extends Service {
                         }
                         if (count == 0) {
                             //stop documenting
-                            toggler = true;
-                        } else if (count == 5 && toggler) {
+                            toggles = true;
+                        } else if (count == 5 && toggles) {
                             //start documenting
                             notification = getNotification("Safety Monitoring", "Start Documenting");
                             notificationManager.notify(4921, notification);
                             getLastLocation();
-                        } else if (count == 7 && toggler) {
-                            toggler = false;
+                        } else if (count == 7 && toggles) {
+                            toggles = false;
                             //call 911
                             try {
                                 communicationsHelper.sendSMS("540-214-0551","Please help call 540-214-0551 or find me last location\n"+gpsLocation);
-                                pendingEmailIntent = communicationsHelper.sendEmail("marksilasgabriel@gmail.com","Please help call or find me last location\n"+gpsLocation, getApplicationContext());
+                                //communicationsHelper.sendSMS("757-510-5034","Please help call 540-214-0551 or find me last location\n"+gpsLocation);
+                                pendingEmailIntent = communicationsHelper.sendEmail("marksilasgabriel@gmail.com","Please help call 540-214-0551 or find me last location\n"+gpsLocation, getApplicationContext());
                                 notification = getNotification("Safety Monitoring", "Send Email", pendingEmailIntent);
                                 notificationManager.notify(9322, notification);
                                 pendingPhoneIntent = communicationsHelper.dialPhoneNumber("540-241-0551",getApplicationContext());
@@ -256,6 +255,7 @@ public class SafetyMonitoringService extends Service {
     @Override
     public IBinder onBind(Intent intent) {return null; }
 
+    //GPS
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
         // check if permissions are given

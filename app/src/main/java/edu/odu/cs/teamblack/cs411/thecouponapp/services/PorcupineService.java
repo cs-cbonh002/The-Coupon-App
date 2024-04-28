@@ -9,6 +9,7 @@
 */
 package edu.odu.cs.teamblack.cs411.thecouponapp.services;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -18,17 +19,30 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -60,6 +74,11 @@ public class PorcupineService extends Service {
     CommunicationsHelper communicationsHelper = new CommunicationsHelper();
     PendingIntent pendingPhoneIntent;
     PendingIntent pendingEmailIntent;
+
+    //GPS
+    private FusedLocationProviderClient fusedLocationClient;
+    int LOCATION_PERMISSION = 44;
+    String gpsLocation = "";
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -99,10 +118,13 @@ public class PorcupineService extends Service {
                     getNotification("Porcupine init failed", "Service will be shut down") :
                     getNotification("Wake word service", "Say "+ pWords[0] +"!");
             startForeground(1234, notification);
-
+            if (checkPermissions()){
+                getLastLocation();
+            }
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onCreate() {
         // Start up the thread running the service. Note that we create a
@@ -116,9 +138,12 @@ public class PorcupineService extends Service {
         // Get the HandlerThread's Looper and use it for our Handler
         Looper serviceLooper = thread.getLooper();
         serviceHandler = new ServiceHandler(serviceLooper);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+
+        fusedLocationClient.getLastLocation();
     }
     private final PorcupineManagerCallback porcupineManagerCallback = (keywordIndex) -> {
-
         Notification notification;
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -127,8 +152,8 @@ public class PorcupineService extends Service {
             case 0:
                 //calling
                 try {
-                    communicationsHelper.sendSMS("540-214-0551","Please help me call or find me last location\n");
-                    pendingEmailIntent = communicationsHelper.sendEmail("marksilasgabriel@gmial.com","Please call or come to my location", getApplicationContext());
+                    communicationsHelper.sendSMS("540-214-0551","Please help me call 540-214-0551 or find me last location\n"+gpsLocation);
+                    pendingEmailIntent = communicationsHelper.sendEmail("marksilasgabriel@gmial.com","Please call 540-214-0551 or come to my location"+gpsLocation, getApplicationContext());
                     notification = getNotification("Safety Monitoring", "Send Email", pendingEmailIntent);
                     notificationManager.notify(8322, notification);
                     pendingPhoneIntent = communicationsHelper.dialPhoneNumber("540-241-0551",getApplicationContext());
@@ -268,12 +293,90 @@ public class PorcupineService extends Service {
     ///////start stop safety monitoring
     private void startService() {
         Intent serviceIntent = new Intent(getApplicationContext(), SafetyMonitoringService.class);
-        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
+        getApplicationContext().startForegroundService(serviceIntent);
     }
 
     private void stopService() {
         Intent serviceIntent = new Intent(getApplicationContext(), SafetyMonitoringService.class);
         getApplicationContext().stopService(serviceIntent);
+    }
+
+    //GPS
+    @SuppressLint("MissingPermission")
+    private void getLastLocation() {
+        // check if permissions are given
+        if (checkPermissions()) {
+
+            // check if location is enabled
+            if (isLocationEnabled()) {
+
+                // getting last
+                // location from
+                // FusedLocationClient
+                // object
+                fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+                    Location location = task.getResult();
+                    if (location == null) {
+                        requestNewLocationData();
+                    } else {
+                        gpsLocation = String.format("https://maps.google.com/maps?q=%s,%s",location.getLatitude(),location.getLongitude());
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Please turn on" + " your location...", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        } else {
+            // if permissions aren't available,
+            // request for permissions
+            //requestPermissions();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void requestNewLocationData() {
+
+
+        // Initializing LocationRequest
+        // object with appropriate methods
+        LocationRequest mLocationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
+                .setWaitForAccurateLocation(false)
+                .setMinUpdateIntervalMillis(500)
+                .setMaxUpdateDelayMillis(1000)
+                .build();
+
+
+        // setting LocationRequest
+        // on FusedLocationClient
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+    }
+
+    private final LocationCallback mLocationCallback = new LocationCallback() {
+
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Location mLastLocation = locationResult.getLastLocation();
+            assert mLastLocation != null;
+            gpsLocation = String.format("https://maps.google.com/maps?q=%s,%s",mLastLocation.getLatitude(),mLastLocation.getLongitude());
+        }
+    };
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+        // If we want background location
+        // on Android 10.0 and higher,
+        // use:
+        // ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 }
 
